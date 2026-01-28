@@ -1,0 +1,22 @@
+[package]
+name = "songbook"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "songbook"
+path = "src/lib.rs"
+
+[[bin]]
+name = "songbook"
+path = "src/tui/main.rs"
+required-features = ["bin-deps"]
+
+[dependencies]
+ratatui = { version = "0.30.0", optional = true }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+
+[features]
+default = []
+bin-deps = ["dep:ratatui"]
