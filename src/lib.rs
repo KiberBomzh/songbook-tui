@@ -2,6 +2,7 @@ mod file_reader;
 
 use std::collections::BTreeMap;
 use serde::{Serialize, Deserialize};
+use crate::Chord::{A, ASharp, B, C, CSharp, D, DSharp, E, F, FSharp, G, GSharp};
 
 
 pub fn run() {
@@ -86,7 +87,7 @@ struct Block {
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Row {
-    chords: Option<BTreeMap<usize, String>>,
+    chords: Option<BTreeMap<usize, Chord>>, // позиция в строке - аккорд
     text: Option<String>
 }
 
@@ -129,7 +130,7 @@ impl Row {
                 }
 
                 chords_str.push_str(&" ".repeat(i));
-                chords_str.push_str(chords.get(k).unwrap());
+                chords_str.push_str(&chords.get(k).unwrap().get_text());
             }
             s.push_str(&chords_str);
 
