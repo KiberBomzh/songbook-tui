@@ -5,12 +5,11 @@ use serde::{Serialize, Deserialize};
 
 
 pub fn run() {
-    // test_struct();
-    let song = Song {
-        metadata: Metadata { title: String::from("Some title"), artist: String::from("Some") },
-        blocks: file_reader::read_from_txt("../../chords.txt").unwrap()
-    };
-
+    let mut song = Song::from_txt(
+        &std::path::PathBuf::from("/home/kiberbomzh/chords.txt"),
+        Metadata { title: String::new(), artist: String::new(), key: String::new() }
+        ).unwrap();
+    song.transpose(2);
     println!("{}", song.get_text());
 }
 
@@ -43,13 +42,40 @@ impl Song {
 
         return s
     }
+
+    pub fn transpose(&mut self, steps: i32) {
+        for block in &mut self.blocks {
+            for row in &mut block.rows {
+                if let Some(chords) = &mut row.chords {
+                    for (key, value) in chords.clone() {
+                        chords.insert(key, value.transpose(steps));
+                    }
+                }
+            }
+        }
+    }
 }
+
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Metadata {
     pub title: String,
-    pub artist: String
+    pub artist: String,
+    pub key: String // потом сделать перечислением
 }
+// Тональности:
+// Am - C
+// A#m - C#
+// Bm - D
+// Cm - D#
+// C#m - E
+// Dm - F
+// D#m - F#
+// Em - G
+// Fm - G#
+// F#m - A
+// Gm - A#
+// G#m - B
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Block {
