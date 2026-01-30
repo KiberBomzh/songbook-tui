@@ -9,14 +9,16 @@ path = "src/lib.rs"
 
 [[bin]]
 name = "songbook"
-path = "src/tui/main.rs"
-required-features = ["bin-deps"]
+path = "src/main.rs"
+required-features = ["cli"]
 
 [dependencies]
-ratatui = { version = "0.30.0", optional = true }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.149"
+clap = { version = "4.5.56", features = ["derive"], optional = true }
+ratatui = { version = "0.30.0", optional = true }
 
 [features]
 default = []
-bin-deps = ["dep:ratatui"]
+cli = ["dep:clap"]
+tui = ["dep:ratatui", "cli"]
