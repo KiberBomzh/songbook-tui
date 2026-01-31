@@ -5,14 +5,6 @@ use serde::{Serialize, Deserialize};
 use crate::Chord::{A, ASharp, B, C, CSharp, D, DSharp, E, F, FSharp, G, GSharp};
 
 
-pub fn run() {
-    let mut song = Song::from_txt(
-        &std::path::PathBuf::from("/home/kiberbomzh/chords.txt"),
-        Metadata { title: String::new(), artist: String::new(), key: String::new() }
-        ).unwrap();
-    song.transpose(2);
-    println!("{}", song.get_text());
-}
 
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -22,7 +14,7 @@ pub struct Song {
 }
 
 impl Song {
-    fn get_text(&self) -> String {
+    pub fn get_text(&self) -> String {
         let mut s = String::new();
         let mut is_first = true;
         for block in &self.blocks {
@@ -31,7 +23,7 @@ impl Song {
 
             if let Some(title) = &block.title {
                 s.push_str(&title);
-                s.push('\n');
+                if !block.rows.is_empty() { s.push('\n') }
             }
             let mut is_first_row = true;
             for row in &block.rows {

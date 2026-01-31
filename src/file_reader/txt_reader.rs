@@ -16,9 +16,11 @@ pub fn read_from_txt(file_path: &Path) -> std::io::Result<Vec<Block>> {
     let mut rows: Vec<Row> = Vec::new();
     let mut chords = BTreeMap::new();
     let mut last_line_is_chords = false;
+    let mut last_line_was_empty = true;
     for line_result in reader.lines() {
         let line = line_result?;
         if line.is_empty() {
+            last_line_was_empty = true;
             if !rows.is_empty() {
                 blocks.push(Block {
                     title: if title.is_empty() { None } else { Some(title) },
@@ -36,7 +38,14 @@ pub fn read_from_txt(file_path: &Path) -> std::io::Result<Vec<Block>> {
                     chords = BTreeMap::new();
                     last_line_is_chords = false
                 }
+            } else if !title.is_empty() {
+                blocks.push(Block {
+                    title: Some(title),
+                    rows: Vec::new()
+                });
+                title = String::new();
             }
+
             continue
         };
 
@@ -65,15 +74,19 @@ pub fn read_from_txt(file_path: &Path) -> std::io::Result<Vec<Block>> {
 
         } else if last_line_is_chords {
             if chords.is_empty() {
-                rows.push(Row { chords: None, text: Some(line)});
+                rows.push(Row { chords: None, text: Some(line) });
             } else {
-                rows.push(Row {chords: Some(chords), text: Some(line)});
+                rows.push(Row { chords: Some(chords), text: Some(line) });
                 chords = BTreeMap::new();
             }
             last_line_is_chords = false;
-        } else if title.is_empty() {
+        } else if last_line_was_empty {
             title = line;
-        };
+        } else {
+            rows.push(Row { chords: None, text: Some(line) });
+        }
+
+        last_line_was_empty = false;
     }
 
     // Последний block
