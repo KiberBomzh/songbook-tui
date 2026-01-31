@@ -1,7 +1,31 @@
 use crate::chord_generator::Note::*;
+use crate::chord_fingerings::{Fingering, STRINGS, StringState};
+use crate::chord_fingerings::StringState::*;
 
 
-#[derive(Debug, Copy, Clone)]
+const MAX_CHORD_SIZE: u8 = 4;
+
+
+pub fn get_chords(tuning: &[Note; STRINGS]) -> Vec<Fingering> {
+    let fret = get_fretboard(tuning);
+    let mut fingerings: Vec<Fingering> = Vec::new();
+    for i in 0..15 {
+        if let Some(string_state) = generate_from_fret(&fret, vec!(E, G, B), i, true) {
+            let fing = Fingering::new(string_state);
+            if fingerings.iter().all(|f| *f != fing) {
+                fingerings.push(fing)
+            }
+        }
+    }
+
+    for f in &fingerings {
+        println!("\n\n{}", f.get_text());
+    }
+
+    return fingerings
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Note {
     A,
     ASharp,
@@ -18,8 +42,8 @@ pub enum Note {
 }
 
 impl Note {
-    fn do_step_right(&self) -> Self {
-        match self {
+    fn increase(&mut self) {
+        *self = match self {
             A =>      ASharp,
             ASharp => B,
             B =>      C,
@@ -34,33 +58,98 @@ impl Note {
             GSharp => A
         }
     }
-    fn do_step_left(&self) -> Self {
-        match self {
-            A =>      GSharp,
-            ASharp => A,
-            B =>      ASharp,
-            C =>      B,
-            CSharp => C,
-            D =>      CSharp,
-            DSharp => D,
-            E =>      DSharp,
-            F =>      E,
-            FSharp => F,
-            G =>      FSharp,
-            GSharp => G
-        }
-    }
 }
 
-pub fn get_fretboard(tuning: &[Note; 6]) -> [[Note; 25]; 6] {
-    let mut fretboard = [[A; 25]; 6];
+fn get_fretboard(tuning: &[Note; STRINGS]) -> [[Note; 25]; STRINGS] {
+    let mut fretboard = [[A; 25]; STRINGS];
     for (index, note) in tuning.iter().enumerate() {
         let mut note = note.clone();
         for n in &mut fretboard[index] {
             *n = note;
-            note = note.do_step_right();
+            note.increase();
         }
     }
 
     return fretboard
+}
+
+
+fn generate_from_fret(
+    fretboard: &[[Note; 25]; STRINGS],
+    notes: Vec<Note>, // first is keynote
+    from_fret: u8,
+    right_bass: bool
+) -> Option<[StringState; STRINGS]> {
+    let mut string_state = [Muted; STRINGS];
+    for (index, string) in fretboard.iter().enumerate() {
+        let mut fret_counter: u8 = 0;
+        for (fret_num, fret) in string.iter().enumerate() {
+            let fret_num = fret_num.try_into().unwrap();
+            if fret_num == 0 && notes.iter().any(|n| n == fret) {
+                string_state[index] = Open
+            }
+
+            if fret_num < from_fret { continue }
+            if fret_counter < MAX_CHORD_SIZE { fret_counter += 1 } else { break }
+            // в аккордах до 5 лада предпочитать открытые ноты
+            if fret_num != 0 && notes.iter().any(|n| n == fret) {
+                if fret_num < 5 {
+                    if string_state[index] == Muted { string_state[index] = FrettedOn(fret_num) }
+                } else { string_state[index] = FrettedOn(fret_num) }
+                break;
+            }
+        }
+    }
+
+    if right_bass {
+        let bass = notes[0];
+
+        for (i, s) in string_state.iter_mut().rev().enumerate() {
+            if *s == Muted { continue }
+
+            let string_num = get_reversed_string_num(i);
+
+            if let Some(note) = get_note_from_position(fretboard, *s, string_num) {
+                if note != bass { *s = Muted }
+                else { break }
+            }
+        }
+    }
+    if string_state.iter().all(|s| *s == Muted) { return None }
+    if !notes.iter().all(|n|
+        string_state.iter().enumerate().any(|(i, s)|
+            get_note_from_position(fretboard, *s, i) == Some(*n)
+        )
+    ) { return None }
+
+    // проверка баррэ
+    let mut fretted_counter = 0;
+    for s in string_state {
+        if let FrettedOn(f) = s {
+            fretted_counter += 1;
+        }
+    }
+    dbg!(fretted_counter);
+
+    return Some(string_state)
+}
+
+fn get_note_from_position(
+    fretboard: &[[Note; 25]; STRINGS],
+    position: StringState,
+    string_num: usize
+) -> Option<Note> {
+    match position {
+        Muted => None,
+        Open => Some(fretboard[string_num][0]),
+        FrettedOn(f) => Some(fretboard[string_num][<u8 as Into<usize>>::into(f)])
+    }
+}
+
+fn get_reversed_string_num(i: usize) -> usize {
+    for (index, value) in (0..STRINGS).rev().enumerate() {
+        if i == value { return index }
+    }
+
+    i
 }

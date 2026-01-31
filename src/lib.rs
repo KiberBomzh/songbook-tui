@@ -4,10 +4,13 @@ mod chord_generator;
 
 use std::collections::BTreeMap;
 use serde::{Serialize, Deserialize};
+
 use crate::Chord::{A, ASharp, B, C, CSharp, D, DSharp, E, F, FSharp, G, GSharp};
 
 pub use crate::chord_fingerings::Fingering;
 pub use crate::chord_fingerings::StringState::{self, *};
+pub use crate::chord_generator::get_chords;
+pub use crate::chord_generator::Note;
 
 
 
@@ -36,8 +39,6 @@ impl Song {
                 s.push_str(&row.get_text());
             }
         }
-        use chord_generator::Note::*;
-        dbg!(chord_generator::get_fretboard(&[E, B, G, D, A, E]));
 
         return s
     }
@@ -151,6 +152,10 @@ fn get_bytes_index_from_char_index(line: &str, char_index: usize) -> Option<usiz
 }
 
 
+// использовать по несколько полей в {}
+// сам аккорд в текстовом формате
+// тип аккорда (мажор минор)
+// что-то придумать со сложными вариантами
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Chord {
     A(String),
@@ -164,8 +169,8 @@ pub enum Chord {
     F(String),
     FSharp(String),
     G(String),
-    GSharp(String)
-}
+    GSharp(String) // {text: String, notes Vec<Note>}
+} // первая нота в векторе - тоника
 
 impl Chord {
 

@@ -5,6 +5,7 @@ use std::path::PathBuf;
 
 use clap::Parser;
 use songbook::{Song, Metadata};
+use songbook::Note::*;
 
 
 #[derive(Parser, Debug)]
@@ -28,6 +29,8 @@ fn main() {
         song.transpose(t)
     }
 
-    dbg!(&song);
-    println!("{}", song.get_text());
+    songbook::get_chords(&[E, B, G, D, A, E]);
+
+    // dbg!(&song);
+    // println!("{}", song.get_text());
 }
