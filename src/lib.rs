@@ -1,9 +1,13 @@
 mod file_reader;
+mod chord_fingerings;
+mod chord_generator;
 
 use std::collections::BTreeMap;
 use serde::{Serialize, Deserialize};
 use crate::Chord::{A, ASharp, B, C, CSharp, D, DSharp, E, F, FSharp, G, GSharp};
 
+pub use crate::chord_fingerings::Fingering;
+pub use crate::chord_fingerings::StringState::{self, *};
 
 
 
@@ -32,6 +36,8 @@ impl Song {
                 s.push_str(&row.get_text());
             }
         }
+        use chord_generator::Note::*;
+        dbg!(chord_generator::get_fretboard(&[E, B, G, D, A, E]));
 
         return s
     }
