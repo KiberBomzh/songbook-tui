@@ -6,20 +6,24 @@ use crate::chord_fingerings::StringState::*;
 const MAX_CHORD_SIZE: u8 = 4;
 
 
-pub fn get_chords(tuning: &[Note; STRINGS]) -> Vec<Fingering> {
+pub fn get_chords(tuning: &[Note; STRINGS], notes: &Vec<Note>) -> Vec<Fingering> {
     let fret = get_fretboard(tuning);
     let mut fingerings: Vec<Fingering> = Vec::new();
-    for i in 0..15 {
-        if let Some(string_state) = generate_from_fret(&fret, vec!(E, G, B), i, true) {
-            let fing = Fingering::new(string_state);
-            if fingerings.iter().all(|f| *f != fing) {
-                fingerings.push(fing)
+    for i in 0..12 {
+        if let Some(string_state) = generate_from_fret(&fret, notes, i, true, true) {
+            if let Some(fing) = Fingering::new(string_state) {
+                if fingerings.iter().all(|f| *f != fing) {
+                    fingerings.push(fing)
+                }
             }
         }
-    }
-
-    for f in &fingerings {
-        println!("\n\n{}", f.get_text());
+        if let Some(string_state) = generate_from_fret(&fret, notes, i, true, false) {
+            if let Some(fing) = Fingering::new(string_state) {
+                if fingerings.iter().all(|f| *f != fing) {
+                    fingerings.push(fing)
+                }
+            }
+        }
     }
 
     return fingerings
@@ -76,9 +80,10 @@ fn get_fretboard(tuning: &[Note; STRINGS]) -> [[Note; 25]; STRINGS] {
 
 fn generate_from_fret(
     fretboard: &[[Note; 25]; STRINGS],
-    notes: Vec<Note>, // first is keynote
+    notes: &Vec<Note>, // first is keynote
     from_fret: u8,
-    right_bass: bool
+    right_bass: bool,
+    is_open: bool
 ) -> Option<[StringState; STRINGS]> {
     let mut string_state = [Muted; STRINGS];
     for (index, string) in fretboard.iter().enumerate() {
@@ -91,9 +96,8 @@ fn generate_from_fret(
 
             if fret_num < from_fret { continue }
             if fret_counter < MAX_CHORD_SIZE { fret_counter += 1 } else { break }
-            // в аккордах до 5 лада предпочитать открытые ноты
             if fret_num != 0 && notes.iter().any(|n| n == fret) {
-                if fret_num < 5 {
+                if is_open {
                     if string_state[index] == Muted { string_state[index] = FrettedOn(fret_num) }
                 } else { string_state[index] = FrettedOn(fret_num) }
                 break;
@@ -101,6 +105,7 @@ fn generate_from_fret(
         }
     }
 
+    // бас соответствующий тонике
     if right_bass {
         let bass = notes[0];
 
@@ -115,21 +120,16 @@ fn generate_from_fret(
             }
         }
     }
+
+    // все ноты глухие
     if string_state.iter().all(|s| *s == Muted) { return None }
+
+    // присутствуют ли все ноты
     if !notes.iter().all(|n|
         string_state.iter().enumerate().any(|(i, s)|
             get_note_from_position(fretboard, *s, i) == Some(*n)
         )
     ) { return None }
-
-    // проверка баррэ
-    let mut fretted_counter = 0;
-    for s in string_state {
-        if let FrettedOn(f) = s {
-            fretted_counter += 1;
-        }
-    }
-    dbg!(fretted_counter);
 
     return Some(string_state)
 }

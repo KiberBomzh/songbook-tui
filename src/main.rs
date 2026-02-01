@@ -29,7 +29,14 @@ fn main() {
         song.transpose(t)
     }
 
-    songbook::get_chords(&[E, B, G, D, A, E]);
+    let fings = songbook::get_chords(
+        &[E, B, G, D, A, E],
+        &vec!(C, E, G)
+    );
+    for fing in &fings {
+        println!("{}\n\n", fing.get_text());
+    }
+    songbook::chord_fingerings::sum_text_in_fingerings(&fings);
 
     // dbg!(&song);
     // println!("{}", song.get_text());
