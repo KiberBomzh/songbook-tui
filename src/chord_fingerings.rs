@@ -150,3 +150,61 @@ impl Fingering {
         return text
     }
 }
+
+pub fn sum_text_in_fingerings(fingerings: &Vec<Fingering>) -> Option<String> {
+    use terminal_size::{terminal_size, Width, Height};
+    let ( Width(width), Height(_) ) = terminal_size()?;
+    let width = <u16 as Into<usize>>::into(width);
+    let indent: usize = 5;
+    let line_width: usize = 14;
+    let fingerings_in_line: usize = width / (line_width + indent);
+
+    let mut s = String::new();
+
+    let mut fing_blocks = Vec::new();
+    let mut buf: Vec<Vec<String>> = Vec::new();
+    let mut counter = 0;
+    for f in fingerings {
+        counter += 1;
+        if counter >= fingerings_in_line {
+            counter = 0;
+            fing_blocks.push(buf);
+            buf = Vec::new();
+        }
+
+        let fing = f
+            .get_text()
+            .split('\n')
+            .map(|l| l.to_string())
+            .collect();
+
+        buf.push(fing);
+    }
+    if !buf.is_empty() { fing_blocks.push(buf) }
+
+    for block in &fing_blocks {
+        let mut max_lines = 0;
+        for f in block {
+            if max_lines < f.len() { max_lines = f.len() }
+        }
+        
+        let left_indent = (  width - ( block.len() * (line_width + indent) )  ) / 2;
+
+
+        for line_num in 0..max_lines {
+            s.push_str( &" ".repeat(left_indent) );
+            for f in block {
+                s.push_str(&
+                    if let Some(line) = f.get(line_num) { line.clone() }
+                    else { " ".repeat(line_width) },
+                );
+
+                s.push_str( &" ".repeat(indent) );
+            }
+            s.push('\n');
+        }
+        s.push_str("\n\n");
+    }
+    
+    return Some(s)
+}

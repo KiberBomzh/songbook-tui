@@ -31,12 +31,12 @@ fn main() {
 
     let fings = songbook::get_chords(
         &[E, B, G, D, A, E],
-        &vec!(C, E, G)
+        &vec!(F, A, C)
     );
-    for fing in &fings {
-        println!("{}\n\n", fing.get_text());
+    if let Some(text) = songbook::chord_fingerings::sum_text_in_fingerings(&fings) {
+        println!("{}", text);
     }
-    songbook::chord_fingerings::sum_text_in_fingerings(&fings);
+
 
     // dbg!(&song);
     // println!("{}", song.get_text());
