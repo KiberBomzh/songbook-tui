@@ -5,7 +5,6 @@ use std::path::PathBuf;
 
 use clap::Parser;
 use songbook::{Song, Metadata};
-use songbook::Note::*;
 
 
 #[derive(Parser, Debug)]
@@ -23,21 +22,22 @@ fn main() {
 
     let mut song = Song::from_txt(
         &args.path,
-        Metadata { title: String::new(), artist: String::new(), key: String::new() }
+        Metadata { title: String::new(), artist: String::new() }
         ).unwrap();
     if let Some(t) = args.transpose {
         song.transpose(t)
     }
 
-    let fings = songbook::get_chords(
-        &[E, B, G, D, A, E],
-        &vec!(F, A, C)
-    );
-    if let Some(text) = songbook::chord_fingerings::sum_text_in_fingerings(&fings) {
-        println!("{}", text);
+
+    let mut fings = Vec::new();
+    for f in song.get_fingerings() {
+        fings.push(f[0].clone());
     }
 
+    if let Some(text) = songbook::sum_text_in_fingerings(&fings) {
+        println!("{text}");
+    }
 
     // dbg!(&song);
-    // println!("{}", song.get_text());
+    println!("{}", song.get_text());
 }

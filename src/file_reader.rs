@@ -7,11 +7,10 @@ use crate::Song;
 
 impl Song {
     pub fn from_txt(file_path: &Path, metadata: crate::Metadata) -> Result<Song> {
+        let (blocks, chord_list) = txt_reader::read_from_txt(file_path)?;
 
-        Ok( Song {
-            blocks: txt_reader::read_from_txt(file_path)?,
-            metadata
-        } )
+        // Написать определение тональности
+        Ok( Song { blocks, chord_list, metadata, key: crate::Note::C } )
     }
 
     // pub fn from_chordpro(file_path: &Path) -> Result<Song> { }

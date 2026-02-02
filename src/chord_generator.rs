@@ -1,24 +1,32 @@
-use crate::chord_generator::Note::*;
-use crate::chord_fingerings::{Fingering, STRINGS, StringState};
-use crate::chord_fingerings::StringState::*;
+pub mod chord_fingerings;
+
+use crate::Note::{self, *};
+use crate::chord_generator::chord_fingerings::{Fingering, StringState};
+use crate::chord_generator::chord_fingerings::StringState::*;
 
 
+pub const STRINGS: usize = 6;
 const MAX_CHORD_SIZE: u8 = 4;
 
 
-pub fn get_chords(tuning: &[Note; STRINGS], notes: &Vec<Note>) -> Vec<Fingering> {
+pub fn get_fingerings(
+    tuning: &[Note; STRINGS],
+    notes: &Vec<Note>,
+    title: Option<String>
+) -> Vec<Fingering> {
     let fret = get_fretboard(tuning);
     let mut fingerings: Vec<Fingering> = Vec::new();
+    // добавить ещё минимальные варианты, где все дублированые или сложные ноты выбрасываются
     for i in 0..12 {
         if let Some(string_state) = generate_from_fret(&fret, notes, i, true, true) {
-            if let Some(fing) = Fingering::new(string_state) {
+            if let Some(fing) = Fingering::new(string_state, title.clone()) {
                 if fingerings.iter().all(|f| *f != fing) {
                     fingerings.push(fing)
                 }
             }
         }
         if let Some(string_state) = generate_from_fret(&fret, notes, i, true, false) {
-            if let Some(fing) = Fingering::new(string_state) {
+            if let Some(fing) = Fingering::new(string_state, title.clone()) {
                 if fingerings.iter().all(|f| *f != fing) {
                     fingerings.push(fing)
                 }
@@ -27,41 +35,6 @@ pub fn get_chords(tuning: &[Note; STRINGS], notes: &Vec<Note>) -> Vec<Fingering>
     }
 
     return fingerings
-}
-
-#[derive(Debug, Copy, Clone, PartialEq)]
-pub enum Note {
-    A,
-    ASharp,
-    B,
-    C,
-    CSharp,
-    D,
-    DSharp,
-    E,
-    F,
-    FSharp,
-    G,
-    GSharp
-}
-
-impl Note {
-    fn increase(&mut self) {
-        *self = match self {
-            A =>      ASharp,
-            ASharp => B,
-            B =>      C,
-            C =>      CSharp,
-            CSharp => D,
-            D =>      DSharp,
-            DSharp => E,
-            E =>      F,
-            F =>      FSharp,
-            FSharp => G,
-            G =>      GSharp,
-            GSharp => A
-        }
-    }
 }
 
 fn get_fretboard(tuning: &[Note; STRINGS]) -> [[Note; 25]; STRINGS] {

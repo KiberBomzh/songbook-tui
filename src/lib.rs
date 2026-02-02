@@ -1,24 +1,39 @@
 mod file_reader;
-
-pub mod chord_fingerings;
-pub mod chord_generator;
+mod chord_generator;
 
 use std::collections::BTreeMap;
 use serde::{Serialize, Deserialize};
 
-use crate::Chord::{A, ASharp, B, C, CSharp, D, DSharp, E, F, FSharp, G, GSharp};
+use crate::Note::*;
+use crate::chord_generator::{get_fingerings, STRINGS};
+use crate::chord_generator::chord_fingerings::Fingering;
 
-pub use crate::chord_fingerings::StringState::{self, *};
-pub use crate::chord_generator::get_chords;
-pub use crate::chord_generator::Note;
+pub use crate::chord_generator::chord_fingerings::StringState::{self, *};
+pub use crate::chord_generator::chord_fingerings::sum_text_in_fingerings;
 
 
+const TUNING: [Note; STRINGS] = [E, B, G, D, A, E];
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Song {
     pub metadata: Metadata,
-    blocks: Vec<Block>
+    chord_list: Vec<Chord>,
+    blocks: Vec<Block>,
+    key: Note
 }
+// Тональности:
+// Am - C
+// A#m - C#
+// Bm - D
+// Cm - D#
+// C#m - E
+// Dm - F
+// D#m - F#
+// Em - G
+// Fm - G#
+// F#m - A
+// Gm - A#
+// G#m - B
 
 impl Song {
     pub fn get_text(&self) -> String {
@@ -44,6 +59,8 @@ impl Song {
     }
 
     pub fn transpose(&mut self, steps: i32) {
+        self.key = self.key.transpose(steps);
+        for chord in &mut self.chord_list { *chord = chord.transpose(steps) }
         for block in &mut self.blocks {
             for row in &mut block.rows {
                 if let Some(chords) = &mut row.chords {
@@ -54,6 +71,15 @@ impl Song {
             }
         }
     }
+
+    pub fn get_fingerings(&self) -> Vec<Vec<Fingering>> {
+        let mut fings = Vec::new();
+        for chord in &self.chord_list {
+            fings.push(chord.get_fingerings(&TUNING));
+        }
+
+        return fings
+    }
 }
 
 
@@ -61,21 +87,7 @@ impl Song {
 pub struct Metadata {
     pub title: String,
     pub artist: String,
-    pub key: String // потом сделать перечислением
 }
-// Тональности:
-// Am - C
-// A#m - C#
-// Bm - D
-// Cm - D#
-// C#m - E
-// Dm - F
-// D#m - F#
-// Em - G
-// Fm - G#
-// F#m - A
-// Gm - A#
-// G#m - B
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Block {
@@ -129,7 +141,7 @@ impl Row {
                 }
 
                 chords_str.push_str(&" ".repeat(i));
-                chords_str.push_str(&chords.get(k).unwrap().get_text());
+                chords_str.push_str(&chords.get(k).unwrap().text);
             }
             s.push_str(&chords_str);
 
@@ -152,61 +164,154 @@ fn get_bytes_index_from_char_index(line: &str, char_index: usize) -> Option<usiz
 }
 
 
-// использовать по несколько полей в {}
-// сам аккорд в текстовом формате
-// тип аккорда (мажор минор)
-// что-то придумать со сложными вариантами
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub enum Chord {
-    A(String),
-    ASharp(String),
-    B(String),
-    C(String),
-    CSharp(String),
-    D(String),
-    DSharp(String),
-    E(String),
-    F(String),
-    FSharp(String),
-    G(String),
-    GSharp(String) // {text: String, notes Vec<Note>}
-} // первая нота в векторе - тоника
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+enum ChordType {
+    Norm,
+    Power,
+    Sixth,
+    SixthMinus,
+    Seventh,
+    MajSeventh,
+    Nineth,
+    Eleventh,
+    Thirteenth
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+enum FifthState {
+    Dim,
+    Norm,
+    Aug
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+enum SusOrAdd {
+    No,
+    Sus2,
+    Sus4,
+    Sus4Plus,
+    Add2,
+    Add4
+}
+
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct Chord {
+    text: String,
+    keynote: Note,
+    minor: bool,
+    chord_type: ChordType,
+    fifth_state: FifthState,
+    sus_or_add: SusOrAdd,
+}
 
 impl Chord {
-
-    pub fn new(s: &str) -> Option<Self> {
-        Some( match s {
-            s if s.starts_with("A#") => ASharp(s.to_string()),
-            s if s.starts_with('A') =>  A(s.to_string()),
-            s if s.starts_with('B') =>  B(s.to_string()),
-            s if s.starts_with("C#") => CSharp(s.to_string()),
-            s if s.starts_with('C') =>  C(s.to_string()),
-            s if s.starts_with("D#") => DSharp(s.to_string()),
-            s if s.starts_with('D') =>  D(s.to_string()),
-            s if s.starts_with('E') =>  E(s.to_string()),
-            s if s.starts_with("F#") => FSharp(s.to_string()),
-            s if s.starts_with('F') =>  F(s.to_string()),
-            s if s.starts_with("G#") => GSharp(s.to_string()),
-            s if s.starts_with('G') =>  G(s.to_string()),
+    pub fn new(text: &str) -> Option<Self> {
+        let (keynote, key_text) = match text {
+            text if text.starts_with("A#") || text.starts_with("Bb") => (ASharp, "A#"),
+            text if text.starts_with('A') =>  (A, "A"),
+            text if text.starts_with('B') =>  (B, "B"),
+            text if text.starts_with("C#") || text.starts_with("Db") => (CSharp, "C#"),
+            text if text.starts_with('C') =>  (C, "C"),
+            text if text.starts_with("D#") || text.starts_with("Eb") => (DSharp, "D#"),
+            text if text.starts_with('D') =>  (D, "D"),
+            text if text.starts_with('E') =>  (E, "E"),
+            text if text.starts_with("F#") || text.starts_with("Gb") => (FSharp, "F#"),
+            text if text.starts_with('F') =>  (F, "F"),
+            text if text.starts_with("G#") || text.starts_with("Ab") => (GSharp, "G#"),
+            text if text.starts_with('G') =>  (G, "G"),
             _ => return None
-        } )
+        };
+
+        let text_after_key = &text[key_text.len()..];
+        let text = text.to_string();
+        let minor = text_after_key.starts_with('m') && !text_after_key.starts_with("maj");
+
+        let fifth_state =
+            if text_after_key.contains("aug") ||
+                text_after_key.contains("5#") ||
+                text_after_key.contains("5+") ||
+                text_after_key.contains("+5") { FifthState::Aug }
+
+            else if text_after_key.contains("dim") ||
+                text_after_key.contains("5b") ||
+                text_after_key.contains("5-") ||
+                text_after_key.contains("-5") { FifthState::Dim }
+
+            else { FifthState::Norm };
+
+
+        let sus_or_add =
+            // если третью ступень поднять ещё выше
+            if text_after_key.starts_with("sus4+") ||
+                text_after_key.starts_with("sus4#") { SusOrAdd::Sus4Plus }
+
+            else if text_after_key.starts_with("sus2") { SusOrAdd::Sus2 }
+            else if text_after_key.starts_with("sus4") { SusOrAdd::Sus4 }
+            else if text_after_key.contains("add2") { SusOrAdd::Add2 }
+            else if text_after_key.contains("add4") { SusOrAdd::Add4 }
+            else { SusOrAdd::No };
+
+
+        if text_after_key == "5" {
+            return Some( Self { text, keynote, fifth_state, sus_or_add, 
+                minor: false,
+                chord_type: ChordType::Power,
+            } )
+        } else if text_after_key.contains("9") {
+            return Some( Self { text, keynote, minor, fifth_state, sus_or_add,
+                chord_type: ChordType::Nineth
+            } )
+        } else if text_after_key.contains("11") {
+            return Some( Self { text, keynote, minor, fifth_state, sus_or_add,
+                chord_type: ChordType::Eleventh
+            } )
+        } else if text_after_key.contains("13") {
+            return Some( Self { text, keynote, minor, fifth_state, sus_or_add,
+                chord_type: ChordType::Thirteenth
+            } )
+        } else if text_after_key.contains("maj") {
+            return Some( Self { text, keynote, minor, fifth_state, sus_or_add,
+                chord_type: ChordType::MajSeventh
+            } )
+        } else if text_after_key.contains('7') {
+            return Some( Self { text, keynote, minor, fifth_state, sus_or_add,
+                chord_type: ChordType::Seventh
+            } )
+        } else if text_after_key.contains("6-") || text_after_key.contains("6b") {
+            return Some( Self { text, keynote, minor, fifth_state, sus_or_add,
+                chord_type: ChordType::SixthMinus
+            } )
+        } else if text_after_key.contains('6') {
+            return Some( Self { text, keynote, minor, fifth_state, sus_or_add,
+                chord_type: ChordType::Sixth
+            } )
+        } else {
+            return Some( Self { text, keynote, minor, fifth_state, sus_or_add,
+                chord_type: ChordType::Norm
+            } )
+        }
     }
 
-    pub fn get_text(&self) -> String {
-        match self {
-            A(text) => text.clone(),
-            ASharp(text) => text.clone(),
-            B(text) => text.clone(),
-            C(text) => text.clone(),
-            CSharp(text) => text.clone(),
-            D(text) => text.clone(),
-            DSharp(text) => text.clone(),
-            E(text) => text.clone(),
-            F(text) => text.clone(),
-            FSharp(text) => text.clone(),
-            G(text) => text.clone(),
-            GSharp(text) => text.clone()
+    pub fn get_fingerings(&self, tuning: &[Note; STRINGS]) -> Vec<Fingering> {
+        let mut notes: Vec<Note> = Vec::new();
+        let key = self.keynote;
+        notes.push(key);
+
+        // строить по ступеням
+        // минор мажор проверять только если не sus
+        if self.minor {
+            notes.push( key.transpose(3) );
+        } else {
+            notes.push( key.transpose(4) );
         }
+
+        // пятая ступень
+        notes.push( key.transpose(7) );
+
+
+        return get_fingerings( tuning, &notes, Some(self.text.clone()) )
     }
 
     pub fn transpose(&self, steps: i32) -> Self {
@@ -224,35 +329,102 @@ impl Chord {
     }
 
     fn do_step_right(&mut self) {
-        *self = match self {
-            A(text) =>      ASharp( format!("A#{}", &text[1..]) ),
-            ASharp(text) => B( format!("B{}", &text[2..]) ),
-            B(text) =>      C( format!("C{}", &text[1..]) ),
-            C(text) =>      CSharp( format!("C#{}", &text[1..]) ),
-            CSharp(text) => D( format!("D{}", &text[2..]) ),
-            D(text) =>      DSharp( format!("D#{}", &text[1..]) ),
-            DSharp(text) => E( format!("E{}", &text[2..]) ),
-            E(text) =>      F( format!("F{}", &text[1..]) ),
-            F(text) =>      FSharp( format!("F#{}", &text[1..]) ),
-            FSharp(text) => G( format!("G{}", &text[2..]) ),
-            G(text) =>      GSharp( format!("G#{}", &text[1..]) ),
-            GSharp(text) => A( format!("A{}", &text[2..]) )
+        (self.keynote, self.text) = match self.keynote {
+            A =>      (ASharp, format!("A#{}", &self.text[1..]) ),
+            ASharp => (B, format!("B{}", &self.text[2..]) ),
+            B =>      (C, format!("C{}", &self.text[1..]) ),
+            C =>      (CSharp, format!("C#{}", &self.text[1..]) ),
+            CSharp => (D, format!("D{}", &self.text[2..]) ),
+            D =>      (DSharp, format!("D#{}", &self.text[1..]) ),
+            DSharp => (E, format!("E{}", &self.text[2..]) ),
+            E =>      (F, format!("F{}", &self.text[1..]) ),
+            F =>      (FSharp, format!("F#{}", &self.text[1..]) ),
+            FSharp => (G, format!("G{}", &self.text[2..]) ),
+            G =>      (GSharp, format!("G#{}", &self.text[1..]) ),
+            GSharp => (A, format!("A{}", &self.text[2..]) )
         }
     }
     fn do_step_left(&mut self) {
-        *self = match self {
-            A(text) =>      GSharp( format!("G#{}", &text[1..]) ),
-            ASharp(text) => A( format!("A{}", &text[2..]) ),
-            B(text) =>      ASharp( format!("A#{}", &text[1..]) ),
-            C(text) =>      B( format!("B{}", &text[1..]) ),
-            CSharp(text) => C( format!("C{}", &text[2..]) ),
-            D(text) =>      CSharp( format!("C#{}", &text[1..]) ),
-            DSharp(text) => D( format!("D{}", &text[2..]) ),
-            E(text) =>      DSharp( format!("D#{}", &text[1..]) ),
-            F(text) =>      E( format!("E{}", &text[1..]) ),
-            FSharp(text) => F( format!("F{}", &text[2..]) ),
-            G(text) =>      FSharp( format!("F#{}", &text[1..]) ),
-            GSharp(text) => G( format!("G{}", &text[2..]) )
+        (self.keynote, self.text) = match self.keynote {
+            A =>      (GSharp, format!("G#{}", &self.text[1..]) ),
+            ASharp => (A, format!("A{}", &self.text[2..]) ),
+            B =>      (ASharp, format!("A#{}", &self.text[1..]) ),
+            C =>      (B, format!("B{}", &self.text[1..]) ),
+            CSharp => (C, format!("C{}", &self.text[2..]) ),
+            D =>      (CSharp, format!("C#{}", &self.text[1..]) ),
+            DSharp => (D, format!("D{}", &self.text[2..]) ),
+            E =>      (DSharp, format!("D#{}", &self.text[1..]) ),
+            F =>      (E, format!("E{}", &self.text[1..]) ),
+            FSharp => (F, format!("F{}", &self.text[2..]) ),
+            G =>      (FSharp, format!("F#{}", &self.text[1..]) ),
+            GSharp => (G, format!("G{}", &self.text[2..]) )
         }
     }
 }
+
+
+#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
+pub enum Note {
+    A,
+    ASharp,
+    B,
+    C,
+    CSharp,
+    D,
+    DSharp,
+    E,
+    F,
+    FSharp,
+    G,
+    GSharp
+}
+
+impl Note {
+    pub fn transpose(&self, steps: i32) -> Self {
+        let steps = steps % 12;
+        if steps == 0 { return self.clone() }
+        let mut note = self.clone();
+
+        if steps > 0 {
+            for _ in 0..steps { note.increase() }
+        } else if steps < 0 {
+            for _ in steps..0 { note.decrease() }
+        }
+
+        return note
+    }
+    fn increase(&mut self) {
+        *self = match self {
+            A =>      ASharp,
+            ASharp => B,
+            B =>      C,
+            C =>      CSharp,
+            CSharp => D,
+            D =>      DSharp,
+            DSharp => E,
+            E =>      F,
+            F =>      FSharp,
+            FSharp => G,
+            G =>      GSharp,
+            GSharp => A
+        }
+    }
+
+    fn decrease(&mut self) {
+        *self = match self {
+            A =>      GSharp,
+            ASharp => A,
+            B =>      ASharp,
+            C =>      B,
+            CSharp => C,
+            D =>      CSharp,
+            DSharp => D,
+            E =>      DSharp,
+            F =>      E,
+            FSharp => F,
+            G =>      FSharp,
+            GSharp => G
+        }
+    }
+}
+

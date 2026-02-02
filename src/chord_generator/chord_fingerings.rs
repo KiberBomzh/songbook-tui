@@ -1,11 +1,12 @@
 use std::collections::BTreeMap;
-use crate::chord_fingerings::StringState::*;
+use crate::chord_generator::chord_fingerings::StringState::*;
+
+use crate::chord_generator::STRINGS;
 
 
-pub const STRINGS: usize = 6;
-
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Fingering {
+    title: Option<String>,
     fret_num: u8,
     chord_size: u8,
     strings: [StringState; STRINGS],
@@ -20,7 +21,7 @@ pub enum StringState {
 }
 
 impl Fingering {
-    pub fn new(strings: [StringState; STRINGS]) -> Option<Self> {
+    pub fn new(strings: [StringState; STRINGS], title: Option<String>) -> Option<Self> {
         let mut fret_num: u8 = 25;
         for s in &strings {
             if let FrettedOn(f) = s {
@@ -80,6 +81,7 @@ impl Fingering {
 
         if fretted + bars.len() > 4 { return None }
         Some( Self {
+            title,
             fret_num,
             chord_size,
             strings,
@@ -172,11 +174,17 @@ pub fn sum_text_in_fingerings(fingerings: &Vec<Fingering>) -> Option<String> {
             buf = Vec::new();
         }
 
-        let fing = f
-            .get_text()
-            .split('\n')
-            .map(|l| l.to_string())
-            .collect();
+        let title = if let Some(title) = &f.title {
+            title.clone() + &" ".repeat(line_width - title.len())
+        }
+        else { " ".repeat(line_width) };
+
+        let mut fing = Vec::new();
+        fing.push(title);
+
+        for line in f.get_text().lines() {
+            fing.push(line.to_string());
+        }
 
         buf.push(fing);
     }

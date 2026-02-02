@@ -6,8 +6,9 @@ use std::collections::BTreeMap;
 use crate::{Block, Row, Chord};
 
 
-pub fn read_from_txt(file_path: &Path) -> std::io::Result<Vec<Block>> {
+pub fn read_from_txt(file_path: &Path) -> std::io::Result<(Vec<Block>, Vec<Chord>)> {
     let mut blocks: Vec<Block> = Vec::new();
+    let mut chord_list: Vec<Chord> = Vec::new();
 
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
@@ -59,7 +60,10 @@ pub fn read_from_txt(file_path: &Path) -> std::io::Result<Vec<Block>> {
                 if i == ' ' {
                     if !chord.is_empty() {
                         if let Some(c) = Chord::new(&chord) {
-                            chords.insert(indent - chord.chars().count(), c);
+                            chords.insert(indent - chord.chars().count(), c.clone());
+                            if chord_list.iter().all(|chord| *chord != c) {
+                                chord_list.push(c);
+                            }
                         }
 
                         chord.clear();
@@ -97,7 +101,7 @@ pub fn read_from_txt(file_path: &Path) -> std::io::Result<Vec<Block>> {
         });
     }
 
-    return Ok(blocks)
+    return Ok((blocks, chord_list))
 }
 
 fn is_line_chords(line: &str) -> bool {
