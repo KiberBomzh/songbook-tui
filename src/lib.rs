@@ -1,6 +1,4 @@
-mod file_reader;
-mod chord_generator;
-
+mod file_reader; mod chord_generator;
 use std::collections::BTreeMap;
 use serde::{Serialize, Deserialize};
 
@@ -12,7 +10,7 @@ pub use crate::chord_generator::chord_fingerings::StringState::{self, *};
 pub use crate::chord_generator::chord_fingerings::sum_text_in_fingerings;
 
 
-const TUNING: [Note; STRINGS] = [E, B, G, D, A, E];
+pub const STANDART_TUNING: [Note; STRINGS] = [E, B, G, D, A, E];
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Song {
@@ -36,6 +34,24 @@ pub struct Song {
 // G#m - B
 
 impl Song {
+    pub fn print(&self) {
+        let mut fings = Vec::new();
+        for f in self.get_fingerings() {
+            fings.push(f[0].clone());
+        }
+
+
+        if !self.metadata.artist.is_empty() && !self.metadata.title.is_empty() {
+            println!("{} - {}", self.metadata.artist, self.metadata.title);
+        }
+
+        if let Some(text) = sum_text_in_fingerings(&fings) {
+            println!("{text}");
+        }
+
+        println!("{}", self.get_text());
+    }
+
     pub fn get_text(&self) -> String {
         let mut s = String::new();
         let mut is_first = true;
@@ -75,7 +91,7 @@ impl Song {
     pub fn get_fingerings(&self) -> Vec<Vec<Fingering>> {
         let mut fings = Vec::new();
         for chord in &self.chord_list {
-            fings.push(chord.get_fingerings(&TUNING));
+            fings.push(chord.get_fingerings(&STANDART_TUNING));
         }
 
         return fings
@@ -210,16 +226,16 @@ impl Chord {
     pub fn new(text: &str) -> Option<Self> {
         let (keynote, key_text) = match text {
             text if text.starts_with("A#") || text.starts_with("Bb") => (ASharp, "A#"),
+            text if text.starts_with("C#") || text.starts_with("Db") => (CSharp, "C#"),
+            text if text.starts_with("D#") || text.starts_with("Eb") => (DSharp, "D#"),
+            text if text.starts_with("F#") || text.starts_with("Gb") => (FSharp, "F#"),
+            text if text.starts_with("G#") || text.starts_with("Ab") => (GSharp, "G#"),
             text if text.starts_with('A') =>  (A, "A"),
             text if text.starts_with('B') =>  (B, "B"),
-            text if text.starts_with("C#") || text.starts_with("Db") => (CSharp, "C#"),
             text if text.starts_with('C') =>  (C, "C"),
-            text if text.starts_with("D#") || text.starts_with("Eb") => (DSharp, "D#"),
             text if text.starts_with('D') =>  (D, "D"),
             text if text.starts_with('E') =>  (E, "E"),
-            text if text.starts_with("F#") || text.starts_with("Gb") => (FSharp, "F#"),
             text if text.starts_with('F') =>  (F, "F"),
-            text if text.starts_with("G#") || text.starts_with("Ab") => (GSharp, "G#"),
             text if text.starts_with('G') =>  (G, "G"),
             _ => return None
         };
@@ -297,20 +313,72 @@ impl Chord {
     pub fn get_fingerings(&self, tuning: &[Note; STRINGS]) -> Vec<Fingering> {
         let mut notes: Vec<Note> = Vec::new();
         let key = self.keynote;
+        // добавление первой ступени
         notes.push(key);
 
-        // строить по ступеням
-        // минор мажор проверять только если не sus
-        if self.minor {
+
+        // третья ступень
+        if self.chord_type == ChordType::Power {
+            notes.push( key.transpose(7) );
+            dbg!(&notes);
+            return get_fingerings( tuning, &notes, Some(self.text.clone()) )
+        }
+        
+        if self.sus_or_add == SusOrAdd::Sus2 {
+            notes.push( key.transpose(2) );
+        } else if self.sus_or_add == SusOrAdd::Sus4 {
+            notes.push( key.transpose(5) );
+        } else if self.sus_or_add == SusOrAdd::Sus4Plus {
+            notes.push( key.transpose(6) );
+        } else if self.minor {
             notes.push( key.transpose(3) );
         } else {
             notes.push( key.transpose(4) );
         }
 
+
         // пятая ступень
-        notes.push( key.transpose(7) );
+        match self.fifth_state {
+            FifthState::Dim => notes.push( key.transpose(6) ),
+            FifthState::Norm => notes.push( key.transpose(7) ),
+            FifthState::Aug => notes.push( key.transpose(8) )
+        }
 
 
+        // дополнительные ноты
+        if self.sus_or_add == SusOrAdd::Add2 {
+            notes.push( key.transpose(2) );
+        } else if self.sus_or_add == SusOrAdd::Add4 {
+            notes.push( key.transpose(5) );
+        } else if self.chord_type != ChordType::Norm {
+            match self.chord_type {
+                ChordType::SixthMinus => notes.push( key.transpose(8) ),
+                ChordType::Sixth => notes.push( key.transpose(9) ),
+                ChordType::Seventh => notes.push( key.transpose(10) ),
+                ChordType::MajSeventh => notes.push( key.transpose(11) ),
+                ChordType::Nineth => {
+                    notes.push( key.transpose(2) );
+                    notes.push( key.transpose(10) );
+                },
+                ChordType::Eleventh => {
+                    notes.push( key.transpose(2) );
+                    notes.push( key.transpose(5) );
+                    notes.push( key.transpose(10) );
+                },
+
+                ChordType::Thirteenth => {
+                    notes.push( key.transpose(2) );
+                    notes.push( key.transpose(5) );
+                    notes.push( key.transpose(9) );
+                    notes.push( key.transpose(10) );
+                },
+                _ => {}
+
+            }
+        }
+
+
+        dbg!(&notes);
         return get_fingerings( tuning, &notes, Some(self.text.clone()) )
     }
 

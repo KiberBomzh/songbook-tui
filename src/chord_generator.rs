@@ -98,11 +98,25 @@ fn generate_from_fret(
     if string_state.iter().all(|s| *s == Muted) { return None }
 
     // присутствуют ли все ноты
-    if !notes.iter().all(|n|
-        string_state.iter().enumerate().any(|(i, s)|
-            get_note_from_position(fretboard, *s, i) == Some(*n)
-        )
-    ) { return None }
+    if notes.len() < 5 {
+        if !notes.iter().all(|n|
+            string_state.iter().enumerate().any(|(i, s)|
+                get_note_from_position(fretboard, *s, i) == Some(*n)
+            )
+        ) { return None }
+    } else {
+        let mut important_notes = Vec::new();
+        important_notes.push(notes[0]);
+        important_notes.push(notes[1]);
+        important_notes.push( notes[notes.len() - 1] );
+        important_notes.push( notes[notes.len() - 2] );
+
+        if !important_notes.iter().all(|n|
+            string_state.iter().enumerate().any(|(i, s)|
+                get_note_from_position(fretboard, *s, i) == Some(*n)
+            )
+        ) { return None }
+    }
 
     return Some(string_state)
 }

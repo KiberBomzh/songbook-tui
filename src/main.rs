@@ -3,41 +3,67 @@ mod tui;
 
 use std::path::PathBuf;
 
-use clap::Parser;
+use clap::{Parser, Subcommand};
 use songbook::{Song, Metadata};
 
 
 #[derive(Parser, Debug)]
+#[command(name = "songbook")]
 #[command(version, about, long_about = None)]
 struct Args {
-    path: PathBuf,
+    #[command(subcommand)]
+    command: Option<Command>,
+}
 
-    #[arg(short, long)]
-    transpose: Option<i32>,
+#[derive(Subcommand, Debug, Clone)]
+enum Command {
+    #[command(about = "Print fretboard, for non-standart tuning use '-t'")]
+    Fret {
+        #[arg(short, long, default_value = "e, b, g, d, a, e", value_name = "TUNING")]
+        tuning: String
+    },
+
+    #[command(about = "Print chord's fingerings")]
+    Chord { chord: String },
+
+    #[command(about = "Print song from .txt file")]
+    Text {
+        path: PathBuf,
+
+        #[arg(short, long, value_name = "STEPS")]
+        transpose: Option<i32>,
+    } 
 }
 
 
 fn main() {
     let args = Args::parse();
 
-    let mut song = Song::from_txt(
-        &args.path,
-        Metadata { title: String::new(), artist: String::new() }
-        ).unwrap();
-    if let Some(t) = args.transpose {
-        song.transpose(t)
+    if let Some(command) = args.command {
+        match command {
+            Command::Fret {tuning} => println!("{}", tuning),
+            Command::Chord {chord} => {
+                if let Some(chord) = songbook::Chord::new(&chord) {
+                    dbg!(&chord);
+                    let fings = chord.get_fingerings(&songbook::STANDART_TUNING);
+                    if let Some(text) = songbook::sum_text_in_fingerings(&fings) {
+                        println!("{text}");
+                    }
+                } else {
+                    println!("Unknown chord!");
+                }
+            },
+            Command::Text {path, transpose} => {
+                let mut song = Song::from_txt(
+                    &path,
+                    Metadata { title: String::new(), artist: String::new() }
+                    ).unwrap();
+                if let Some(t) = transpose {
+                    song.transpose(t)
+                }
+
+                song.print();
+            }
+        }
     }
-
-
-    let mut fings = Vec::new();
-    for f in song.get_fingerings() {
-        fings.push(f[0].clone());
-    }
-
-    if let Some(text) = songbook::sum_text_in_fingerings(&fings) {
-        println!("{text}");
-    }
-
-    // dbg!(&song);
-    println!("{}", song.get_text());
 }
