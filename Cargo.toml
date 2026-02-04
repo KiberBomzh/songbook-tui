@@ -17,7 +17,7 @@ clap = { version = "4.5.56", features = ["derive"], optional = true }
 ratatui = { version = "0.30.0", optional = true }
 dirs = { version = "6.0.0", optional = true }
 edit = { version = "0.1.5", optional = true }
-colored = { version = "3.1.1", optional = true }
+termcolor = { version = "1.4.1", optional = true }
 serde_yaml = { version = "0.9.34", optional = true }
 serde = { version = "1.0.228", features = ["derive"] }
 terminal_size = "0.4.3"
@@ -25,6 +25,6 @@ anyhow = "1.0.100"
 
 [features]
 default = []
-song_library = ["dep:dirs", "dep:edit", "dep:colored", "dep:serde_yaml"]
+song_library = ["dep:dirs", "dep:edit", "dep:termcolor", "dep:serde_yaml"]
 cli = ["dep:clap", "song_library"]
 tui = ["dep:ratatui", "cli"]

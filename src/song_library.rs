@@ -3,9 +3,9 @@ use std::fs::{self, File};
 use std::io::{BufWriter, BufReader, Write, Error, ErrorKind};
 use std::process::{Command, Stdio};
 
-use colored::Colorize;
 use dirs;
 use anyhow::Result;
+use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 use crate::Song;
 use crate::file_reader::txt_reader::read_from_txt;
@@ -142,11 +142,15 @@ pub fn ls(added_path: Option<&Path>) -> Result<()> {
         return Err( Error::new(ErrorKind::NotFound, "There's no such dir!").into() )
     }
 
+    let mut stdout = StandardStream::stdout(ColorChoice::Always);
+
     for entry in fs::read_dir(path)? {
         let entry = entry?;
         if let Some(name) = entry.file_name().to_str() {
             if entry.path().is_dir() {
-                println!("{}", name.blue());
+                stdout.set_color(ColorSpec::new().set_fg(Some(Color::Blue)))?;
+                writeln!(&mut stdout, "{name}")?;
+                stdout.reset()?;
             } else {
                 println!("{}", name);
             }
@@ -171,7 +175,7 @@ pub fn tree(added_path: Option<&Path>) -> Result<()> {
 
 fn recursive_tree(dir: &Path, indent: usize) -> Result<()> {
     if let Some(name) = dir.file_name().and_then(|f| f.to_str()) {
-        println!("{}", name.blue());
+        println!("{}", name);
     }
 
     let last = if let Some(entry) = fs::read_dir(dir)?.last() { entry?.path() }
