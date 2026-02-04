@@ -1,25 +1,19 @@
-use std::path::Path;
-use std::fs::File;
-use std::io::{BufRead, BufReader};
 use std::collections::BTreeMap;
 
 use crate::{Block, Row, Chord};
 
 
-pub fn read_from_txt(file_path: &Path) -> std::io::Result<(Vec<Block>, Vec<Chord>)> {
+pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
     let mut blocks: Vec<Block> = Vec::new();
     let mut chord_list: Vec<Chord> = Vec::new();
-
-    let file = File::open(file_path)?;
-    let reader = BufReader::new(file);
 
     let mut title = String::new();
     let mut rows: Vec<Row> = Vec::new();
     let mut chords = BTreeMap::new();
     let mut last_line_is_chords = false;
     let mut last_line_was_empty = true;
-    for line_result in reader.lines() {
-        let line = line_result?;
+    for line in txt.lines() {
+        let line = line.to_string();
         if line.is_empty() {
             last_line_was_empty = true;
             if !rows.is_empty() {
@@ -101,7 +95,7 @@ pub fn read_from_txt(file_path: &Path) -> std::io::Result<(Vec<Block>, Vec<Chord
         });
     }
 
-    return Ok((blocks, chord_list))
+    return (blocks, chord_list)
 }
 
 fn is_line_chords(line: &str) -> bool {

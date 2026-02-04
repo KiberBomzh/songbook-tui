@@ -5,6 +5,7 @@ use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
 use songbook::{Song, Metadata, Note, STRINGS};
+use songbook::song_library;
 
 
 #[derive(Parser, Debug)]
@@ -29,6 +30,15 @@ enum Command {
     /// Show song
     Show {
         path: PathBuf,
+    },
+
+    /// Edit song
+    Edit {
+        path: PathBuf,
+        
+        /// Target for editing [meta or song]
+        #[arg(short, long)]
+        target: String,
     },
 
     /// Add a song to the library
@@ -98,40 +108,44 @@ fn main() {
                 }
             },
             Command::Show { path } => {
-                songbook::song_library::show(&path)
+                song_library::show(&path)
                     .expect("Error during geting song!");
+            },
+            Command::Edit { path, target } => {
+                song_library::edit(&path, &target)
+                    .expect("Error during editing song!");
             },
             Command::Add {path, artist, title} => {
                 let song = Song::from_txt(
                     &path,
-                    Metadata { title, artist }
+                    Metadata { title, artist, key: None }
                     ).expect("Error during adding a song!");
 
-                songbook::song_library::add(&song)
+                song_library::add(&song)
                     .expect("Error during adding a song!");
             },
             Command::Rm { paths } => {
                 for path in &paths {
-                    songbook::song_library::rm(&path)
+                    song_library::rm(&path)
                         .expect("Error during removing!");
                 }
             },
             Command::Mv {input_paths, output_path } => {
                 for input_path in &input_paths {
-                    songbook::song_library::mv(&input_path, &output_path)
+                    song_library::mv(&input_path, &output_path)
                         .expect("Error during moving!");
                 }
             },
             Command::Ls { path } => {
-                songbook::song_library::ls(path.as_deref())
+                song_library::ls(path.as_deref())
                     .expect("Error during reading a dir!");
             },
             Command::Tree { path } => {
-                songbook::song_library::tree(path.as_deref())
+                song_library::tree(path.as_deref())
                     .expect("Error during reading a dir!");
             },
             Command::Mkdir { path } => {
-                songbook::song_library::mkdir(&path)
+                song_library::mkdir(&path)
                     .expect("Error during creating a dir!");
             },
         }

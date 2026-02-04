@@ -1,27 +1,27 @@
 use std::path::{PathBuf, Path};
 use std::fs::{self, File};
-use std::io::{BufWriter, BufReader, Write, Error};
-use std::io::ErrorKind;
+use std::io::{BufWriter, BufReader, Write, Error, ErrorKind};
 use std::process::{Command, Stdio};
 
 use colored::Colorize;
 use dirs;
+use anyhow::Result;
 
 use crate::Song;
+use crate::file_reader::txt_reader::read_from_txt;
 
 
 const FORBIDDEN_CHARS: [char; 9] = ['<', '>', ':', '/', '\\', '|', '?', '*', '`'];
 
 
 
-pub fn show(song_path: &Path) -> Result<(), Error> {
+pub fn show(song_path: &Path) -> Result<()> {
     let mut path = get_lib_path()?;
     path = path.join(song_path);
-    dbg!(&path);
 
     let file = File::open(path)?;
     let reader = BufReader::new(file);
-    let song: Song = serde_json::from_reader(reader)?;
+    let song: Song = serde_yaml::from_reader(reader)?;
     let text = song.get_song_as_text();
 
     if let Ok(mut child) = Command::new("less") .stdin(Stdio::piped()) .spawn() {
@@ -37,7 +37,47 @@ pub fn show(song_path: &Path) -> Result<(), Error> {
 }
 
 
-pub fn add(song: &Song) -> Result<(), Error> {
+pub fn edit(added_path: &Path, target: &str) -> Result<()> {
+    let mut path = get_lib_path()?;
+    path = path.join(added_path);
+    if !path.exists() {
+        return Err( Error::new(ErrorKind::NotFound, "There's no such file!").into() )
+    }
+
+    let file = File::open(&path)?;
+    let reader = BufReader::new(file);
+    let mut song: Song = serde_yaml::from_reader(reader)?;
+
+    match target {
+        "meta" => {
+            let metadata = &mut song.metadata;
+            let mut data = serde_yaml::to_string(&metadata)?;
+            data = edit::edit(data)?;
+
+            *metadata = serde_yaml::from_str(&data)?;
+        },
+        "song" => {
+            let mut text = song.get_text();
+            text = edit::edit(text)?;
+
+            let blocks = &mut song.blocks;
+            let chord_list = &mut song.chord_list;
+            (*blocks, *chord_list) = read_from_txt(&text);
+        },
+        _ => { println!("There's no such option!"); return Ok(()) }
+    }
+
+    let file = File::create(path)?;
+    let writer = BufWriter::new(file);
+
+    serde_yaml::to_writer(writer, &song)?;
+
+
+    Ok(())
+}
+
+
+pub fn add(song: &Song) -> Result<()> {
     let mut path = get_lib_path()?;
     if !path.exists() { fs::create_dir_all(&path)? }
 
@@ -50,14 +90,14 @@ pub fn add(song: &Song) -> Result<(), Error> {
     let file = File::create(path)?;
     let writer = BufWriter::new(file);
 
-    serde_json::to_writer_pretty(writer, &song)?;
+    serde_yaml::to_writer(writer, &song)?;
 
 
     Ok(())
 }
 
 
-pub fn rm(added_path: &Path) -> Result<(), Error> {
+pub fn rm(added_path: &Path) -> Result<()> {
     let mut path = get_lib_path()?;
     path = path.join(added_path);
 
@@ -68,21 +108,21 @@ pub fn rm(added_path: &Path) -> Result<(), Error> {
         return Err( Error::new(
             ErrorKind::NotFound,
             format!("There's no such path: {:#?}", added_path)
-        ))
+        ).into())
     }
 
     Ok(())
 }
 
 
-pub fn mv(input_path: &Path, output_path: &Path) -> Result<(), Error> {
+pub fn mv(input_path: &Path, output_path: &Path) -> Result<()> {
     let path = get_lib_path()?;
     let i_path = path.join(input_path);
     if !i_path.exists() {
         return Err( Error::new(
             ErrorKind::NotFound,
             format!("There's no such path: {:#?}", input_path)
-        ))
+        ).into())
     }
 
     let mut o_path = path.join(output_path);
@@ -95,11 +135,11 @@ pub fn mv(input_path: &Path, output_path: &Path) -> Result<(), Error> {
 }
 
 
-pub fn ls(added_path: Option<&Path>) -> Result<(), Error> {
+pub fn ls(added_path: Option<&Path>) -> Result<()> {
     let mut path = get_lib_path()?;
     if let Some(p) = added_path { path = path.join(p) }
     if !path.exists() {
-        return Err( Error::new(ErrorKind::NotFound, "There's no such dir!") )
+        return Err( Error::new(ErrorKind::NotFound, "There's no such dir!").into() )
     }
 
     for entry in fs::read_dir(path)? {
@@ -117,11 +157,11 @@ pub fn ls(added_path: Option<&Path>) -> Result<(), Error> {
 }
 
 
-pub fn tree(added_path: Option<&Path>) -> Result<(), Error> {
+pub fn tree(added_path: Option<&Path>) -> Result<()> {
     let mut path = get_lib_path()?;
     if let Some(p) = added_path { path = path.join(p) }
     if !path.is_dir() {
-        return Err( Error::new(ErrorKind::NotFound, "There's no such dir!") )
+        return Err( Error::new(ErrorKind::NotFound, "There's no such dir!").into() )
     }
 
     recursive_tree(&path, 1)?;
@@ -129,7 +169,7 @@ pub fn tree(added_path: Option<&Path>) -> Result<(), Error> {
     Ok(())
 }
 
-fn recursive_tree(dir: &Path, indent: usize) -> Result<(), Error> {
+fn recursive_tree(dir: &Path, indent: usize) -> Result<()> {
     if let Some(name) = dir.file_name().and_then(|f| f.to_str()) {
         println!("{}", name.blue());
     }
@@ -162,7 +202,7 @@ fn recursive_tree(dir: &Path, indent: usize) -> Result<(), Error> {
 }
 
 
-pub fn mkdir(added_path: &Path) -> Result<(), Error> {
+pub fn mkdir(added_path: &Path) -> Result<()> {
     let mut path = get_lib_path()?;
     path = path.join(added_path);
 
@@ -171,7 +211,7 @@ pub fn mkdir(added_path: &Path) -> Result<(), Error> {
         return Err( Error::new(
             ErrorKind::AlreadyExists, 
             format!("{:#?} is already exists!", added_path)
-        ))
+        ).into())
     }
 
     fs::create_dir_all(path)?;
@@ -197,12 +237,12 @@ fn get_free_path(mut path: PathBuf, name: &str) -> PathBuf {
     return path
 }
 
-fn get_lib_path() -> Result<PathBuf, Error> {
+fn get_lib_path() -> Result<PathBuf> {
     if let Some(mut path) = dirs::data_dir() {
         path.push("songbook");
         path.push("library");
 
         Ok(path)
     }
-    else { Err( Error::new(ErrorKind::NotFound, "Cannot get data directory!") ) }
+    else { Err( Error::new(ErrorKind::NotFound, "Cannot get data directory!").into() ) }
 }

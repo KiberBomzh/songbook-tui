@@ -24,7 +24,6 @@ pub struct Song {
     pub metadata: Metadata,
     chord_list: Vec<Chord>,
     blocks: Vec<Block>,
-    key: Note
 }
 // Тональности:
 // Am - C
@@ -93,7 +92,9 @@ impl Song {
     }
 
     pub fn transpose(&mut self, steps: i32) {
-        self.key = self.key.transpose(steps);
+        if let Some(key) = self.metadata.key {
+            self.metadata.key = Some(key.transpose(steps))
+        }
         for chord in &mut self.chord_list { *chord = chord.transpose(steps) }
         for block in &mut self.blocks {
             for row in &mut block.rows {
@@ -117,10 +118,11 @@ impl Song {
 }
 
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Metadata {
     pub title: String,
     pub artist: String,
+    pub key: Option<Note>
 }
 
 #[derive(Serialize, Deserialize, Debug)]
