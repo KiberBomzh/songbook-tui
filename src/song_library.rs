@@ -85,7 +85,9 @@ pub fn mv(input_path: &Path, output_path: &Path) -> Result<(), Error> {
         ))
     }
 
-    let o_path = path.join(output_path);
+    let mut o_path = path.join(output_path);
+    if o_path.is_dir() { o_path = o_path.join( i_path.file_name()
+        .expect("Cannot get input_path file name!") ) }
 
     fs::rename(i_path, o_path)?;
 
