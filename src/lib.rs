@@ -1,13 +1,18 @@
-mod file_reader; mod chord_generator;
+mod file_reader;
+mod chord_generator;
+pub mod song_library;
+
 use std::collections::BTreeMap;
 use serde::{Serialize, Deserialize};
 
 use crate::Note::*;
-use crate::chord_generator::{get_fingerings, STRINGS};
+use crate::chord_generator::get_fingerings;
 use crate::chord_generator::chord_fingerings::Fingering;
 
 pub use crate::chord_generator::chord_fingerings::StringState::{self, *};
 pub use crate::chord_generator::chord_fingerings::sum_text_in_fingerings;
+pub use crate::chord_generator::get_fretboard;
+pub use crate::chord_generator::STRINGS;
 
 
 pub const STANDART_TUNING: [Note; STRINGS] = [E, B, G, D, A, E];
@@ -320,7 +325,6 @@ impl Chord {
         // третья ступень
         if self.chord_type == ChordType::Power {
             notes.push( key.transpose(7) );
-            dbg!(&notes);
             return get_fingerings( tuning, &notes, Some(self.text.clone()) )
         }
         
@@ -378,7 +382,6 @@ impl Chord {
         }
 
 
-        dbg!(&notes);
         return get_fingerings( tuning, &notes, Some(self.text.clone()) )
     }
 
@@ -448,6 +451,45 @@ pub enum Note {
 }
 
 impl Note {
+    pub fn new(s: &str) -> Option<Self> {
+        Some( match s {
+            "A#" | "Bb" => ASharp,
+            "C#" | "Db" => CSharp,
+            "D#" | "Eb" => DSharp,
+            "F#" | "Gb" => FSharp,
+            "G#" | "Ab" => GSharp,
+
+            "B" | "Cb" => B,
+            "E" | "Fb" => E,
+
+            "A" => A,
+            "C" => C,
+            "D" => D,
+            "F" => F,
+            "G" => G,
+            _ => return None
+        } )
+    }
+
+    pub fn get_text(&self) -> String {
+        (
+            match self {
+                A      => "A",
+                ASharp => "A#",
+                B      => "B",
+                C      => "C",
+                CSharp => "C#",
+                D      => "D",
+                DSharp => "D#",
+                E      => "E",
+                F      => "F",
+                FSharp => "F#",
+                G      => "G",
+                GSharp => "G#",
+            }
+        ).to_string()
+    }
+
     pub fn transpose(&self, steps: i32) -> Self {
         let steps = steps % 12;
         if steps == 0 { return self.clone() }
@@ -496,3 +538,43 @@ impl Note {
     }
 }
 
+
+
+pub fn print_fretboard(tuning: &[Note; STRINGS]) {
+    let fretboard = crate::chord_generator::get_fretboard(tuning);
+    let mut s = String::new();
+
+    let note_width = 4;
+    let line_width = fretboard.len() * note_width;
+    let string_line = "|   ".repeat(fretboard.len());
+    for fret_num in 0..fretboard[0].len() {
+        if fret_num != 0 {
+            s.push_str(&string_line);
+            s.push('\n');
+        } else { s.push('\n') }
+
+        for string_num in (0..fretboard.len()).rev() {
+            let note = &fretboard[string_num][fret_num].get_text();
+            s.push_str(note);
+            s.push_str( &" ".repeat(note_width - note.len()) );
+
+        }
+
+        if fret_num != 0 {
+            s.push('\n');
+            s.push_str(&string_line);
+            s.push('\n');
+
+            s.push_str( &"-".repeat(line_width - (note_width - 1)) );
+            s.push(' ');
+            s.push_str(&fret_num.to_string());
+            s.push('\n');
+        } else {
+            s.push('\n');
+            s.push_str( &"=".repeat(line_width - (note_width - 1)) );
+            s.push('\n');
+        }
+    }
+
+    println!("{s}");
+}

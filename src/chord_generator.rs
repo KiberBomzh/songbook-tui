@@ -37,7 +37,7 @@ pub fn get_fingerings(
     return fingerings
 }
 
-fn get_fretboard(tuning: &[Note; STRINGS]) -> [[Note; 25]; STRINGS] {
+pub fn get_fretboard(tuning: &[Note; STRINGS]) -> [[Note; 25]; STRINGS] {
     let mut fretboard = [[A; 25]; STRINGS];
     for (index, note) in tuning.iter().enumerate() {
         let mut note = note.clone();

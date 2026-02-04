@@ -4,7 +4,7 @@ mod tui;
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
-use songbook::{Song, Metadata};
+use songbook::{Song, Metadata, Note, STRINGS};
 
 
 #[derive(Parser, Debug)]
@@ -17,13 +17,13 @@ struct Args {
 
 #[derive(Subcommand, Debug, Clone)]
 enum Command {
-    #[command(about = "Print fretboard, for non-standart tuning use '-t'")]
+    /// Print fretboard, for non-standart tuning use '-t'
     Fret {
-        #[arg(short, long, default_value = "e, b, g, d, a, e", value_name = "TUNING")]
+        #[arg(short, long, default_value = "E, B, G, D, A, E", value_name = "TUNING")]
         tuning: String
     },
 
-    #[command(about = "Print chord's fingerings")]
+    /// Print chord's fingerings
     Chord { chord: String },
 
     #[command(about = "Print song from .txt file")]
@@ -41,10 +41,29 @@ fn main() {
 
     if let Some(command) = args.command {
         match command {
-            Command::Fret {tuning} => println!("{}", tuning),
+            Command::Fret {tuning} => {
+                // check tuning
+                let mut notes = [Note::A; STRINGS];
+                let mut counter = 0;
+                for n in tuning.split(", ") {
+                    if let Some(note) = Note::new(&n) {
+                        notes[counter] = note;
+                    } else {
+                        println!("Unknown note: {n}!");
+                        return
+                    }
+                    counter += 1;
+                    if counter == 6 { break }
+                }
+                if counter != STRINGS {
+                    println!("Notes must be {STRINGS}!");
+                    return
+                }
+
+                songbook::print_fretboard(&notes);
+            },
             Command::Chord {chord} => {
                 if let Some(chord) = songbook::Chord::new(&chord) {
-                    dbg!(&chord);
                     let fings = chord.get_fingerings(&songbook::STANDART_TUNING);
                     if let Some(text) = songbook::sum_text_in_fingerings(&fings) {
                         println!("{text}");
