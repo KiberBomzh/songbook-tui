@@ -1,16 +1,43 @@
 use std::path::{PathBuf, Path};
 use std::fs::{self, File};
-use std::io::{BufWriter, Error};
+use std::io::{BufWriter, BufReader, Write, Error};
 use std::io::ErrorKind;
+use std::process::{Command, Stdio};
 
+use colored::Colorize;
 use dirs;
+
+use crate::Song;
 
 
 const FORBIDDEN_CHARS: [char; 9] = ['<', '>', ':', '/', '\\', '|', '?', '*', '`'];
 
 
 
-pub fn add(song: &crate::Song) -> Result<(), Error> {
+pub fn show(song_path: &Path) -> Result<(), Error> {
+    let mut path = get_lib_path()?;
+    path = path.join(song_path);
+    dbg!(&path);
+
+    let file = File::open(path)?;
+    let reader = BufReader::new(file);
+    let song: Song = serde_json::from_reader(reader)?;
+    let text = song.get_song_as_text();
+
+    if let Ok(mut child) = Command::new("less") .stdin(Stdio::piped()) .spawn() {
+        if let Some(mut stdin) = child.stdin.take() {
+            stdin.write_all(text.as_bytes())?;
+        }
+        child.wait()?;
+    } else {
+        println!("{text}");
+    }
+
+    Ok(())
+}
+
+
+pub fn add(song: &Song) -> Result<(), Error> {
     let mut path = get_lib_path()?;
     if !path.exists() { fs::create_dir_all(&path)? }
 

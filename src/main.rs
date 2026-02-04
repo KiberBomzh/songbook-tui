@@ -26,6 +26,11 @@ enum Command {
     /// Print chord's fingerings
     Chord { chord: String },
 
+    /// Show song
+    Show {
+        path: PathBuf,
+    },
+
     /// Add a song to the library
     Add {
         path: PathBuf,
@@ -88,6 +93,10 @@ fn main() {
                 } else {
                     println!("Unknown chord!");
                 }
+            },
+            Command::Show { path } => {
+                songbook::song_library::show(&path)
+                    .expect("Error during geting song!");
             },
             Command::Add {path, artist, title} => {
                 let song = Song::from_txt(

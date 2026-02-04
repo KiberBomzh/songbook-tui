@@ -41,7 +41,10 @@ pub struct Song {
 // G#m - B
 
 impl Song {
-    pub fn print(&self) {
+    pub fn get_song_as_text(&self) -> String {
+        let mut s = String::new();
+
+
         let mut fings = Vec::new();
         for f in self.get_fingerings() {
             fings.push(f[0].clone());
@@ -49,14 +52,22 @@ impl Song {
 
 
         if !self.metadata.artist.is_empty() && !self.metadata.title.is_empty() {
-            println!("{} - {}", self.metadata.artist, self.metadata.title);
+            s.push_str( &format!("{} - {}", self.metadata.artist, self.metadata.title) );
+            s.push_str("\n\n");
         }
 
         if let Some(text) = sum_text_in_fingerings(&fings) {
-            println!("{text}");
+            s.push_str(&text);
         }
 
-        println!("{}", self.get_text());
+        s.push_str(&self.get_text());
+
+
+        return s
+    }
+
+    pub fn print(&self) {
+        println!("{}", self.get_song_as_text());
     }
 
     pub fn get_text(&self) -> String {
