@@ -53,6 +53,9 @@ enum Command {
     /// Print songs from the library
     Ls { path: Option<PathBuf> },
 
+    /// Print tree
+    Tree { path: Option<PathBuf> },
+
     /// Create directory in the library
     Mkdir { path: PathBuf },
 }
@@ -117,7 +120,11 @@ fn main() {
             },
             Command::Ls { path } => {
                 songbook::song_library::ls(path.as_deref())
-                    .expect("Error during reading a dir: ");
+                    .expect("Error during reading a dir!");
+            },
+            Command::Tree { path } => {
+                songbook::song_library::tree(path.as_deref())
+                    .expect("Error during reading a dir!");
             },
             Command::Mkdir { path } => {
                 songbook::song_library::mkdir(&path)

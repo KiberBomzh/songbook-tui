@@ -117,6 +117,51 @@ pub fn ls(added_path: Option<&Path>) -> Result<(), Error> {
 }
 
 
+pub fn tree(added_path: Option<&Path>) -> Result<(), Error> {
+    let mut path = get_lib_path()?;
+    if let Some(p) = added_path { path = path.join(p) }
+    if !path.is_dir() {
+        return Err( Error::new(ErrorKind::NotFound, "There's no such dir!") )
+    }
+
+    recursive_tree(&path, 1)?;
+
+    Ok(())
+}
+
+fn recursive_tree(dir: &Path, indent: usize) -> Result<(), Error> {
+    if let Some(name) = dir.file_name().and_then(|f| f.to_str()) {
+        println!("{}", name.blue());
+    }
+
+    let last = if let Some(entry) = fs::read_dir(dir)?.last() { entry?.path() }
+    else { return Ok(()) };
+
+    for entry in fs::read_dir(dir)? {
+        let entry = entry?;
+        if let Some(name) = entry.file_name().to_str() {
+            if indent > 1 {
+                print!("{}", "│   ".repeat(indent - 1));
+            }
+
+            if entry.path() == last {
+                print!("└── ");
+            } else {
+                print!("├── ");
+            }
+
+            if entry.path().is_dir() {
+                recursive_tree(&entry.path(), indent + 1)?;
+            } else {
+                println!("{}", name);
+            }
+        }
+    }
+
+    Ok(())
+}
+
+
 pub fn mkdir(added_path: &Path) -> Result<(), Error> {
     let mut path = get_lib_path()?;
     path = path.join(added_path);
