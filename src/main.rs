@@ -149,5 +149,11 @@ fn main() {
                     .expect("Error during creating a dir!");
             },
         }
+    } else {
+        #[cfg(not(feature = "tui"))]
+        println!("There's a command requirent! Try 'songbook help' for more information");
+
+        #[cfg(feature = "tui")]
+        println!("TUI is still in development");
     }
 }
