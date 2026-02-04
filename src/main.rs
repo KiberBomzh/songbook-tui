@@ -45,10 +45,10 @@ enum Command {
     },
 
     /// Remove a song from the library
-    Rm { path: PathBuf },
+    Rm { paths: Vec<PathBuf> },
 
     /// Move(or rename) a song or a dir
-    Mv { input_path: PathBuf, output_path: PathBuf },
+    Mv { input_paths: Vec<PathBuf>, output_path: PathBuf },
 
     /// Print songs from the library
     Ls { path: Option<PathBuf> },
@@ -110,13 +110,17 @@ fn main() {
                 songbook::song_library::add(&song)
                     .expect("Error during adding a song!");
             },
-            Command::Rm { path } => {
-                songbook::song_library::rm(&path)
-                    .expect("Error during removing!");
+            Command::Rm { paths } => {
+                for path in &paths {
+                    songbook::song_library::rm(&path)
+                        .expect("Error during removing!");
+                }
             },
-            Command::Mv {input_path, output_path } => {
-                songbook::song_library::mv(&input_path, &output_path)
-                    .expect("Error during moving!");
+            Command::Mv {input_paths, output_path } => {
+                for input_path in &input_paths {
+                    songbook::song_library::mv(&input_path, &output_path)
+                        .expect("Error during moving!");
+                }
             },
             Command::Ls { path } => {
                 songbook::song_library::ls(path.as_deref())
