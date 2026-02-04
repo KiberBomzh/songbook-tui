@@ -76,7 +76,11 @@ pub fn ls(added_path: Option<&Path>) -> Result<(), Error> {
     for entry in fs::read_dir(path)? {
         let entry = entry?;
         if let Some(name) = entry.file_name().to_str() {
-            println!("{}", name);
+            if entry.path().is_dir() {
+                println!("{}", name.blue());
+            } else {
+                println!("{}", name);
+            }
         }
     }
 

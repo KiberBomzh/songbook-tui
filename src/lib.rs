@@ -1,5 +1,7 @@
 mod file_reader;
 mod chord_generator;
+
+#[cfg(feature = "song_library")]
 pub mod song_library;
 
 use std::collections::BTreeMap;

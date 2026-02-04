@@ -58,7 +58,7 @@ fn main() {
 
     if let Some(command) = args.command {
         match command {
-            Command::Fret {tuning} => {
+            Command::Fret { tuning } => {
                 // check tuning
                 let mut notes = [Note::A; STRINGS];
                 let mut counter = 0;
@@ -79,7 +79,7 @@ fn main() {
 
                 songbook::print_fretboard(&notes);
             },
-            Command::Chord {chord} => {
+            Command::Chord { chord } => {
                 if let Some(chord) = songbook::Chord::new(&chord) {
                     let fings = chord.get_fingerings(&songbook::STANDART_TUNING);
                     if let Some(text) = songbook::sum_text_in_fingerings(&fings) {
