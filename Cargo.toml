@@ -18,6 +18,7 @@ serde_json = "1.0.149"
 terminal_size = "0.4.3"
 clap = { version = "4.5.56", features = ["derive"], optional = true }
 ratatui = { version = "0.30.0", optional = true }
+dirs = "6.0.0"
 
 [features]
 default = []

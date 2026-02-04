@@ -26,13 +26,30 @@ enum Command {
     /// Print chord's fingerings
     Chord { chord: String },
 
-    #[command(about = "Print song from .txt file")]
-    Text {
+    /// Add a song to the library
+    Add {
         path: PathBuf,
 
-        #[arg(short, long, value_name = "STEPS")]
-        transpose: Option<i32>,
-    } 
+        /// Song's artist
+        #[arg(long, short)]
+        artist: String,
+
+        /// Song's title
+        #[arg(long, short)]
+        title: String,
+    },
+
+    /// Remove a song from the library
+    Rm { path: PathBuf },
+
+    /// Move(or rename) a song or a dir
+    Mv { input_path: PathBuf, output_path: PathBuf },
+
+    /// Print songs from the library
+    Ls { path: Option<PathBuf> },
+
+    /// Create directory in the library
+    Mkdir { path: PathBuf },
 }
 
 
@@ -72,17 +89,31 @@ fn main() {
                     println!("Unknown chord!");
                 }
             },
-            Command::Text {path, transpose} => {
-                let mut song = Song::from_txt(
+            Command::Add {path, artist, title} => {
+                let song = Song::from_txt(
                     &path,
-                    Metadata { title: String::new(), artist: String::new() }
-                    ).unwrap();
-                if let Some(t) = transpose {
-                    song.transpose(t)
-                }
+                    Metadata { title, artist }
+                    ).expect("Error during adding a song!");
 
-                song.print();
-            }
+                songbook::song_library::add(&song)
+                    .expect("Error during adding a song!");
+            },
+            Command::Rm { path } => {
+                songbook::song_library::rm(&path)
+                    .expect("Error during removing!");
+            },
+            Command::Mv {input_path, output_path } => {
+                songbook::song_library::mv(&input_path, &output_path)
+                    .expect("Error during moving!");
+            },
+            Command::Ls { path } => {
+                songbook::song_library::ls(path.as_deref())
+                    .expect("Error during reading a dir: ");
+            },
+            Command::Mkdir { path } => {
+                songbook::song_library::mkdir(&path)
+                    .expect("Error during creating a dir!");
+            },
         }
     }
 }
