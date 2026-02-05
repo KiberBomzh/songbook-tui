@@ -10,7 +10,7 @@ use crossterm::{
     style::{Color, Print, ResetColor, SetForegroundColor}
 };
 
-use crate::Song;
+use crate::{Song, Metadata};
 use crate::file_reader::txt_reader::read_from_txt;
 
 
@@ -25,12 +25,14 @@ pub fn show(song_path: &Path, key: Option<crate::Note>) -> Result<()> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
     let mut song: Song = serde_yaml::from_reader(reader)?;
-    if let Some(k) = key { if let Some(mut m_key) = song.metadata.key {
-        while m_key != k {
-            song.transpose(1);
-            m_key = song.metadata.key.unwrap();
-        }
-    }}
+    if let Some(k) = key {
+        if let Some(mut m_key) = song.metadata.key {
+            while m_key != k {
+                song.transpose(1);
+                m_key = song.metadata.key.unwrap();
+            }
+        } else { println!("Add a key before transposing, try 'songbook edit <song_name> -t meta'") }
+    }
 
     let text = song.get_song_as_text();
 
@@ -61,13 +63,13 @@ pub fn edit(added_path: &Path, target: &str) -> Result<()> {
     match target {
         "meta" => {
             let metadata = &mut song.metadata;
-            let mut data = serde_yaml::to_string(&metadata)?;
+            let mut data = Metadata::to_string(&metadata)?;
             data = edit::edit(data)?;
 
-            *metadata = serde_yaml::from_str(&data)?;
+            *metadata = Metadata::from_str(&data)?;
         },
         "song" => {
-            let mut text = song.get_text();
+            let mut text = song.to_string();
             text = edit::edit(text)?;
 
             let blocks = &mut song.blocks;

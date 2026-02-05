@@ -6,6 +6,7 @@ pub mod song_library;
 
 use std::collections::BTreeMap;
 use serde::{Serialize, Deserialize};
+use anyhow::Result;
 
 use crate::Note::*;
 use crate::chord_generator::get_fingerings;
@@ -59,7 +60,7 @@ impl Song {
             s.push_str(&text);
         }
 
-        s.push_str(&self.get_text());
+        s.push_str(&self.to_string());
 
 
         return s
@@ -69,7 +70,7 @@ impl Song {
         println!("{}", self.get_song_as_text());
     }
 
-    pub fn get_text(&self) -> String {
+    pub fn to_string(&self) -> String {
         let mut s = String::new();
         let mut is_first = true;
         for block in &self.blocks {
@@ -123,6 +124,16 @@ pub struct Metadata {
     pub title: String,
     pub artist: String,
     pub key: Option<Note>
+}
+
+impl Metadata {
+    pub fn from_str(meta: &str) -> Result<Self> {
+        Ok(serde_yaml::from_str(meta)?)
+    }
+
+    pub fn to_string(&self) -> Result<String> {
+        Ok(serde_yaml::to_string(&self)?)
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
