@@ -1,11 +1,14 @@
 use std::path::{PathBuf, Path};
 use std::fs::{self, File};
-use std::io::{BufWriter, BufReader, Write, Error, ErrorKind};
+use std::io::{BufWriter, BufReader, Write, Error, ErrorKind, stdout};
 use std::process::{Command, Stdio};
 
 use dirs;
 use anyhow::Result;
-use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+use crossterm::{
+    execute,
+    style::{Color, Print, ResetColor, SetForegroundColor}
+};
 
 use crate::Song;
 use crate::file_reader::txt_reader::read_from_txt;
@@ -149,15 +152,17 @@ pub fn ls(added_path: Option<&Path>) -> Result<()> {
         return Err( Error::new(ErrorKind::NotFound, "There's no such dir!").into() )
     }
 
-    let mut stdout = StandardStream::stdout(ColorChoice::Always);
-
     for entry in fs::read_dir(path)? {
         let entry = entry?;
         if let Some(name) = entry.file_name().to_str() {
             if entry.path().is_dir() {
-                stdout.set_color(ColorSpec::new().set_fg(Some(Color::Blue)))?;
-                writeln!(&mut stdout, "{name}")?;
-                stdout.reset()?;
+                execute!(
+                    stdout(),
+                    SetForegroundColor(Color::Blue),
+                    Print(name),
+                    Print("\n"),
+                    ResetColor
+                )?;
             } else {
                 println!("{}", name);
             }
