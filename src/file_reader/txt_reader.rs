@@ -27,7 +27,7 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
                 if !chords.is_empty() {
                     blocks.push(Block {
                         title: if title.is_empty() { None } else { Some(title) },
-                        rows: vec!(Row { chords: Some(chords), text: None })
+                        rows: vec!(Row { chords: Some(chords), text: None, rhythm: None })
                     });
                     title = String::new();
                     chords = BTreeMap::new();
@@ -72,16 +72,16 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
 
         } else if last_line_is_chords {
             if chords.is_empty() {
-                rows.push(Row { chords: None, text: Some(line) });
+                rows.push(Row { chords: None, text: Some(line), rhythm: None });
             } else {
-                rows.push(Row { chords: Some(chords), text: Some(line) });
+                rows.push(Row { chords: Some(chords), text: Some(line), rhythm: None });
                 chords = BTreeMap::new();
             }
             last_line_is_chords = false;
         } else if last_line_was_empty {
             title = line;
         } else {
-            rows.push(Row { chords: None, text: Some(line) });
+            rows.push(Row { chords: None, text: Some(line), rhythm: None });
         }
 
         last_line_was_empty = false;

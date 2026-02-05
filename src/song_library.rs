@@ -77,6 +77,10 @@ pub fn edit(added_path: &Path, target: &str) -> Result<()> {
             (*blocks, *chord_list) = read_from_txt(&text);
         },
         "rhythm" => {
+            let mut text = song.get_rhythm_for_editing();
+            text = edit::edit(text)?;
+            
+            song.change_rhythm_from_edited_str(&text);
         },
         _ => { println!("There's no such option!"); return Ok(()) }
     }

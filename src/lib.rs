@@ -19,6 +19,9 @@ pub use crate::chord_generator::STRINGS;
 
 
 pub const STANDART_TUNING: [Note; STRINGS] = [E, B, G, D, A, E];
+const RHYTHM_SYMBOL: &str = "{r:} ";
+const TEXT_SYMBOL: &str = "{t:} ";
+
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Song {
@@ -85,7 +88,7 @@ impl Song {
             for row in &block.rows {
                 if is_first_row { is_first_row = false }
                 else { s.push('\n') }
-                s.push_str(&row.get_text());
+                s.push_str(&row.get_chords());
             }
         }
 
@@ -116,6 +119,52 @@ impl Song {
 
         return fings
     }
+
+    pub fn get_rhythm_for_editing(&self) -> String {
+        let mut s = String::new();
+        let mut is_first = true;
+        for block in &self.blocks {
+            if is_first { is_first = false }
+            else { s.push_str("\n\n") }
+
+            if let Some(title) = &block.title {
+                s.push_str(&title);
+                if !block.rows.is_empty() { s.push('\n') }
+            }
+            let mut is_first_row = true;
+            for row in &block.rows {
+                if is_first_row { is_first_row = false }
+                else { s.push('\n') }
+                s.push_str(&row.get_rhythm_for_editing());
+            }
+        }
+
+        return s
+    }
+
+    pub fn change_rhythm_from_edited_str(&mut self, text: &str) {
+        let mut pairs: Vec<(String, String)> = Vec::new();
+        let mut r_line = String::new();
+        for line in text.lines() {
+            if line.starts_with(RHYTHM_SYMBOL) {
+                r_line.push_str(&line[RHYTHM_SYMBOL.len()..]);
+            } else if line.starts_with(TEXT_SYMBOL) {
+                pairs.push((r_line,
+                    line[TEXT_SYMBOL.len()..].to_string()
+                ));
+                r_line = String::new();
+            }
+        }
+
+        let mut row_counter = 0;
+        for block in &mut self.blocks {
+            for row in &mut block.rows {
+                let (rhythm_line, text) = &pairs[row_counter];
+                row.change_rhythm_from_edited(rhythm_line, text);
+                row_counter += 1;
+            }
+        }
+    }
 }
 
 
@@ -143,14 +192,21 @@ struct Block {
 }
 
 
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+enum Beat {
+    OnIndex{ index: usize, symbol: char },
+    UpBeat(char)
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 struct Row {
+    rhythm: Option<Vec<Beat>>,
     chords: Option<BTreeMap<usize, Chord>>, // позиция в строке - аккорд
     text: Option<String>
 }
 
 impl Row {
-    fn get_text(&self) -> String {
+    fn get_chords(&self) -> String {
         let mut s = String::new();
         let mut text = if let Some(t) = &self.text { t.clone() } else { String::new() };
         let mut added_indent = 0;
@@ -201,6 +257,101 @@ impl Row {
 
 
         return s
+    }
+
+    pub fn get_rhythm(&self) -> String {
+        let mut s = String::new();
+        let text = if let Some(t) = &self.text { t } else { &String::new() };
+
+        let (whitespaces, rhythm_line) =
+            if let Some(line) = self.get_rhythm_line() {line}
+            else { return text.clone() };
+
+        s.push_str(&rhythm_line);
+        s.push('\n');
+        s.push_str(&" ".repeat(whitespaces));
+        s.push_str(&text);
+        s.push('\n');
+        return s
+    }
+
+    pub fn get_rhythm_for_editing(&self) -> String {
+        let mut s = String::new();
+        let text = if let Some(t) = &self.text { t } else { &String::new() };
+        let (whitespaces, rhythm_line) =
+            if let Some(line) = self.get_rhythm_line() {line}
+            else { ( 0, String::new() ) };
+        
+        s.push_str(RHYTHM_SYMBOL);
+        s.push_str(&rhythm_line);
+        s.push('\n');
+
+        s.push_str(TEXT_SYMBOL);
+        s.push_str(&" ".repeat(whitespaces));
+        s.push_str(&text);
+        s.push('\n');
+
+        return s;
+    }
+    pub fn change_rhythm_from_edited(&mut self, rhythm_line: &str, text: &str) {
+        let mut beats: Vec<Beat> = Vec::new();
+        let whitespaces = {
+            let mut counter = 0;
+            for c in text.chars() {
+                if c == ' ' { counter += 1 }
+                else { break }
+            }
+
+            counter
+        };
+        dbg!(whitespaces);
+
+        let text = text.trim().to_string();
+        for (i, c) in rhythm_line.chars().enumerate() {
+            if c != ' ' { beats.push(
+                if whitespaces > i {
+                    Beat::UpBeat(c)
+                } else {
+                    Beat::OnIndex {index: (i - whitespaces), symbol: c}
+                }
+            ) }
+        }
+
+        if !rhythm_line.is_empty() { self.rhythm = Some(beats) }
+        else if self.rhythm != None { self.rhythm = None }
+
+        if !text.is_empty() { self.text = Some(text) }
+        else if self.text != None { self.text = None }
+        dbg!(&self);
+    }
+    
+
+    fn get_rhythm_line(&self
+    ) -> Option<(usize, String)> {
+        let beats: &Vec<Beat> = if let Some(r) = &self.rhythm {r}
+        else { return None };
+
+        let mut whitespaces = 0;
+        let mut added_indent = 0;
+        let mut rhythm_line = String::new();
+        for beat in beats {
+            match beat {
+                Beat::UpBeat(symbol) => {
+                    whitespaces += 1 + 1; // один символ + один пробел
+                    rhythm_line.push(*symbol);
+                    rhythm_line.push(' ');
+                },
+                Beat::OnIndex { index, symbol } => {
+                    let dif = index - added_indent;
+                    rhythm_line.push_str(&" ".repeat(dif));
+                    rhythm_line.push(*symbol);
+                    rhythm_line.push(' ');
+                    added_indent += dif + 2;
+                }
+            }
+        }
+
+        return Some( (whitespaces, rhythm_line) )
     }
 }
 
