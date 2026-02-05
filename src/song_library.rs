@@ -15,13 +15,20 @@ const FORBIDDEN_CHARS: [char; 9] = ['<', '>', ':', '/', '\\', '|', '?', '*', '`'
 
 
 
-pub fn show(song_path: &Path) -> Result<()> {
+pub fn show(song_path: &Path, key: Option<crate::Note>) -> Result<()> {
     let mut path = get_lib_path()?;
     path = path.join(song_path);
 
     let file = File::open(path)?;
     let reader = BufReader::new(file);
-    let song: Song = serde_yaml::from_reader(reader)?;
+    let mut song: Song = serde_yaml::from_reader(reader)?;
+    if let Some(k) = key { if let Some(mut m_key) = song.metadata.key {
+        while m_key != k {
+            song.transpose(1);
+            m_key = song.metadata.key.unwrap();
+        }
+    }}
+
     let text = song.get_song_as_text();
 
     if let Ok(mut child) = Command::new("less") .stdin(Stdio::piped()) .spawn() {

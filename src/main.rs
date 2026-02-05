@@ -30,6 +30,10 @@ enum Command {
     /// Show song
     Show {
         path: PathBuf,
+        
+        /// Show in certain key
+        #[arg(short, long)]
+        key: Option<String>,
     },
 
     /// Edit song
@@ -41,6 +45,9 @@ enum Command {
         target: String,
     },
 
+    // Потом разбить это на разные варианты откуда добавлять
+    // text, chordpro или создание пустой песни
+    // добавить вариант с созданием песни с буфера обмена (text но с буфера)
     /// Add a song to the library
     Add {
         path: PathBuf,
@@ -107,8 +114,29 @@ fn main() {
                     println!("Unknown chord!");
                 }
             },
-            Command::Show { path } => {
-                song_library::show(&path)
+            Command::Show { path, key } => {
+                let key = if let Some(k) = key.as_deref() { match k {
+                    "C" | "c" | "Am" | "am" => Note::new("C"),
+                    "C#" | "c#" | "A#m" | "a#m"
+                        | "Db" | "db" | "Bbm" | "bbm" => Note::new("C#"),
+                    "D" | "d" | "Bm" | "bm" => Note::new("D"),
+                    "D#" | "d#" | "Cm" | "cm" | "Eb" | "eb" => Note::new("D#"),
+                    "E" | "e" | "C#m" | "c#m" | "Dbm" | "dbm" => Note::new("E"),
+                    "F" | "f" | "Dm" | "dm" => Note::new("F"),
+                    "F#" | "f#" | "D#m" | "d#m"
+                        | "Gb" | "gb" | "Ebm" | "ebm" => Note::new("F#"),
+                    "G" | "g" | "Em" | "em" => Note::new("G"),
+                    "G#" | "g#" | "Fm" | "fm" | "Ab" | "ab" => Note::new("G#"),
+                    "A" | "a" | "F#m" | "f#m" | "Gbm" | "gbm" => Note::new("A"),
+                    "A#" | "a#" | "Gm" | "gm" | "Bb" | "bb" => Note::new("A#"),
+                    "B" | "b" | "G#m" | "g#m" | "Abm" | "abm" => Note::new("B"),
+                    _ => {
+                        println!("Unknown key: {k}!");
+                        None
+                    }
+                } } else { None };
+
+                song_library::show(&path, key)
                     .expect("Error during geting song!");
             },
             Command::Edit { path, target } => {
