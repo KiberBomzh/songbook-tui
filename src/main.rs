@@ -3,7 +3,7 @@ mod tui;
 
 use std::path::PathBuf;
 
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, ValueEnum};
 use songbook::{Song, Metadata, Note, STRINGS};
 use songbook::song_library;
 
@@ -40,9 +40,9 @@ enum Command {
     Edit {
         path: PathBuf,
         
-        /// Target for editing [meta or song]
+        /// Target for editing
         #[arg(short, long)]
-        target: String,
+        target: EditTarget,
     },
 
     // Потом разбить это на разные варианты откуда добавлять
@@ -75,6 +75,13 @@ enum Command {
 
     /// Create directory in the library
     Mkdir { path: PathBuf },
+}
+
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Debug, ValueEnum)]
+enum EditTarget {
+    Chords,
+    Rhythm,
+    Meta
 }
 
 
@@ -140,7 +147,12 @@ fn main() {
                     .expect("Error during geting song!");
             },
             Command::Edit { path, target } => {
-                song_library::edit(&path, &target)
+                let target = match target {
+                    EditTarget::Chords => "chords",
+                    EditTarget::Rhythm => "rhythm",
+                    EditTarget::Meta => "meta"
+                };
+                song_library::edit(&path, target)
                     .expect("Error during editing song!");
             },
             Command::Add {path, artist, title} => {

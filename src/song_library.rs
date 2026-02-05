@@ -68,13 +68,15 @@ pub fn edit(added_path: &Path, target: &str) -> Result<()> {
 
             *metadata = Metadata::from_str(&data)?;
         },
-        "song" => {
+        "chords" => {
             let mut text = song.to_string();
             text = edit::edit(text)?;
 
             let blocks = &mut song.blocks;
             let chord_list = &mut song.chord_list;
             (*blocks, *chord_list) = read_from_txt(&text);
+        },
+        "rhythm" => {
         },
         _ => { println!("There's no such option!"); return Ok(()) }
     }
