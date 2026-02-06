@@ -11,14 +11,18 @@ use crossterm::{
 };
 
 use crate::{Song, Metadata};
-use crate::file_reader::txt_reader::read_from_txt;
 
 
 const FORBIDDEN_CHARS: [char; 9] = ['<', '>', ':', '/', '\\', '|', '?', '*', '`'];
 
 
 
-pub fn show(song_path: &Path, key: Option<crate::Note>) -> Result<()> {
+pub fn show(
+    song_path: &Path,
+    key: Option<crate::Note>,
+    chords: bool, // show chords
+    rhythm: bool // show rhythm
+) -> Result<()> {
     let mut path = get_lib_path()?;
     path = path.join(song_path);
 
@@ -34,7 +38,7 @@ pub fn show(song_path: &Path, key: Option<crate::Note>) -> Result<()> {
         } else { println!("Add a key before transposing, try 'songbook edit <song_name> -t meta'") }
     }
 
-    let text = song.get_song_as_text();
+    let text = song.get_song_as_text(chords, rhythm);
     print(&text)?;
 
 
@@ -60,14 +64,6 @@ pub fn edit(added_path: &Path, target: &str) -> Result<()> {
             data = edit::edit(data)?;
 
             *metadata = Metadata::from_str(&data)?;
-        },
-        "chords" => {
-            let mut text = song.to_string();
-            text = edit::edit(text)?;
-
-            let blocks = &mut song.blocks;
-            let chord_list = &mut song.chord_list;
-            (*blocks, *chord_list) = read_from_txt(&text);
         },
         "song" => {
             let mut text = song.get_for_editing();

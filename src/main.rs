@@ -34,6 +34,14 @@ enum Command {
         /// Show in certain key
         #[arg(short, long)]
         key: Option<String>,
+
+        /// Show chords
+        #[arg(short, long)]
+        chords: bool,
+
+        /// Show rhythm
+        #[arg(short, long)]
+        rhythm: bool,
     },
 
     /// Edit song
@@ -120,7 +128,7 @@ fn main() {
                     println!("Unknown chord!");
                 }
             },
-            Command::Show { path, key } => {
+            Command::Show { path, key, chords, rhythm } => {
                 let key = if let Some(k) = key.as_deref() { match k {
                     "C" | "c" | "Am" | "am" => Note::new("C"),
                     "C#" | "c#" | "A#m" | "a#m"
@@ -142,7 +150,7 @@ fn main() {
                     }
                 } } else { None };
 
-                song_library::show(&path, key)
+                song_library::show(&path, key, chords, rhythm)
                     .expect("Error during geting song!");
             },
             Command::Edit { path, target } => {

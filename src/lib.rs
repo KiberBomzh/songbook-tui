@@ -50,14 +50,8 @@ pub struct Song {
 // G#m - B
 
 impl Song {
-    pub fn get_song_as_text(&self) -> String {
+    pub fn get_song_as_text(&self, chords: bool, rhythm: bool) -> String {
         let mut s = String::new();
-
-
-        let mut fings = Vec::new();
-        for f in self.get_fingerings() {
-            fings.push(f[0].clone());
-        }
 
 
         if !self.metadata.artist.is_empty() && !self.metadata.title.is_empty() {
@@ -65,21 +59,27 @@ impl Song {
             s.push_str("\n\n");
         }
 
-        if let Some(text) = sum_text_in_fingerings(&fings) {
-            s.push_str(&text);
+        if chords {
+            let mut fings = Vec::new();
+            for f in self.get_fingerings() {
+                fings.push(f[0].clone());
+            }
+            if let Some(text) = sum_text_in_fingerings(&fings) {
+                s.push_str(&text);
+            }
         }
 
-        s.push_str(&self.to_string());
+        s.push_str(&self.to_string(chords, rhythm));
 
 
         return s
     }
 
-    pub fn print(&self) {
-        println!("{}", self.get_song_as_text());
+    pub fn print(&self, chords: bool, rhythm: bool) {
+        println!("{}", self.get_song_as_text(chords, rhythm));
     }
 
-    pub fn to_string(&self) -> String {
+    pub fn to_string(&self, chords: bool, rhythm: bool) -> String {
         let mut s = String::new();
         let mut is_first = true;
         for block in &self.blocks {
@@ -94,7 +94,7 @@ impl Song {
             for row in &block.rows {
                 if is_first_row { is_first_row = false }
                 else { s.push('\n') }
-                s.push_str(&row.get_chords_and_text());
+                s.push_str(&row.to_string(chords, rhythm));
             }
         }
 
@@ -258,12 +258,46 @@ struct Row {
 }
 
 impl Row {
-    fn get_chords_and_text(&self) -> String {
+    fn to_string(&self, chords: bool, rhythm: bool) -> String {
         let mut s = String::new();
         let mut text = if let Some(t) = &self.text { t.clone() } else { String::new() };
-        let mut added_indent = 0;
-        if let Some(chords) = &self.chords {
-            let mut chords_str = String::new();
+        if chords || rhythm {
+            let (c, r) = self.chords_and_rhythm_to_string(&mut text, chords, rhythm);
+            if !c.is_empty() && chords {
+                s.push_str(&c);
+                s.push('\n');
+            }
+
+            if !r.is_empty() && rhythm {
+                s.push_str(&r);
+                s.push('\n');
+            }
+        }
+
+
+        if !text.is_empty() {
+            s.push_str(&text);
+        }
+
+
+        return s
+    }
+    fn chords_and_rhythm_to_string(
+        &self,
+        text: &mut String,
+        needs_chords: bool,
+        needs_rhythm: bool
+    ) -> (String, String) {
+        let mut chords_str = String::new();
+        let (whitespaces, mut rhythm_str) =
+            if let Some((w, r)) = self.get_rhythm_line() { (w, r) }
+            else { (0, String::new()) };
+        if !rhythm_str.is_empty() && rhythm_str.len() < text.len() {
+            rhythm_str.push_str( &" ".repeat(text.len() - rhythm_str.len()) );
+        }
+
+        let mut added_indent = whitespaces;
+        if let Some(chords) = &self.chords && needs_chords {
             for k in chords.keys() {
                 let i: usize;
                 let p = k - 1 + added_indent;
@@ -276,17 +310,31 @@ impl Row {
                         added_indent += dif;
                         i = 1;
                         if !text.is_empty() {
-                            if let Some(b_index) = get_bytes_index_from_char_index(&text, p) {
-                                match text.chars().nth(p) {
-                                    Some(c) if c == ' ' => text.insert_str(b_index, &" ".repeat(dif)),
-                                    Some(_) => if let Some(prior_char) = text.chars().nth(p - 1) {
-                                        if prior_char == ' ' {
-                                            text.insert_str(b_index, &" ".repeat(dif))
-                                        } else {
-                                            text.insert_str(b_index, &"-".repeat(dif))
+                            if let Some(b_index) = get_bytes_index_from_char_index(&text, p - whitespaces) {
+                                match text.chars().nth(p - whitespaces) {
+                                    Some(c) if c == ' ' => {
+                                        text.insert_str(b_index, &" ".repeat(dif));
+                                        if !rhythm_str.is_empty() {
+                                            rhythm_str.insert_str(p - 1, &" ".repeat(dif));
                                         }
                                     },
-                                    None => text.push_str(&" ".repeat(dif))
+                                    Some(_) => if let Some(prior_char) = text.chars().nth(p - 1 - whitespaces) {
+                                        if prior_char == ' ' {
+                                            text.insert_str(b_index, &" ".repeat(dif));
+                                        } else {
+                                            text.insert_str(b_index, &"-".repeat(dif));
+                                        }
+
+                                        if !rhythm_str.is_empty() {
+                                            rhythm_str.insert_str(p - 1, &" ".repeat(dif));
+                                        }
+                                    },
+                                    None => {
+                                        text.push_str(&" ".repeat(dif));
+                                        if !rhythm_str.is_empty() {
+                                            rhythm_str.push_str(&" ".repeat(dif));
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -298,18 +346,12 @@ impl Row {
                 chords_str.push_str(&" ".repeat(i));
                 chords_str.push_str(&chords.get(k).unwrap().text);
             }
-            s.push_str(&chords_str);
-
         }
+        if whitespaces > 0 && needs_rhythm { text.insert_str(0, &" ".repeat(whitespaces)) }
 
-        if !text.is_empty() {
-            if !s.is_empty() { s.push('\n') }
-            s.push_str(&text);
-        }
-
-
-        return s
+        return (chords_str, rhythm_str)
     }
+
 
     fn get_for_editing(&self, s: &mut String) {
         let text = if let Some(t) = &self.text { t } else { &String::new() };
@@ -321,6 +363,7 @@ impl Row {
         else { String::new() };
 
         s.push_str(CHORDS_SYMBOL);
+        s.push_str(&" ".repeat(whitespaces));
         s.push_str(&chords_line);
         s.push('\n');
         
