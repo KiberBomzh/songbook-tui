@@ -35,15 +35,8 @@ pub fn show(song_path: &Path, key: Option<crate::Note>) -> Result<()> {
     }
 
     let text = song.get_song_as_text();
+    print(&text)?;
 
-    if let Ok(mut child) = Command::new("less") .stdin(Stdio::piped()) .spawn() {
-        if let Some(mut stdin) = child.stdin.take() {
-            stdin.write_all(text.as_bytes())?;
-        }
-        child.wait()?;
-    } else {
-        println!("{text}");
-    }
 
     Ok(())
 }
@@ -243,6 +236,19 @@ pub fn mkdir(added_path: &Path) -> Result<()> {
     Ok(())
 }
 
+
+fn print(text: &str) -> Result<()> {
+    if let Ok(mut child) = Command::new("less").stdin(Stdio::piped()).spawn() {
+        if let Some(mut stdin) = child.stdin.take() {
+            stdin.write_all(text.as_bytes())?;
+        }
+        child.wait()?;
+    } else {
+        println!("{text}");
+    }
+
+    Ok(())
+}
 
 fn get_without_forbidden_chars(text: String) -> String {
     text.chars().map(|c|
