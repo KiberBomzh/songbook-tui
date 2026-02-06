@@ -79,8 +79,7 @@ enum Command {
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Debug, ValueEnum)]
 enum EditTarget {
-    Chords,
-    Rhythm,
+    Song,
     Meta
 }
 
@@ -148,8 +147,7 @@ fn main() {
             },
             Command::Edit { path, target } => {
                 let target = match target {
-                    EditTarget::Chords => "chords",
-                    EditTarget::Rhythm => "rhythm",
+                    EditTarget::Song => "song",
                     EditTarget::Meta => "meta"
                 };
                 song_library::edit(&path, target)
