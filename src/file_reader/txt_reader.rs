@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use crate::song::{
-    block::Block,
+    block::{Block, Line},
     row::Row,
     chord::Chord
 };
@@ -23,15 +23,17 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
             if !rows.is_empty() {
                 blocks.push(Block {
                     title: if title.is_empty() { None } else { Some(title) },
-                    rows
+                    lines: rows.iter().map(|r| Line::TextBlock(r.clone())).collect()
                 });
                 title = String::new();
-                rows = Vec::new();
+                rows.clear();
             } else if last_line_is_chords {
                 if !chords.is_empty() {
                     blocks.push(Block {
                         title: if title.is_empty() { None } else { Some(title) },
-                        rows: vec!(Row { chords: Some(chords), text: None, rhythm: None })
+                        lines: vec!(Line::TextBlock(
+                                Row { chords: Some(chords), text: None, rhythm: None })
+                        )
                     });
                     title = String::new();
                     chords = BTreeMap::new();
@@ -40,7 +42,7 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
             } else if !title.is_empty() {
                 blocks.push(Block {
                     title: Some(title),
-                    rows: Vec::new()
+                    lines: vec!(Line::EmptyLine)
                 });
                 title = String::new();
             }
@@ -95,7 +97,7 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
     if !rows.is_empty() {
         blocks.push(Block {
             title: if title.is_empty() { None } else { Some(title) },
-            rows
+            lines: rows.iter().map(|r| Line::TextBlock(r.clone())).collect()
         });
     }
 

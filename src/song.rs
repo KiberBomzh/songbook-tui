@@ -10,7 +10,7 @@ use crate::{BLOCK_START, BLOCK_END, STANDART_TUNING};
 use crate::Note;
 use crate::sum_text_in_fingerings;
 use crate::song::chord::Chord;
-use crate::song::block::Block;
+use crate::song::block::{Block, Line};
 
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -90,13 +90,22 @@ impl Song {
 
             if let Some(title) = &block.title {
                 s.push_str(&title);
-                if !block.rows.is_empty() { s.push('\n') }
+                if !block.lines.is_empty() { s.push('\n') }
             }
-            let mut is_first_row = true;
-            for row in &block.rows {
-                if is_first_row { is_first_row = false }
+            let mut is_first_line = true;
+            for line in &block.lines {
+                if is_first_line { is_first_line = false }
                 else { s.push('\n') }
-                s.push_str(&row.to_string(chords, rhythm));
+                match line {
+                    Line::TextBlock(row) => s.push_str(&row.to_string(chords, rhythm)),
+                    Line::ChordsLine(chords) => {
+                        for chord in chords {
+                            s.push_str(&chord.text);
+                            s.push(' ');
+                        }
+                    },
+                    Line::EmptyLine => {}
+                }
             }
         }
 
@@ -109,11 +118,18 @@ impl Song {
         }
         for chord in &mut self.chord_list { *chord = chord.transpose(steps) }
         for block in &mut self.blocks {
-            for row in &mut block.rows {
-                if let Some(chords) = &mut row.chords {
-                    for (key, value) in chords.clone() {
-                        chords.insert(key, value.transpose(steps));
-                    }
+            for line in &mut block.lines {
+                match line {
+                    Line::TextBlock(row) => {
+                        if let Some(chords) = &mut row.chords {
+                            for (key, value) in chords.clone() {
+                                chords.insert(key, value.transpose(steps));
+                            }
+                        }
+                    },
+                    Line::ChordsLine(chords) =>
+                        chords.iter_mut().for_each(|c| *c = c.transpose(steps)),
+                    Line::EmptyLine => {}
                 }
             }
         }
@@ -162,13 +178,23 @@ impl Song {
     fn get_chord_list(&self) -> Vec<Chord> {
         let mut list = Vec::new();
         for block in &self.blocks {
-            for row in &block.rows {
-                if let Some(chords) = &row.chords {
-                    for (_, chord) in chords {
+            for line in &block.lines {
+                match line {
+                    Line::TextBlock(row) => {
+                        if let Some(chords) = &row.chords {
+                            for (_, chord) in chords {
+                                if list.iter().all(|c| c != chord) {
+                                    list.push(chord.clone());
+                                }
+                            }
+                        }
+                    },
+                    Line::ChordsLine(chords) => for chord in chords {
                         if list.iter().all(|c| c != chord) {
                             list.push(chord.clone());
                         }
-                    }
+                    },
+                    Line::EmptyLine => {}
                 }
             }
         }

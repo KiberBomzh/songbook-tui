@@ -10,7 +10,7 @@ pub enum Beat {
     UpBeat(char)
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Row {
     pub rhythm: Option<Vec<Beat>>,
     pub chords: Option<BTreeMap<usize, Chord>>, // позиция в строке - аккорд
