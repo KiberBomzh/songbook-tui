@@ -1,6 +1,10 @@
 use std::collections::BTreeMap;
 
-use crate::{Block, Row, Chord};
+use crate::song::{
+    block::Block,
+    row::Row,
+    chord::Chord
+};
 
 
 pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
