@@ -73,7 +73,12 @@ enum Command {
     Rm { paths: Vec<PathBuf> },
 
     /// Move(or rename) a song or a dir
-    Mv { input_paths: Vec<PathBuf>, output_path: PathBuf },
+    Mv {
+        /// Input files for
+        #[arg(num_args = 1.., required = true)]
+        input_paths: Vec<PathBuf>,
+        output_path: PathBuf
+    },
 
     /// Print songs from the library
     Ls { path: Option<PathBuf> },
