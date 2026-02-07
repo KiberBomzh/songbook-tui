@@ -52,7 +52,7 @@ impl Metadata {
 
 
 impl Song {
-    pub fn get_song_as_text(&self, chords: bool, rhythm: bool) -> String {
+    pub fn get_song_as_text(&self, chords: bool, rhythm: bool, fingerings: bool) -> String {
         let mut s = String::new();
 
 
@@ -61,7 +61,7 @@ impl Song {
             s.push_str("\n\n");
         }
 
-        if chords {
+        if chords && fingerings {
             let mut fings = Vec::new();
             
             #[cfg(not(feature = "song_library"))]
@@ -90,8 +90,8 @@ impl Song {
         return s
     }
 
-    pub fn print(&self, chords: bool, rhythm: bool) {
-        println!("{}", self.get_song_as_text(chords, rhythm));
+    pub fn print(&self, chords: bool, rhythm: bool, fingerings: bool) {
+        println!("{}", self.get_song_as_text(chords, rhythm, fingerings));
     }
 
     pub fn to_string(&self, chords: bool, rhythm: bool) -> String {

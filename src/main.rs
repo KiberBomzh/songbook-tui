@@ -58,6 +58,10 @@ enum Command {
         /// Show rhythm
         #[arg(short, long)]
         rhythm: bool,
+        
+        /// Show fingerings
+        #[arg(short, long)]
+        fingerings: bool,
     },
 
     /// Edit song
@@ -181,7 +185,7 @@ fn main() {
                 let fing = Fingering::new(strings, Some(chord)).unwrap();
                 song_library::add_fingering(&fing).expect("Error during saving a fingering!");
             },
-            Command::Show { path, key, chords, rhythm } => {
+            Command::Show { path, key, chords, rhythm, fingerings } => {
                 let key = if let Some(k) = key.as_deref() { match k {
                     "C" | "c" | "Am" | "am" => Note::new("C"),
                     "C#" | "c#" | "A#m" | "a#m"
@@ -203,7 +207,7 @@ fn main() {
                     }
                 } } else { None };
 
-                song_library::show(&path, key, chords, rhythm)
+                song_library::show(&path, key, chords, rhythm, fingerings)
                     .expect("Error during geting song!");
             },
             Command::Edit { path, target } => {

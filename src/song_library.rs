@@ -33,7 +33,8 @@ pub fn show(
     song_path: &Path,
     key: Option<crate::Note>,
     chords: bool, // show chords
-    rhythm: bool // show rhythm
+    rhythm: bool, // show rhythm
+    fingerings: bool // show fingerings
 ) -> Result<()> {
     let mut path = get_lib_path()?;
     path = path.join(song_path);
@@ -50,7 +51,7 @@ pub fn show(
         } else { println!("Add a key before transposing, try 'songbook edit <song_name> -t meta'") }
     }
 
-    let text = song.get_song_as_text(chords, rhythm);
+    let text = song.get_song_as_text(chords, rhythm, fingerings);
     print(&text)?;
 
 
