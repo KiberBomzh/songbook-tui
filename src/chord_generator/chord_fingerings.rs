@@ -1,10 +1,12 @@
 use std::collections::BTreeMap;
+use serde::{Serialize, Deserialize};
+
 use crate::chord_generator::chord_fingerings::StringState::*;
 
 use crate::chord_generator::STRINGS;
 
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Fingering {
     title: Option<String>,
     fret_num: u8,
@@ -13,7 +15,7 @@ pub struct Fingering {
     bars: Option<BTreeMap<u8, u8>> // лад - верхушка баррэ 
 }                                  // (баррэ начинается всегда с первой струны)
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
 pub enum StringState {
     Open,
     Muted,
@@ -150,6 +152,10 @@ impl Fingering {
 
         // длина каждой строки 14 символов
         return text
+    }
+    
+    pub fn get_title(&self) -> Option<String> {
+        self.title.clone()
     }
 }
 

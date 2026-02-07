@@ -8,8 +8,7 @@ pub mod song_library;
 use serde::{Serialize, Deserialize};
 
 use crate::Note::*;
-use crate::chord_generator::chord_fingerings::Fingering;
-
+pub use crate::chord_generator::chord_fingerings::Fingering;
 pub use crate::chord_generator::chord_fingerings::StringState::{self, *};
 pub use crate::chord_generator::chord_fingerings::sum_text_in_fingerings;
 pub use crate::chord_generator::get_fretboard;

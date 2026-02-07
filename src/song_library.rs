@@ -10,7 +10,7 @@ use crossterm::{
     style::{Color, Print, ResetColor, SetForegroundColor}
 };
 
-use crate::{Song, Metadata};
+use crate::{Song, Metadata, Fingering};
 
 
 const FORBIDDEN_CHARS: [char; 9] = ['<', '>', ':', '/', '\\', '|', '?', '*', '`'];
@@ -230,6 +230,45 @@ pub fn mkdir(added_path: &Path) -> Result<()> {
     fs::create_dir_all(path)?;
 
     Ok(())
+}
+
+pub fn add_fingering(fing: &Fingering) -> Result<(), Box<dyn std::error::Error>> {
+    let mut path: PathBuf = dirs::data_dir()
+        .ok_or("Cannot get path for data!")?;
+    path.push("songbook");
+    path.push("fingerings");
+    if !path.exists() { fs::create_dir_all(&path)? }
+
+    let fing_name = get_without_forbidden_chars(
+        fing.get_title()
+            .ok_or("Cannot get the fingering title!")?
+    );
+    path.push(&fing_name);
+
+    let file = File::create(path)?;
+    let writer = BufWriter::new(file);
+
+    serde_yaml::to_writer(writer, &fing)?;
+
+    
+    Ok(())
+}
+
+pub fn get_fingering(chord_name: &str) -> Result<Option<Fingering>, Box<dyn std::error::Error>> {
+    let mut path: PathBuf = dirs::data_dir()
+        .ok_or("Cannot get path for data!")?;
+    path.push("songbook");
+    path.push("fingerings");
+    path.push(&chord_name);
+    
+    if !path.exists() { return Ok(None) }
+
+    let file = File::open(path)?;
+    let reader = BufReader::new(file);
+    let fing: Fingering = serde_yaml::from_reader(reader)?;
+
+    
+    Ok(Some(fing))
 }
 
 

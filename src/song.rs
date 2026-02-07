@@ -63,9 +63,22 @@ impl Song {
 
         if chords {
             let mut fings = Vec::new();
+            
+            #[cfg(not(feature = "song_library"))]
             for f in self.get_fingerings() {
                 fings.push(f[0].clone());
             }
+            
+            #[cfg(feature = "song_library")]
+            for chord in &self.chord_list {
+                if let Ok(Some(f)) = crate::song_library::get_fingering(&chord.text) {
+                    fings.push(f)
+                } else {
+                    fings.push( chord.get_fingerings(&STANDART_TUNING)[0].clone() )
+                }
+            }
+
+            
             if let Some(text) = sum_text_in_fingerings(&fings) {
                 s.push_str(&text);
             }

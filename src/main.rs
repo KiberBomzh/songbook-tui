@@ -6,6 +6,7 @@ use std::path::PathBuf;
 use clap::{Parser, Subcommand, ValueEnum};
 use songbook::{Song, Metadata, Note, STRINGS};
 use songbook::song_library;
+use songbook::{Fingering, StringState};
 
 
 #[derive(Parser, Debug)]
@@ -26,6 +27,18 @@ enum Command {
 
     /// Print chord's fingerings
     Chord { chord: String },
+    
+    /// Manage your fingerings
+    Fingering {
+        /// Your chord name
+        #[arg(long, short)]
+        chord: String,
+
+        /// Strings' conditions (x - muted, 0 - open, 1-24 - fretted)
+        #[arg(long, short, num_args = 1..)]
+        fingering: Vec<String>,
+    },
+
 
     /// Show song
     Show {
@@ -132,6 +145,37 @@ fn main() {
                 } else {
                     println!("Unknown chord!");
                 }
+            },
+            Command::Fingering { chord, fingering } => {
+                if fingering.len() != STRINGS {
+                    println!("Len --fingering must be {}!", STRINGS);
+                    return
+                }
+                let allowed = ["x", "0", 
+                    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+                    "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"
+                ];
+                if !fingering.iter().all(|f|
+                    allowed.iter().any(|a| a == f)
+                ) {
+                    println!("There's not allowed char in your fingering!");
+                    return
+                }
+                
+                let mut strings = [StringState::Muted; STRINGS];
+                for (i, f) in fingering.iter().enumerate() {
+                    match f {
+                        c if c == "x" => {},
+                        c if c == "0" => strings[i] = StringState::Open,
+                        c => {
+                            let fret_num = c.parse::<u8>().unwrap();
+                            strings[i] = StringState::FrettedOn(fret_num);
+                        }
+                    }
+                }
+                
+                let fing = Fingering::new(strings, Some(chord)).unwrap();
+                song_library::add_fingering(&fing).expect("Error during saving a fingering!");
             },
             Command::Show { path, key, chords, rhythm } => {
                 let key = if let Some(k) = key.as_deref() { match k {
