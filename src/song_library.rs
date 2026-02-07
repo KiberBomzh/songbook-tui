@@ -4,6 +4,7 @@ use std::io::{BufWriter, BufReader, Write, Error, ErrorKind, stdout};
 use std::process::{Command, Stdio};
 
 use dirs;
+use include_dir::{include_dir, Dir};
 use anyhow::Result;
 use crossterm::{
     execute,
@@ -16,6 +17,17 @@ use crate::{Song, Metadata, Fingering};
 const FORBIDDEN_CHARS: [char; 9] = ['<', '>', ':', '/', '\\', '|', '?', '*', '`'];
 
 
+
+pub fn init() -> Result<(), Box<dyn std::error::Error>> {
+    let assets: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/assets");
+    let mut path: PathBuf = dirs::data_dir()
+        .ok_or("Cannot get path for data!")?;
+    path.push("songbook");
+    if !path.exists() { fs::create_dir_all(&path)? }
+    assets.extract(&path)?;
+
+    Ok(())
+}
 
 pub fn show(
     song_path: &Path,

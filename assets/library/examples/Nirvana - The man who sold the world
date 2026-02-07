@@ -1,0 +1,422 @@
+metadata:
+  title: The man who sold the world
+  artist: Nirvana
+  key: null
+chord_list:
+- text: A
+  keynote: A
+  minor: false
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+- text: Dm
+  keynote: D
+  minor: true
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+- text: F
+  keynote: F
+  minor: false
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+- text: C
+  keynote: C
+  minor: false
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+- text: Db
+  keynote: CSharp
+  minor: false
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+blocks:
+- title: Intro
+  lines:
+  - !ChordsLine
+    - text: A
+      keynote: A
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - text: Dm
+      keynote: D
+      minor: true
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - text: F
+      keynote: F
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - text: Dm
+      keynote: D
+      minor: true
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+- title: Verse
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      21:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: We passed upon the stair,
+  - !TextBlock
+    rhythm: null
+    chords:
+      21:
+        text: Dm
+        keynote: D
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: We spoke of was and when
+  - !TextBlock
+    rhythm: null
+    chords:
+      21:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Although I wasn't there,
+  - !TextBlock
+    rhythm: null
+    chords:
+      23:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: He said I was his friend
+  - !TextBlock
+    rhythm: null
+    chords:
+      21:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Which came as a surprise,
+  - !TextBlock
+    rhythm: null
+    chords:
+      19:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: I spoke into his eyes
+  - !TextBlock
+    rhythm: null
+    chords:
+      21:
+        text: Dm
+        keynote: D
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: I thought you died alone,
+  - !TextBlock
+    rhythm: null
+    chords:
+      19:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: A long long time ago
+- title: Chorus
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      12:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Oh no, not me
+  - !TextBlock
+    rhythm: null
+    chords:
+      4:
+        text: Db
+        keynote: CSharp
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: We never lost control
+  - !TextBlock
+    rhythm: null
+    chords:
+      6:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      14:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: The face to face
+  - !TextBlock
+    rhythm: null
+    chords:
+      8:
+        text: Db
+        keynote: CSharp
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: To The Man Who Sold The World
+- title: Verse
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      26:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: I laughed and shook his hand,
+  - !TextBlock
+    rhythm: null
+    chords:
+      22:
+        text: Dm
+        keynote: D
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: And made my way back home
+  - !TextBlock
+    rhythm: null
+    chords:
+      25:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: I searched for foreign land,
+  - !TextBlock
+    rhythm: null
+    chords:
+      24:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: For years and years I roamed
+  - !TextBlock
+    rhythm: null
+    chords:
+      22:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: I gazed a gazeless stare,
+  - !TextBlock
+    rhythm: null
+    chords:
+      22:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: We walked a million hills
+  - !TextBlock
+    rhythm: null
+    chords:
+      19:
+        text: Dm
+        keynote: D
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: I must have died alone,
+  - !TextBlock
+    rhythm: null
+    chords:
+      19:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: A long long time ago
+- title: Chorus
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      16:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Who knows, not me
+  - !TextBlock
+    rhythm: null
+    chords:
+      4:
+        text: Db
+        keynote: CSharp
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: I  never lost control
+  - !TextBlock
+    rhythm: null
+    chords:
+      9:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      17:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: You're face to face
+  - !TextBlock
+    rhythm: null
+    chords:
+      10:
+        text: Db
+        keynote: CSharp
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: With The Man Who Sold The World
+  - EmptyLine
+  - !TextBlock
+    rhythm: null
+    chords:
+      17:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Who knows, not me
+  - !TextBlock
+    rhythm: null
+    chords:
+      5:
+        text: Db
+        keynote: CSharp
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      21:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: We  never lost control
+  - !TextBlock
+    rhythm: null
+    chords:
+      9:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      17:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: You're face to face
+  - !TextBlock
+    rhythm: null
+    chords:
+      8:
+        text: Db
+        keynote: CSharp
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: To The Man Who Sold The World

@@ -19,6 +19,9 @@ struct Args {
 
 #[derive(Subcommand, Debug, Clone)]
 enum Command {
+    /// Create folder for songs and add couple songs-examples
+    Init,
+
     /// Print fretboard, for non-standart tuning use '-t'
     Fret {
         #[arg(short, long, default_value = "E, B, G, D, A, E", value_name = "TUNING")]
@@ -115,6 +118,7 @@ fn main() {
 
     if let Some(command) = args.command {
         match command {
+            Command::Init => song_library::init().expect("Error during initialisation!"),
             Command::Fret { tuning } => {
                 // check tuning
                 let mut notes = [Note::A; STRINGS];

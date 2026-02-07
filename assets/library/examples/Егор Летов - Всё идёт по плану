@@ -1,0 +1,1293 @@
+metadata:
+  title: Всё идёт по плану
+  artist: Егор Летов
+  key: null
+chord_list:
+- text: Am
+  keynote: A
+  minor: true
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+- text: F
+  keynote: F
+  minor: false
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+- text: C
+  keynote: C
+  minor: false
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+- text: E
+  keynote: E
+  minor: false
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+blocks:
+- title: Вступление
+  lines:
+  - !ChordsLine
+    - text: Am
+      keynote: A
+      minor: true
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - text: F
+      keynote: F
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - text: C
+      keynote: C
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - text: E
+      keynote: E
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+- title: Куплет
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      4:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      10:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      18:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      29:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Границы ключ переломлен пополам,
+  - !TextBlock
+    rhythm: null
+    chords:
+      7:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      15:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      24:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      30:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: А наш батюшка Ленин совсем усопх.
+  - !TextBlock
+    rhythm: null
+    chords:
+      9:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      19:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      31:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      39:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Он разложился на плесень и на липовый мед,
+  - !TextBlock
+    rhythm: null
+    chords:
+      8:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      28:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      36:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: А перестройка все идет, и идет по плану.
+  - !TextBlock
+    rhythm: null
+    chords:
+      8:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      19:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      34:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: И вся грязь превратилась в голый лед,
+- title: Припев
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      3:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      15:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      18:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      21:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: И всё идет по плану,
+  - !TextBlock
+    rhythm: null
+    chords:
+      1:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      13:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      16:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      19:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      21:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Всё идет по плану.
+- title: Куплет
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      5:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      11:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      18:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      28:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: А моя судьба захотела на покой,
+  - !TextBlock
+    rhythm: null
+    chords:
+      6:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      17:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      32:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      40:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Я обещал ей не участвовать в военной игре.
+  - !TextBlock
+    rhythm: null
+    chords:
+      9:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      31:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      42:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Но на фуражке на моей серп и молот и звезда.
+  - !TextBlock
+    rhythm: null
+    chords:
+      10:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      23:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      31:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      42:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Как это трогательно - серп и молот и звезда.
+  - !TextBlock
+    rhythm: null
+    chords:
+      9:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      17:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      25:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Лихой фонарь ожидания мотается,
+- title: Припев
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      3:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      15:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      18:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      21:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: И всё идет по плану,
+  - !TextBlock
+    rhythm: null
+    chords:
+      1:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      13:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      16:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      19:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      21:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Всё идет по плану.
+- title: Куплет
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      5:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      10:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      19:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      27:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: А моей женой накормили толпу,
+  - !TextBlock
+    rhythm: null
+    chords:
+      5:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      13:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      23:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      33:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Мировым кулаком растоптали ей грудь.
+  - !TextBlock
+    rhythm: null
+    chords:
+      6:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      16:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      28:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      38:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Всенародной свободой растерзали ей плоть.
+  - !TextBlock
+    rhythm: null
+    chords:
+      9:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      18:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      26:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Так закопайте ж ее во Христе,
+- title: Припев
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      3:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      15:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      18:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      22:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: И всё идет по плану,
+  - !TextBlock
+    rhythm: null
+    chords:
+      1:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      13:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      16:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      22:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Всё идет по плану.
+- title: Куплет
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      11:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      21:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      27:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      37:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Один лишь дедушка Ленин хороший был вождь,
+  - !TextBlock
+    rhythm: null
+    chords:
+      10:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      28:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      36:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: А все другие остальные - такое дерьмо,
+  - !TextBlock
+    rhythm: null
+    chords:
+      10:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      19:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      26:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      34:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: А все другие - враги и такие мудаки.
+  - !TextBlock
+    rhythm: null
+    chords:
+      8:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      18:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      30:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      42:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Над родною над отчизной бесноватый снег шел.
+  - !TextBlock
+    rhythm: null
+    chords:
+      5:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      19:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      30:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      39:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Я купил журнал "Корея" - там тоже хорошо.
+  - !TextBlock
+    rhythm: null
+    chords:
+      7:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      30:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      42:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Там товарищ Ким Ир Сен - там тоже, что у нас.
+  - !TextBlock
+    rhythm: null
+    chords:
+      4:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      17:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      26:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Я уверен, что у них тоже самое,
+- title: Припев
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      1:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      13:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      16:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Всё идет по плану,
+  - !TextBlock
+    rhythm: null
+    chords:
+      1:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      13:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      16:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      22:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Всё идет по плану.
+- title: Куплет
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      7:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      12:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      22:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      31:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: А при коммунизме все будет заебись,
+  - !TextBlock
+    rhythm: null
+    chords:
+      7:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      14:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      25:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      37:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Он наступит скоро, надо только подождать.
+  - !TextBlock
+    rhythm: null
+    chords:
+      9:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      19:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      30:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      42:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Там все будет бесплатно, там все будет в кайф.
+  - !TextBlock
+    rhythm: null
+    chords:
+      7:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      18:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      29:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      38:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Там наверное вообще не надо будет умирать
+  - !TextBlock
+    rhythm: null
+    chords:
+      7:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      19:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      28:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Я проснулся среди ночи и понял что
+- title: Припев
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+      1:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      13:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      16:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Всё идет по плану,
+  - !TextBlock
+    rhythm: null
+    chords:
+      1:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      13:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      16:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Всё идет по плану.
+  - !TextBlock
+    rhythm: null
+    chords:
+      1:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      13:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      16:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Всё идет по плану,
+  - !TextBlock
+    rhythm: null
+    chords:
+      1:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      13:
+        text: Am
+        keynote: A
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      16:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      20:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+      22:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Всё идет по плану.
