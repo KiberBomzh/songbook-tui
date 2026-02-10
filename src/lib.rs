@@ -25,9 +25,9 @@ const BLOCK_END: &str = "{block end}";
 const TITLE_SYMBOL: &str = "{title:} ";
 const CHORDS_LINE_SYMBOL: &str = "{chords_line:} ";
 const EMPTY_LINE_SYMBOL: &str = "{empty_line}";
-const CHORDS_SYMBOL: &str = "C|";
-const RHYTHM_SYMBOL: &str = "R|";
-const TEXT_SYMBOL: &str = "T|";
+const CHORDS_SYMBOL: &str = "{C}|";
+const RHYTHM_SYMBOL: &str = "{R}|";
+const TEXT_SYMBOL: &str = "{T}|";
 
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
