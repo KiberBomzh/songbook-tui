@@ -1,8 +1,6 @@
-use std::collections::BTreeMap;
-
 use crate::song::{
     block::{Block, Line},
-    row::Row,
+    row::{Row, ChordPosition},
     chord::Chord
 };
 
@@ -13,7 +11,7 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
 
     let mut title = String::new();
     let mut rows: Vec<Row> = Vec::new();
-    let mut chords = BTreeMap::new();
+    let mut chords = Vec::new();
     let mut last_line_is_chords = false;
     let mut last_line_was_empty = true;
     for line in txt.lines() {
@@ -36,7 +34,7 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
                         )
                     });
                     title = String::new();
-                    chords = BTreeMap::new();
+                    chords = Vec::new();
                     last_line_is_chords = false
                 }
             } else if !title.is_empty() {
@@ -55,12 +53,12 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
 
             let line = line + " ";
             let mut chord = String::new();
-            let mut indent = 1;
+            let mut indent = 0;
             for i in line.chars() {
                 if i == ' ' {
                     if !chord.is_empty() {
                         if let Some(c) = Chord::new(&chord) {
-                            chords.insert(indent - chord.chars().count(), c.clone());
+                            chords.push( ChordPosition::OnIndex{ index: ( indent - chord.chars().count() ), chord: c.clone() } );
                             if chord_list.iter().all(|chord| *chord != c) {
                                 chord_list.push(c);
                             }
@@ -81,7 +79,7 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
                 rows.push(Row { chords: None, text: Some(line), rhythm: None });
             } else {
                 rows.push(Row { chords: Some(chords), text: Some(line), rhythm: None });
-                chords = BTreeMap::new();
+                chords = Vec::new();
             }
             last_line_is_chords = false;
         } else if last_line_was_empty {
@@ -113,7 +111,7 @@ fn is_line_chords(line: &str) -> bool {
     }
     
     // Проверка по второй букве
-    let allowed_second_chars = ['m', '+', '-', '5', '6', '7', '9', '1', 's', 'a'];
+    let allowed_second_chars = ['m', '+', '-', '5', '6', '7', '9', '1', 's', 'a', '#', 'b'];
     for word in words {
         // Если в слове есть вторая буква то проверить что она есть в списке разрешенных
         if let Some(second_char) = word.chars().nth(1) {

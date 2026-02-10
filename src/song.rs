@@ -11,6 +11,7 @@ use crate::Note;
 use crate::sum_text_in_fingerings;
 use crate::song::chord::Chord;
 use crate::song::block::{Block, Line};
+use crate::song::row::ChordPosition;
 
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -135,8 +136,11 @@ impl Song {
                 match line {
                     Line::TextBlock(row) => {
                         if let Some(chords) = &mut row.chords {
-                            for (key, value) in chords.clone() {
-                                chords.insert(key, value.transpose(steps));
+                            for chord in chords {
+                                match chord {
+                                    ChordPosition::UpBeat(chord) => *chord = chord.transpose(steps),
+                                    ChordPosition::OnIndex{chord, ..} => *chord = chord.transpose(steps)
+                                }
                             }
                         }
                     },
@@ -195,9 +199,14 @@ impl Song {
                 match line {
                     Line::TextBlock(row) => {
                         if let Some(chords) = &row.chords {
-                            for (_, chord) in chords {
-                                if list.iter().all(|c| c != chord) {
-                                    list.push(chord.clone());
+                            for chord in chords {
+                                match chord {
+                                    ChordPosition::UpBeat(chord) => if list.iter().all(|c| c != chord) {
+                                        list.push(chord.clone());
+                                    },
+                                    ChordPosition::OnIndex{chord, ..} => if list.iter().all(|c| c != chord) {
+                                        list.push(chord.clone());
+                                    },
                                 }
                             }
                         }

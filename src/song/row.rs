@@ -1,4 +1,3 @@
-use std::collections::BTreeMap;
 use serde::{Serialize, Deserialize};
 use crate::song::chord::Chord;
 use crate::{CHORDS_SYMBOL, RHYTHM_SYMBOL, TEXT_SYMBOL};
@@ -10,26 +9,31 @@ pub enum Beat {
     UpBeat(char)
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum ChordPosition {
+    OnIndex { index: usize, chord: Chord },
+    UpBeat(Chord)
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Row {
     pub rhythm: Option<Vec<Beat>>,
-    pub chords: Option<BTreeMap<usize, Chord>>, // позиция в строке - аккорд
+    pub chords: Option<Vec<ChordPosition>>, // позиция в строке - аккорд
     pub text: Option<String>
 }
 
 impl Row {
-    pub fn to_string(&self, chords: bool, rhythm: bool) -> String {
+    pub fn to_string(&self, needs_chords: bool, needs_rhythm: bool) -> String {
         let mut s = String::new();
-        let mut text = if let Some(t) = &self.text { t.clone() } else { String::new() };
-        if chords || rhythm {
-            let (c, r) = self.chords_and_rhythm_to_string(&mut text, chords, rhythm);
-            if !c.is_empty() && chords {
-                s.push_str(&c);
+        let (chords, rhythm, text) = self.get_strings();
+        if needs_chords || needs_rhythm {
+            if needs_chords && !chords.is_empty() {
+                s.push_str(&chords);
                 s.push('\n');
             }
 
-            if !r.is_empty() && rhythm {
-                s.push_str(&r);
+            if needs_rhythm && !rhythm.is_empty() {
+                s.push_str(&rhythm);
                 s.push('\n');
             }
         }
@@ -42,88 +46,12 @@ impl Row {
 
         return s
     }
-    fn chords_and_rhythm_to_string(
-        &self,
-        text: &mut String,
-        needs_chords: bool,
-        needs_rhythm: bool
-    ) -> (String, String) {
-        let mut chords_str = String::new();
-        let (whitespaces, mut rhythm_str) =
-            if let Some((w, r)) = self.get_rhythm_line() { (w, r) }
-            else { (0, String::new()) };
-        if !rhythm_str.is_empty() && rhythm_str.len() < text.len() {
-            rhythm_str.push_str( &" ".repeat(text.len() - rhythm_str.len()) );
-        }
-
-        let mut added_indent = whitespaces;
-        if let Some(chords) = &self.chords && needs_chords {
-            for k in chords.keys() {
-                let i: usize;
-                let p = k - 1 + added_indent;
-                if chords_str.is_empty() {
-                    i = p;
-                } else {
-                    let s_len = chords_str.chars().count();
-                    if s_len >= p {
-                        let dif = 1 + (s_len - p);
-                        added_indent += dif;
-                        i = 1;
-                        if !text.is_empty() {
-                            if let Some(b_index) = get_bytes_index_from_char_index(&text, p - whitespaces) {
-                                match text.chars().nth(p - whitespaces) {
-                                    Some(c) if c == ' ' => {
-                                        text.insert_str(b_index, &" ".repeat(dif));
-                                        if !rhythm_str.is_empty() {
-                                            rhythm_str.insert_str(p - 1, &" ".repeat(dif));
-                                        }
-                                    },
-                                    Some(_) => if let Some(prior_char) = text.chars().nth(p - 1 - whitespaces) {
-                                        if prior_char == ' ' {
-                                            text.insert_str(b_index, &" ".repeat(dif));
-                                        } else {
-                                            text.insert_str(b_index, &"-".repeat(dif));
-                                        }
-
-                                        if !rhythm_str.is_empty() {
-                                            rhythm_str.insert_str(p - 1, &" ".repeat(dif));
-                                        }
-                                    },
-                                    None => {
-                                        text.push_str(&" ".repeat(dif));
-                                        if !rhythm_str.is_empty() {
-                                            rhythm_str.push_str(&" ".repeat(dif));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        i = p - s_len;
-                    }
-                }
-
-                chords_str.push_str(&" ".repeat(i));
-                chords_str.push_str(&chords.get(k).unwrap().text);
-            }
-        }
-        if whitespaces > 0 && needs_rhythm { text.insert_str(0, &" ".repeat(whitespaces)) }
-
-        return (chords_str, rhythm_str)
-    }
 
 
     pub fn get_for_editing(&self, s: &mut String) {
-        let text = if let Some(t) = &self.text { t } else { &String::new() };
-        let (whitespaces, rhythm_line) =
-            if let Some(line) = self.get_rhythm_line() { line }
-            else { ( 0, String::new() ) };
-
-        let chords_line = if let Some(line) = self.get_chords_line() { line }
-        else { String::new() };
-
+        let (chords_line, rhythm_line, text) = self.get_strings();
+        
         s.push_str(CHORDS_SYMBOL);
-        s.push_str(&" ".repeat(whitespaces));
         s.push_str(&chords_line);
         s.push('\n');
         
@@ -132,7 +60,6 @@ impl Row {
         s.push('\n');
 
         s.push_str(TEXT_SYMBOL);
-        s.push_str(&" ".repeat(whitespaces));
         s.push_str(&text);
         s.push('\n');
     }
@@ -169,67 +96,203 @@ impl Row {
             text: if text_line.is_empty() { None } else { Some(text_line.trim().to_string()) },
         }
     }
-
-
-    pub fn get_chords_line(&self) -> Option<String> {
-        let mut chords_str = String::new();
-        let chords = if let Some(c) = &self.chords {c}
-        else { return None };
-
-        for k in chords.keys() {
-            let i: usize;
-            let p = k.saturating_sub(1);
-            if chords_str.is_empty() {
-                i = p;
-            } else {
-                let s_len = chords_str.chars().count();
-                i = p - s_len;
-            }
-
-            chords_str.push_str(&" ".repeat(i));
-            chords_str.push_str(&chords.get(k).unwrap().text);
-        }
-
-
-        return Some(chords_str)
-    }
-
-    fn get_rhythm_line(&self
-    ) -> Option<(usize, String)> {
-        let beats: &Vec<Beat> = if let Some(r) = &self.rhythm {r}
-        else { return None };
-
-        let mut whitespaces = 0;
-        let mut added_indent = 0;
-        let mut rhythm_line = String::new();
-        for beat in beats {
-            match beat {
-                Beat::UpBeat(symbol) => {
-                    whitespaces += 1 + 1; // один символ + один пробел
-                    rhythm_line.push(*symbol);
-                    rhythm_line.push(' ');
-                },
-                Beat::OnIndex { index, symbol } => {
-                    let dif = index - added_indent;
-                    rhythm_line.push_str(&" ".repeat(dif));
-                    rhythm_line.push(*symbol);
-                    rhythm_line.push(' ');
-                    added_indent += dif + 2;
+    
+    
+    fn get_strings(&self) -> (String, String, String) {
+        let mut chord_string = String::new();
+        let mut rhythm_string = String::new();
+        let mut text_string = String::new();
+        
+        if self.text == None {
+            if let Some(chords) = &self.chords {
+                for chord in chords {
+                    match chord {
+                        ChordPosition::UpBeat(chord) => {
+                            chord_string.push_str(&chord.text);
+                            chord_string.push(' ');
+                        }
+                        ChordPosition::OnIndex { chord, .. } => {
+                            chord_string.push_str(&chord.text);
+                            chord_string.push(' ');
+                        }
+                    }
                 }
             }
+            if let Some(beats) = &self.rhythm {
+                for beat in beats {
+                    match beat {
+                        Beat::UpBeat(symbol) => {
+                            chord_string.push(*symbol);
+                            chord_string.push(' ');
+                        }
+                        Beat::OnIndex { symbol, .. } => {
+                            chord_string.push(*symbol);
+                            chord_string.push(' ');
+                        }
+                    }
+                }
+            }
+            
+            return (chord_string, rhythm_string, text_string)
         }
-
-        return Some( (whitespaces, rhythm_line) )
+        
+        
+        
+        // Если есть текст
+        // Если есть аккорды
+        if let Some(chords) = &self.chords {
+            let text = self.text.as_ref().unwrap();
+            let mut whitespaces_for_chords = 0;
+            // Пары аккорд - отрывок текста после него
+            let mut pairs: Vec<(usize, Chord, String)> = Vec::new();
+            let mut text_in_start = String::new();
+            let mut is_first = true;
+            for (i, chord) in chords.iter().enumerate() {
+                match chord {
+                    ChordPosition::UpBeat(chord) => {
+                        whitespaces_for_chords += 1 + chord.text.chars().count();
+                        chord_string.push_str(&chord.text);
+                        chord_string.push(' ');
+                    },
+                    ChordPosition::OnIndex { index, chord } => {
+                        if *index > 0 && text_in_start.is_empty() && is_first {
+                            text_in_start = text.chars().take(*index).collect::<String>();
+                        }
+                        if is_first { is_first = false }
+                        
+                        let index_new = if is_first {
+                            index + text_in_start.chars().count()
+                        } else {
+                            *index
+                        };
+                        
+                        let slice_for_chord = if let Some(ChordPosition::OnIndex {index: next_index, .. }) = chords.iter().nth(i + 1) {
+                            text.chars().skip(index_new).take(next_index - index_new).collect::<String>()
+                        } else {
+                            text.chars().skip(index_new).collect::<String>()
+                            
+                        };
+                        pairs.push((*index, chord.clone(), slice_for_chord));
+                    }
+                }
+            }
+            
+            if let Some(beats) = &self.rhythm {
+                let mut whitespaces_for_beats = 0;
+                let mut added_indent = 0;
+                let mut start_for_indexed_beats = None;
+                for beat in beats {
+                    match beat {
+                        Beat::UpBeat(symbol) => {
+                            whitespaces_for_beats += 1 + 1; // Символ + пробел
+                            rhythm_string.push(*symbol);
+                            rhythm_string.push(' ');
+                        },
+                        Beat::OnIndex { index, symbol } => {
+                            let dif = index - added_indent;
+                            rhythm_string.push_str(&" ".repeat(dif));
+                            rhythm_string.push(*symbol);
+                            rhythm_string.push(' ');
+                            added_indent += dif + 2;
+                            if start_for_indexed_beats == None {
+                                start_for_indexed_beats = Some(index)
+                            }
+                        }
+                    }
+                }
+                
+                if whitespaces_for_beats > whitespaces_for_chords {
+                    whitespaces_for_chords = whitespaces_for_beats
+                } else {
+                    if let Some(index) = start_for_indexed_beats {
+                        rhythm_string.insert_str(*index, &" ".repeat(whitespaces_for_chords - whitespaces_for_beats) );
+                    }
+                }
+            }
+            
+            text_string.push_str( &" ".repeat(whitespaces_for_chords) );
+            // Если все аккорды UpBeat то без этого не захватывает текст вообще
+            if is_first && text_in_start.is_empty() && pairs.is_empty() {
+                text_in_start = text.clone()
+            }
+            text_string.push_str( &text_in_start );
+            
+            if chord_string.is_empty() {
+                chord_string.push_str( &" ".repeat(whitespaces_for_chords) );
+            }
+            chord_string.push_str( &" ".repeat(text_in_start.chars().count()) );
+            
+            let mut added_indent_in_rhythm = 0;
+            for (index, (index_before, chord, slice)) in pairs.iter().enumerate() {
+                chord_string.push_str(&chord.text);
+                if slice.chars().count() <= chord.text.chars().count() {
+                    if let Some((_, _, next_slice)) = pairs.iter().nth(index + 1) {
+                        chord_string.push(' ');
+                        text_string.push_str(&slice);
+                        
+                        if !slice.ends_with(" ") && !next_slice.starts_with(" ") && !next_slice.is_empty() {
+                            text_string.push_str( &"-".repeat(chord.text.chars().count() - slice.chars().count() + 1) );
+                        } else {
+                            text_string.push_str( &" ".repeat(chord.text.chars().count() - slice.chars().count() + 1) );
+                        }
+                        if !rhythm_string.is_empty() {
+                            rhythm_string.insert(index_before + whitespaces_for_chords + added_indent_in_rhythm, ' ');
+                            added_indent_in_rhythm += 1;
+                        }
+                    } else {
+                        text_string.push_str(&slice);
+                    }
+                } else {
+                    chord_string.push_str( &" ".repeat(slice.chars().count() - chord.text.chars().count()) );
+                    text_string.push_str(&slice);
+                }
+            }
+            
+            
+            return (chord_string, rhythm_string, text_string)
+        }
+        
+        
+        
+        // Если аккордов нет но есть ритм
+        if let Some(beats) = &self.rhythm {
+            let mut whitespaces = 0;
+            let mut added_indent = 0;
+            for beat in beats {
+                match beat {
+                    Beat::UpBeat(symbol) => {
+                        whitespaces += 1 + 1; // Символ + пробел
+                        rhythm_string.push(*symbol);
+                        rhythm_string.push(' ');
+                    },
+                    Beat::OnIndex { index, symbol } => {
+                        let dif = index - added_indent;
+                        rhythm_string.push_str(&" ".repeat(dif));
+                        rhythm_string.push(*symbol);
+                        rhythm_string.push(' ');
+                        added_indent += dif + 2;
+                    }
+                }
+            }
+            
+            text_string.push_str( &" ".repeat(whitespaces) );
+            text_string.push_str(&self.text.as_ref().unwrap());
+            
+            return (chord_string, rhythm_string, text_string)
+        }
+        
+        
+        // Если только текст
+        if let Some(text) = &self.text && text_string.is_empty() {
+            text_string.push_str(text)
+        }
+        return (chord_string, rhythm_string, text_string)
     }
 }
 
-fn get_bytes_index_from_char_index(line: &str, char_index: usize) -> Option<usize> {
-    line.char_indices()
-        .nth(char_index)
-        .map(|(idx, _)| idx)
-}
-fn chords_from_edited(line: &str, whitespaces: usize) -> Option<BTreeMap<usize, Chord>> {
-    let mut chords: BTreeMap<usize, Chord> = BTreeMap::new();
+
+fn chords_from_edited(line: &str, whitespaces: usize) -> Option<Vec<ChordPosition>> {
+    let mut chords: Vec<ChordPosition> = Vec::new();
 
     let line = line.to_string() + " ";
     let mut chord = String::new();
@@ -243,7 +306,12 @@ fn chords_from_edited(line: &str, whitespaces: usize) -> Option<BTreeMap<usize, 
 
 
         if let Some(c) = Chord::new(&chord) {
-            chords.insert( indent - chord.chars().count() - whitespaces, c );
+            let index = indent - 1 - chord.chars().count();
+            if whitespaces > index {
+                chords.push(ChordPosition::UpBeat(c))
+            } else {
+                chords.push( ChordPosition::OnIndex {index: (index - whitespaces), chord: c} )
+            }
         }
 
         chord.clear();
