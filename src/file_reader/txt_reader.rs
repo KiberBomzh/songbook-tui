@@ -108,5 +108,20 @@ fn is_line_chords(line: &str) -> bool {
     let words: Vec<&str> = line.split_whitespace().collect();
     let chords = ["A", "B", "C", "D", "E", "F", "G"];
 
-    words.iter().all(|w| chords.iter().any(|c| w.starts_with(*c)))
+    if !words.iter().all(|w| chords.iter().any(|c| w.starts_with(*c))) {
+        return false
+    }
+    
+    // Проверка по второй букве
+    let allowed_second_chars = ['m', '+', '-', '5', '6', '7', '9', '1', 's', 'a'];
+    for word in words {
+        // Если в слове есть вторая буква то проверить что она есть в списке разрешенных
+        if let Some(second_char) = word.chars().nth(1) {
+            if !allowed_second_chars.iter().any(|c| *c == second_char) {
+                return false
+            }
+        }
+    }
+    
+    return true
 }
