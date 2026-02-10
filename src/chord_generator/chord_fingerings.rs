@@ -181,7 +181,10 @@ pub fn sum_text_in_fingerings(fingerings: &Vec<Fingering>) -> Option<String> {
         }
 
         let title = if let Some(title) = &f.title {
-            title.clone() + &" ".repeat(line_width - title.len())
+            let left_part_width = ( line_width - title.len() ) / 2 - title.len();
+            let right_part_width = line_width - left_part_width - title.len();
+            
+            " ".repeat(left_part_width) + title + &" ".repeat(right_part_width)
         }
         else { " ".repeat(line_width) };
 
