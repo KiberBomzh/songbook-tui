@@ -190,12 +190,12 @@ pub fn tree(added_path: Option<&Path>) -> Result<()> {
         return Err( Error::new(ErrorKind::NotFound, "There's no such dir!").into() )
     }
 
-    recursive_tree(&path, 1)?;
+    recursive_tree(&path, 1, false)?;
 
     Ok(())
 }
 
-fn recursive_tree(dir: &Path, indent: usize) -> Result<()> {
+fn recursive_tree(dir: &Path, indent: usize, is_parent_last: bool) -> Result<()> {
     if let Some(name) = dir.file_name().and_then(|f| f.to_str()) {
         println!("{}", name);
     }
@@ -205,19 +205,24 @@ fn recursive_tree(dir: &Path, indent: usize) -> Result<()> {
 
     for entry in fs::read_dir(dir)? {
         let entry = entry?;
+        let is_last = entry.path() == last;
         if let Some(name) = entry.file_name().to_str() {
             if indent > 1 {
-                print!("{}", "│   ".repeat(indent - 1));
+                if is_parent_last {
+                    print!("{}", "    ".repeat(indent - 1));
+                } else {
+                    print!("{}", "│   ".repeat(indent - 1));
+                }
             }
 
-            if entry.path() == last {
+            if is_last {
                 print!("└── ");
             } else {
                 print!("├── ");
             }
 
             if entry.path().is_dir() {
-                recursive_tree(&entry.path(), indent + 1)?;
+                recursive_tree(&entry.path(), indent + 1, is_last)?;
             } else {
                 println!("{}", name);
             }
