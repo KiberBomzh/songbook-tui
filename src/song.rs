@@ -4,6 +4,10 @@ pub mod chord;
 
 use serde::{Serialize, Deserialize};
 use anyhow::Result;
+use crossterm::{
+    execute,
+    style::{Color, Print, ResetColor, SetForegroundColor}
+};
 
 use crate::Fingering;
 use crate::{BLOCK_START, BLOCK_END, STANDART_TUNING};
@@ -112,9 +116,10 @@ impl Song {
         let mut is_first = true;
         for block in &self.blocks {
             if is_first { is_first = false }
-            else { s.push_str("\n\n") }
+            else { s.push('\n') }
 
             if let Some(title) = &block.title {
+                if !is_first && !title.is_empty() { s.push('\n') }
                 s.push_str(&title);
                 if !block.lines.is_empty() { s.push('\n') }
             }
@@ -166,10 +171,16 @@ impl Song {
         let mut is_first = true;
         for block in &self.blocks {
             if is_first { is_first = false }
-            else { write!(out, "\n\n")? }
+            else { write!(out, "\n")? }
 
             if let Some(title) = &block.title {
-                write!(out, "{}", &title)?;
+                if !is_first && !title.is_empty() { writeln!(out)? }
+                execute!(
+                    out,
+                    SetForegroundColor(Color::Green),
+                    Print(title),
+                    ResetColor
+                )?;
                 if !block.lines.is_empty() { write!(out, "\n")? }
             }
             
