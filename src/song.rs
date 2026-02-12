@@ -53,6 +53,18 @@ impl Metadata {
 
 
 impl Song {
+    pub fn new(title: &str, artist: &str) -> Self {
+        Self {
+            metadata: Metadata {
+                title: title.to_string(), 
+                artist: artist.to_string(),
+                key: None
+            },
+            chord_list: Vec::new(),
+            blocks: Vec::new()
+        }
+    }
+
     pub fn get_song_as_text(&self, chords: bool, rhythm: bool, fingerings: bool) -> String {
         let mut s = String::new();
 

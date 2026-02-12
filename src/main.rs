@@ -73,21 +73,10 @@ enum Command {
         target: EditTarget,
     },
 
-    // Потом разбить это на разные варианты откуда добавлять
-    // text, chordpro или создание пустой песни
     // добавить вариант с созданием песни с буфера обмена (text но с буфера)
     /// Add a song to the library
-    Add {
-        path: PathBuf,
-
-        /// Song's artist
-        #[arg(long, short)]
-        artist: String,
-
-        /// Song's title
-        #[arg(long, short)]
-        title: String,
-    },
+    #[command(subcommand)]
+    Add(AddSubcommand),
 
     /// Remove a song from the library
     Rm { paths: Vec<PathBuf> },
@@ -114,6 +103,31 @@ enum Command {
 enum EditTarget {
     Song,
     Meta
+}
+
+#[derive(Subcommand, Debug, Clone)]
+enum AddSubcommand {
+    FromTxt {
+        path: PathBuf,
+
+        /// Song's artist
+        #[arg(long, short)]
+        artist: String,
+
+        /// Song's title
+        #[arg(long, short)]
+        title: String,
+    },
+    // FromChordPro { path: PathBuf },
+    Empty {
+        /// Song's artist
+        #[arg(long, short)]
+        artist: String,
+
+        /// Song's title
+        #[arg(long, short)]
+        title: String,
+    }
 }
 
 
@@ -218,14 +232,21 @@ fn main() {
                 song_library::edit(&path, target)
                     .expect("Error during editing song!");
             },
-            Command::Add {path, artist, title} => {
-                let song = Song::from_txt(
-                    &path,
-                    Metadata { title, artist, key: None }
-                    ).expect("Error during adding a song!");
+            Command::Add(subcommand) => match subcommand {
+                AddSubcommand::FromTxt { path, title, artist } => {
+                    let song = Song::from_txt(
+                        &path,
+                        Metadata { title, artist, key: None }
+                        ).expect("Error during adding a song!");
 
-                song_library::add(&song)
-                    .expect("Error during adding a song!");
+                    song_library::add(&song)
+                        .expect("Error during adding a song!");
+                },
+                AddSubcommand::Empty { title, artist } => {
+                    let song = Song::new(&title, &artist);
+                    song_library::add(&song)
+                        .expect("Error during adding a song!");
+                }
             },
             Command::Rm { paths } => {
                 for path in &paths {
