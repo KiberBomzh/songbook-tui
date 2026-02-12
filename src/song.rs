@@ -138,6 +138,25 @@ impl Song {
         return s
     }
 
+    pub fn print_colored(&self) {
+        let mut is_first = true;
+        for block in &self.blocks {
+            if is_first { is_first = false }
+            else { print!("\n\n") }
+
+            if let Some(title) = &block.title {
+                print!("{}", &title);
+                if !block.lines.is_empty() { print!("\n") }
+            }
+            let mut is_first_line = true;
+            for line in &block.lines {
+                if is_first_line { is_first_line = false }
+                else { print!("\n") }
+                line.print_colored();
+            }
+        }
+    }
+
     pub fn transpose(&mut self, steps: i32) {
         if let Some(key) = self.metadata.key {
             self.metadata.key = Some(key.transpose(steps))

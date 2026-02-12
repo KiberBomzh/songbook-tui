@@ -1,4 +1,11 @@
 use serde::{Serialize, Deserialize};
+
+use std::io::stdout;
+use crossterm::{
+    execute,
+    style::{Color, Print, ResetColor, SetForegroundColor}
+};
+
 use crate::song::chord::Chord;
 use crate::{CHORDS_SYMBOL, RHYTHM_SYMBOL, TEXT_SYMBOL};
 
@@ -45,6 +52,35 @@ impl Row {
 
 
         return s
+    }
+
+
+    pub fn print_colored(&self) {
+        let (chords_line, rhythm_line, text) = self.get_strings();
+
+        if !chords_line.is_empty(){
+            execute!(
+                stdout(),
+                SetForegroundColor(Color::Magenta),
+                Print(chords_line),
+                Print("\n"),
+                ResetColor
+            ).unwrap_or(());
+        }
+
+        if !rhythm_line.is_empty() {
+            execute!(
+                stdout(),
+                SetForegroundColor(Color::Blue),
+                Print(rhythm_line),
+                Print("\n"),
+                ResetColor
+            ).unwrap_or(());
+        }
+
+        if !text.is_empty() {
+            println!("{}", text);
+        }
     }
 
 

@@ -1,4 +1,10 @@
+use std::io::stdout;
+use crossterm::{
+    execute,
+    style::{Color, Print, ResetColor, SetForegroundColor}
+};
 use serde::{Serialize, Deserialize};
+
 use crate::song::row::Row;
 use crate::song::chord::Chord;
 use crate::{
@@ -24,6 +30,29 @@ pub enum Line {
     TextBlock(Row),
     ChordsLine(Vec<Chord>),
     EmptyLine
+}
+
+impl Line {
+    pub fn print_colored(&self) {
+        match self {
+            Line::TextBlock(row) => row.print_colored(),
+            Line::ChordsLine(chords) => {
+                let mut s = String::new();
+                for chord in chords {
+                    s.push_str(&chord.text);
+                    s.push(' ');
+                }
+                execute!(
+                    stdout(),
+                    SetForegroundColor(Color::Magenta),
+                    Print(s),
+                    Print("\n"),
+                    ResetColor
+                ).unwrap_or(());
+            },
+            Line::EmptyLine => println!()
+        }
+    }
 }
 
 impl Block {
