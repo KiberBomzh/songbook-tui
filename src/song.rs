@@ -130,6 +130,7 @@ impl Song {
                             s.push(' ');
                         }
                     },
+                    Line::PlainText(text) => s.push_str(text),
                     Line::EmptyLine => {}
                 }
             }
@@ -203,6 +204,7 @@ impl Song {
                     },
                     Line::ChordsLine(chords) =>
                         chords.iter_mut().for_each(|c| *c = c.transpose(steps)),
+                    Line::PlainText(_) => {},
                     Line::EmptyLine => {}
                 }
             }
@@ -273,6 +275,7 @@ impl Song {
                             list.push(chord.clone());
                         }
                     },
+                    Line::PlainText(_) => {},
                     Line::EmptyLine => {}
                 }
             }

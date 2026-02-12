@@ -14,7 +14,9 @@ use crate::{
     RHYTHM_SYMBOL,
     TEXT_SYMBOL,
     EMPTY_LINE_SYMBOL,
-    CHORDS_LINE_SYMBOL
+    CHORDS_LINE_SYMBOL,
+    PLAIN_TEXT_START,
+    PLAIN_TEXT_END
 };
 
 
@@ -28,6 +30,7 @@ pub struct Block {
 pub enum Line {
     TextBlock(Row),
     ChordsLine(Vec<Chord>),
+    PlainText(String),
     EmptyLine
 }
 
@@ -49,6 +52,7 @@ impl Line {
                     ResetColor
                 )?;
             },
+            Line::PlainText(text) => write!(out, "{}", text)?,
             Line::EmptyLine => writeln!(out)?
         }
         
@@ -81,6 +85,16 @@ impl Block {
                     }
                     s.push('\n');
                 },
+                Line::PlainText(text) => {
+                    s.push_str(PLAIN_TEXT_START);
+                    s.push('\n');
+                    
+                    s.push_str(text);
+                    s.push('\n');
+                    
+                    s.push_str(PLAIN_TEXT_END);
+                    s.push('\n');
+                },
                 Line::EmptyLine =>  {
                     s.push_str(EMPTY_LINE_SYMBOL);
                     s.push('\n');
@@ -97,9 +111,25 @@ impl Block {
         let mut title: Option<String> = None;
         let mut lines: Vec<Line> = Vec::new();
 
+
+        let mut is_plain_text = false;
+        let mut plain_text_buf = String::new();
+        
         let mut row_buf = String::new();
         for line in text.lines() {
-            if line.starts_with(TITLE_SYMBOL) {
+            if line.starts_with(PLAIN_TEXT_END) {
+                is_plain_text = false;
+                lines.push( Line::PlainText(plain_text_buf) );
+                plain_text_buf = String::new();
+            } else if is_plain_text {
+                if !plain_text_buf.is_empty() {
+                    plain_text_buf.push('\n');
+                }
+                plain_text_buf.push_str(line);
+            } else if line.starts_with(PLAIN_TEXT_START) {
+                is_plain_text = true;
+            
+            } else if line.starts_with(TITLE_SYMBOL) {
                 title = Some(line[TITLE_SYMBOL.len()..].to_string());
             } else if line.starts_with(EMPTY_LINE_SYMBOL) {
                 lines.push(Line::EmptyLine);

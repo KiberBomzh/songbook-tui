@@ -23,8 +23,13 @@ const BLOCK_START: &str = "{block start}";
 const BLOCK_END: &str = "{block end}";
 
 const TITLE_SYMBOL: &str = "{title:} ";
+
 const CHORDS_LINE_SYMBOL: &str = "{chords_line:} ";
 const EMPTY_LINE_SYMBOL: &str = "{empty_line}";
+
+const PLAIN_TEXT_START: &str = "{plain_text:}";
+const PLAIN_TEXT_END: &str = "{:plain_text}";
+
 const CHORDS_SYMBOL: &str = "{C}|";
 const RHYTHM_SYMBOL: &str = "{R}|";
 const TEXT_SYMBOL: &str = "{T}|";
