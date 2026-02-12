@@ -1,7 +1,7 @@
 metadata:
   title: Dumb
   artist: Nirvana
-  key: null
+  key: G
 chord_list:
 - text: E5
   keynote: E
@@ -57,14 +57,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      13:
+    - !OnIndex
+      index: 12
+      chord:
         text: A
         keynote: A
         minor: false
@@ -75,14 +79,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      3:
+    - !OnIndex
+      index: 2
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      14:
+    - !OnIndex
+      index: 13
+      chord:
         text: C5
         keynote: C
         minor: false
@@ -93,14 +101,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      13:
+    - !OnIndex
+      index: 12
+      chord:
         text: A
         keynote: A
         minor: false
@@ -111,14 +123,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      3:
+    - !OnIndex
+      index: 2
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      13:
+    - !OnIndex
+      index: 12
+      chord:
         text: C5
         keynote: C
         minor: false
@@ -129,14 +145,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: A
         keynote: A
         minor: false
@@ -147,14 +167,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      3:
+    - !OnIndex
+      index: 2
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      13:
+    - !OnIndex
+      index: 12
+      chord:
         text: C5
         keynote: C
         minor: false
@@ -165,14 +189,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      13:
+    - !OnIndex
+      index: 12
+      chord:
         text: A
         keynote: A
         minor: false
@@ -183,28 +211,36 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: C5
         keynote: C
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      17:
+    - !OnIndex
+      index: 16
+      chord:
         text: E
         keynote: E
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      19:
+    - !OnIndex
+      index: 18
+      chord:
         text: G
         keynote: G
         minor: false
@@ -217,14 +253,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      17:
+    - !OnIndex
+      index: 16
+      chord:
         text: E
         keynote: E
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      20:
+    - !OnIndex
+      index: 19
+      chord:
         text: G
         keynote: G
         minor: false
@@ -235,14 +275,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      17:
+    - !OnIndex
+      index: 16
+      chord:
         text: E
         keynote: E
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      20:
+    - !OnIndex
+      index: 19
+      chord:
         text: G
         keynote: G
         minor: false
@@ -253,14 +297,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      17:
+    - !OnIndex
+      index: 16
+      chord:
         text: E
         keynote: E
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      20:
+    - !OnIndex
+      index: 19
+      chord:
         text: G
         keynote: G
         minor: false
@@ -273,14 +321,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: A
         keynote: A
         minor: false
@@ -291,14 +343,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      13:
+    - !OnIndex
+      index: 12
+      chord:
         text: C5
         keynote: C
         minor: false
@@ -309,14 +365,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      11:
+    - !OnIndex
+      index: 10
+      chord:
         text: A
         keynote: A
         minor: false
@@ -327,14 +387,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      11:
+    - !OnIndex
+      index: 10
+      chord:
         text: C5
         keynote: C
         minor: false
@@ -345,14 +409,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      14:
+    - !OnIndex
+      index: 13
+      chord:
         text: A
         keynote: A
         minor: false
@@ -363,14 +431,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      11:
+    - !OnIndex
+      index: 10
+      chord:
         text: C5
         keynote: C
         minor: false
@@ -381,14 +453,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: A
         keynote: A
         minor: false
@@ -399,14 +475,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      11:
+    - !OnIndex
+      index: 10
+      chord:
         text: C5
         keynote: C
         minor: false
@@ -417,14 +497,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      3:
+    - !OnIndex
+      index: 2
+      chord:
         text: E
         keynote: E
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      5:
+    - !OnIndex
+      index: 4
+      chord:
         text: G
         keynote: G
         minor: false
@@ -437,14 +521,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      7:
+    - !OnIndex
+      index: 6
+      chord:
         text: E
         keynote: E
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      11:
+    - !OnIndex
+      index: 10
+      chord:
         text: G
         keynote: G
         minor: false
@@ -455,14 +543,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      7:
+    - !OnIndex
+      index: 6
+      chord:
         text: E
         keynote: E
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      11:
+    - !OnIndex
+      index: 10
+      chord:
         text: G
         keynote: G
         minor: false
@@ -473,14 +565,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      7:
+    - !OnIndex
+      index: 6
+      chord:
         text: E
         keynote: E
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      11:
+    - !OnIndex
+      index: 10
+      chord:
         text: G
         keynote: G
         minor: false
@@ -493,7 +589,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: B
         keynote: B
         minor: false
@@ -504,7 +602,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: C
         keynote: C
         minor: false
@@ -515,7 +615,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: B
         keynote: B
         minor: false
@@ -526,7 +628,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: C
         keynote: C
         minor: false
@@ -537,7 +641,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: B
         keynote: B
         minor: false
@@ -548,7 +654,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: C
         keynote: C
         minor: false
@@ -559,7 +667,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: B
         keynote: B
         minor: false
@@ -570,7 +680,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: C
         keynote: C
         minor: false
@@ -583,14 +695,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      13:
+    - !OnIndex
+      index: 12
+      chord:
         text: A
         keynote: A
         minor: false
@@ -601,14 +717,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      3:
+    - !OnIndex
+      index: 2
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      14:
+    - !OnIndex
+      index: 13
+      chord:
         text: C5
         keynote: C
         minor: false
@@ -619,14 +739,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      13:
+    - !OnIndex
+      index: 12
+      chord:
         text: A
         keynote: A
         minor: false
@@ -637,14 +761,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      3:
+    - !OnIndex
+      index: 2
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      13:
+    - !OnIndex
+      index: 12
+      chord:
         text: C5
         keynote: C
         minor: false
@@ -655,14 +783,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: A
         keynote: A
         minor: false
@@ -673,14 +805,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      3:
+    - !OnIndex
+      index: 2
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      13:
+    - !OnIndex
+      index: 12
+      chord:
         text: C5
         keynote: C
         minor: false
@@ -691,14 +827,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      1:
+    - !OnIndex
+      index: 0
+      chord:
         text: E5
         keynote: E
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      13:
+    - !OnIndex
+      index: 12
+      chord:
         text: A
         keynote: A
         minor: false
@@ -709,28 +849,36 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: G5
         keynote: G
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: C5
         keynote: C
         minor: false
         chord_type: Power
         fifth_state: Norm
         sus_or_add: No
-      17:
+    - !OnIndex
+      index: 16
+      chord:
         text: E
         keynote: E
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      19:
+    - !OnIndex
+      index: 18
+      chord:
         text: G
         keynote: G
         minor: false
@@ -743,14 +891,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: E
         keynote: E
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      16:
+    - !OnIndex
+      index: 15
+      chord:
         text: G
         keynote: G
         minor: false
@@ -761,21 +913,27 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: E
         keynote: E
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      15:
+    - !OnIndex
+      index: 14
+      chord:
         text: G
         keynote: G
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      17:
+    - !OnIndex
+      index: 16
+      chord:
         text: E
         keynote: E
         minor: false
@@ -783,19 +941,23 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Think im just happy
-- title: Outro
+- title: ''
   lines:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: A
         keynote: A
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: G
         keynote: G
         minor: false
@@ -806,14 +968,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: C
         keynote: C
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: E
         keynote: E
         minor: false
@@ -824,14 +990,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: A
         keynote: A
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: G
         keynote: G
         minor: false
@@ -842,14 +1012,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: C
         keynote: C
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: E
         keynote: E
         minor: false
@@ -860,14 +1034,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: A
         keynote: A
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: G
         keynote: G
         minor: false
@@ -878,14 +1056,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: C
         keynote: C
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: E
         keynote: E
         minor: false
@@ -896,14 +1078,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: A
         keynote: A
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: G
         keynote: G
         minor: false
@@ -914,14 +1100,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      2:
+    - !OnIndex
+      index: 1
+      chord:
         text: C
         keynote: C
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: E
         keynote: E
         minor: false

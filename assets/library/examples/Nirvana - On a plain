@@ -1,11 +1,17 @@
 metadata:
-  title: Всё идёт по плану
-  artist: Егор Летов
-  key: C
+  title: On a plain
+  artist: Nirvana
+  key: D
 chord_list:
-- text: Am
-  keynote: A
-  minor: true
+- text: D
+  keynote: D
+  minor: false
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+- text: G
+  keynote: G
+  minor: false
   chord_type: Norm
   fifth_state: Norm
   sus_or_add: No
@@ -15,8 +21,26 @@ chord_list:
   chord_type: Norm
   fifth_state: Norm
   sus_or_add: No
+- text: Em
+  keynote: E
+  minor: true
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
 - text: C
   keynote: C
+  minor: false
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+- text: Bm
+  keynote: B
+  minor: true
+  chord_type: Norm
+  fifth_state: Norm
+  sus_or_add: No
+- text: A
+  keynote: A
   minor: false
   chord_type: Norm
   fifth_state: Norm
@@ -28,49 +52,71 @@ chord_list:
   fifth_state: Norm
   sus_or_add: No
 blocks:
-- title: Вступление
-  lines:
-  - !ChordsLine
-    - text: Am
-      keynote: A
-      minor: true
-      chord_type: Norm
-      fifth_state: Norm
-      sus_or_add: No
-    - text: F
-      keynote: F
-      minor: false
-      chord_type: Norm
-      fifth_state: Norm
-      sus_or_add: No
-    - text: C
-      keynote: C
-      minor: false
-      chord_type: Norm
-      fifth_state: Norm
-      sus_or_add: No
-    - text: E
-      keynote: E
-      minor: false
-      chord_type: Norm
-      fifth_state: Norm
-      sus_or_add: No
-- title: Куплет
+- title: Verse
   lines:
   - !TextBlock
     rhythm: null
     chords:
     - !OnIndex
-      index: 3
+      index: 0
       chord:
-        text: Am
-        keynote: A
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 7
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 17
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 23
+      chord:
+        text: Em
+        keynote: E
         minor: true
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 9
+      index: 33
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: I'll start this off without any words
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 2
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 10
       chord:
         text: F
         keynote: F
@@ -81,6 +127,28 @@ blocks:
     - !OnIndex
       index: 17
       chord:
+        text: Em
+        keynote: E
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 35
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: I Got so high I scratched till it bled
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 0
+      chord:
         text: C
         keynote: C
         minor: false
@@ -88,24 +156,389 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 28
+      index: 5
       chord:
-        text: E
-        keynote: E
+        text: Bm
+        keynote: B
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 14
+      chord:
+        text: A
+        keynote: A
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    text: Границы ключ переломлен пополам,
+    - !OnIndex
+      index: 25
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 35
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 42
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 51
+      chord:
+        text: Em
+        keynote: E
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 66
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Love myself, Better than you, I know it's wrong so what should I do?
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 4
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 12
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 20
+      chord:
+        text: Em
+        keynote: E
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 29
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: The finest day that I ever had
   - !TextBlock
     rhythm: null
     chords:
     - !OnIndex
       index: 6
       chord:
-        text: Am
-        keynote: A
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 13
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 22
+      chord:
+        text: Em
+        keynote: E
         minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 30
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Was when I learned to cry on command
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 0
+      chord:
+        text: C
+        keynote: C
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 5
+      chord:
+        text: Bm
+        keynote: B
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 14
+      chord:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 25
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 35
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 42
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 51
+      chord:
+        text: Em
+        keynote: E
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 66
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Love myself, Better than you, I know it's wrong so what should I do?
+- title: Chorus
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !UpBeat
+      text: D
+      keynote: D
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: G
+      keynote: G
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: F
+      keynote: F
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    text: I'm on a plain
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !UpBeat
+      text: D
+      keynote: D
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: G
+      keynote: G
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: F
+      keynote: F
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    text: I can't complain
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !UpBeat
+      text: D
+      keynote: D
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: G
+      keynote: G
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: F
+      keynote: F
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !OnIndex
+      index: 14
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 16
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 18
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: I'm on a Plain
+- title: Verse
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 0
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 4
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 12
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 17
+      chord:
+        text: Em
+        keynote: E
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 23
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: My brother died every night
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 7
+      chord:
+        text: G
+        keynote: G
+        minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
@@ -121,45 +554,27 @@ blocks:
     - !OnIndex
       index: 23
       chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 29
-      chord:
-        text: E
+        text: Em
         keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: А наш батюшка Ленин совсем усопх.
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 8
-      chord:
-        text: Am
-        keynote: A
         minor: true
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 18
+      index: 35
       chord:
-        text: F
-        keynote: F
+        text: D
+        keynote: D
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
+    text: It's safe to say don't quote me on that
+  - !TextBlock
+    rhythm: null
+    chords:
     - !OnIndex
-      index: 30
+      index: 0
       chord:
         text: C
         keynote: C
@@ -168,41 +583,28 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 38
+      index: 5
       chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Он разложился на плесень и на липовый мед,
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 7
-      chord:
-        text: Am
-        keynote: A
+        text: Bm
+        keynote: B
         minor: true
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 19
+      index: 14
       chord:
-        text: F
-        keynote: F
+        text: A
+        keynote: A
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 27
+      index: 25
       chord:
-        text: C
-        keynote: C
+        text: D
+        keynote: D
         minor: false
         chord_type: Norm
         fifth_state: Norm
@@ -210,27 +612,14 @@ blocks:
     - !OnIndex
       index: 35
       chord:
-        text: E
-        keynote: E
+        text: G
+        keynote: G
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    text: А перестройка все идет, и идет по плану.
-  - !TextBlock
-    rhythm: null
-    chords:
     - !OnIndex
-      index: 7
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 18
+      index: 42
       chord:
         text: F
         keynote: F
@@ -239,25 +628,81 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 33
+      index: 51
       chord:
-        text: C
-        keynote: C
+        text: Em
+        keynote: E
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 66
+      chord:
+        text: D
+        keynote: D
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    text: И вся грязь превратилась в голый лед,
-- title: Припев
-  lines:
+    text: Love myself, Better than you, I know it's wrong so what should I do?
   - !TextBlock
     rhythm: null
     chords:
     - !OnIndex
-      index: 2
+      index: 4
       chord:
-        text: E
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 16
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 20
+      chord:
+        text: Em
         keynote: E
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 34
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: The black sheep got black mailed again
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 0
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 8
+      chord:
+        text: F
+        keynote: F
         minor: false
         chord_type: Norm
         fifth_state: Norm
@@ -265,23 +710,27 @@ blocks:
     - !OnIndex
       index: 14
       chord:
-        text: Am
-        keynote: A
+        text: Em
+        keynote: E
         minor: true
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 17
+      index: 25
       chord:
-        text: F
-        keynote: F
+        text: D
+        keynote: D
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
+    text: Forgot to put on the zip code
+  - !TextBlock
+    rhythm: null
+    chords:
     - !OnIndex
-      index: 20
+      index: 0
       chord:
         text: C
         keynote: C
@@ -289,33 +738,160 @@ blocks:
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    text: И всё идет по плану,
-  - !TextBlock
-    rhythm: null
-    chords:
     - !OnIndex
-      index: 0
+      index: 5
       chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 12
-      chord:
-        text: Am
-        keynote: A
+        text: Bm
+        keynote: B
         minor: true
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 15
+      index: 14
+      chord:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 25
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 35
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 42
       chord:
         text: F
         keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 51
+      chord:
+        text: Em
+        keynote: E
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 66
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Love myself, Better than you, I know it's wrong so what should I do?
+- title: Chorus
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !UpBeat
+      text: D
+      keynote: D
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: G
+      keynote: G
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: F
+      keynote: F
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    text: I'm on a plain
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !UpBeat
+      text: D
+      keynote: D
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: G
+      keynote: G
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: F
+      keynote: F
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    text: I can't complain
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !UpBeat
+      text: D
+      keynote: D
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: G
+      keynote: G
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: F
+      keynote: F
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !OnIndex
+      index: 14
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 16
+      chord:
+        text: G
+        keynote: G
         minor: false
         chord_type: Norm
         fifth_state: Norm
@@ -323,14 +899,29 @@ blocks:
     - !OnIndex
       index: 18
       chord:
-        text: C
-        keynote: C
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: I'm on a Plain
+- title: Bridge
+  lines:
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 0
+      chord:
+        text: F
+        keynote: F
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 20
+      index: 10
       chord:
         text: E
         keynote: E
@@ -338,18 +929,165 @@ blocks:
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    text: Всё идет по плану.
-- title: Куплет
+    - !OnIndex
+      index: 29
+      chord:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 35
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Some where I have heard this before
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 0
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 7
+      chord:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 26
+      chord:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 31
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: In a dream my memory has stored
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 0
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 7
+      chord:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 28
+      chord:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 34
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: In defense I'm neutered and spayed
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 0
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 10
+      chord:
+        text: E
+        keynote: E
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 29
+      chord:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 33
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: What the hell am I trying to say?
+- title: Verse
   lines:
   - !TextBlock
     rhythm: null
     chords:
     - !OnIndex
-      index: 4
+      index: 0
       chord:
-        text: Am
-        keynote: A
-        minor: true
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 3
+      chord:
+        text: G
+        keynote: G
+        minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
@@ -363,158 +1101,38 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 17
+      index: 18
       chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 27
-      chord:
-        text: E
+        text: Em
         keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: А моя судьба захотела на покой,
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 5
-      chord:
-        text: Am
-        keynote: A
         minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 16
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 31
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 39
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Я обещал ей не участвовать в военной игре.
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 8
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 19
-      chord:
-        text: F
-        keynote: F
-        minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
       index: 30
       chord:
-        text: C
-        keynote: C
+        text: D
+        keynote: D
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    - !OnIndex
-      index: 41
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Но на фуражке на моей серп и молот и звезда.
+    text: It is now time to make it unclear
   - !TextBlock
     rhythm: null
     chords:
     - !OnIndex
-      index: 9
+      index: 3
       chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 22
-      chord:
-        text: F
-        keynote: F
+        text: G
+        keynote: G
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 30
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 41
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Как это трогательно - серп и молот и звезда.
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 8
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 16
+      index: 12
       chord:
         text: F
         keynote: F
@@ -525,243 +1143,48 @@ blocks:
     - !OnIndex
       index: 24
       chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Лихой фонарь ожидания мотается,
-- title: Припев
-  lines:
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 2
-      chord:
-        text: E
+        text: Em
         keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 14
-      chord:
-        text: Am
-        keynote: A
         minor: true
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 17
+      index: 36
       chord:
-        text: F
-        keynote: F
+        text: D
+        keynote: D
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    - !OnIndex
-      index: 20
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: И всё идет по плану,
+    text: To write off lines that don't make sense
   - !TextBlock
     rhythm: null
     chords:
     - !OnIndex
       index: 0
       chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 12
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 15
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 18
-      chord:
         text: C
         keynote: C
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    - !OnIndex
-      index: 20
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Всё идет по плану.
-- title: Куплет
-  lines:
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 4
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 9
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 18
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 26
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: А моей женой накормили толпу,
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 4
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 12
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 22
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 32
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Мировым кулаком растоптали ей грудь.
-  - !TextBlock
-    rhythm: null
-    chords:
     - !OnIndex
       index: 5
       chord:
-        text: Am
-        keynote: A
+        text: Bm
+        keynote: B
         minor: true
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 15
+      index: 14
       chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 27
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 37
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Всенародной свободой растерзали ей плоть.
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 8
-      chord:
-        text: Am
+        text: A
         keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 17
-      chord:
-        text: F
-        keynote: F
         minor: false
         chord_type: Norm
         fifth_state: Norm
@@ -769,172 +1192,8 @@ blocks:
     - !OnIndex
       index: 25
       chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Так закопайте ж ее во Христе,
-- title: Припев
-  lines:
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 2
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 14
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 17
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 21
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: И всё идет по плану,
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 0
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 12
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 15
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 19
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 21
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Всё идет по плану.
-- title: Куплет
-  lines:
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 10
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 20
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 26
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 36
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Один лишь дедушка Ленин хороший был вождь,
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 9
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 19
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 27
-      chord:
-        text: C
-        keynote: C
+        text: D
+        keynote: D
         minor: false
         chord_type: Norm
         fifth_state: Norm
@@ -942,27 +1201,14 @@ blocks:
     - !OnIndex
       index: 35
       chord:
-        text: E
-        keynote: E
+        text: G
+        keynote: G
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    text: А все другие остальные - такое дерьмо,
-  - !TextBlock
-    rhythm: null
-    chords:
     - !OnIndex
-      index: 9
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 18
+      index: 42
       chord:
         text: F
         keynote: F
@@ -971,277 +1217,33 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 25
+      index: 51
       chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 33
-      chord:
-        text: E
+        text: Em
         keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: А все другие - враги и такие мудаки.
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 7
-      chord:
-        text: Am
-        keynote: A
         minor: true
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 17
+      index: 66
       chord:
-        text: F
-        keynote: F
+        text: D
+        keynote: D
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    - !OnIndex
-      index: 29
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 41
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Над родною над отчизной бесноватый снег шел.
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 4
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 18
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 29
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 38
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Я купил журнал "Корея" - там тоже хорошо.
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 6
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 19
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 29
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 41
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Там товарищ Ким Ир Сен - там тоже, что у нас.
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 3
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 16
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 25
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Я уверен, что у них тоже самое,
-- title: Припев
-  lines:
+    text: Love myself, Better than you, I know it's wrong so what should I do?
   - !TextBlock
     rhythm: null
     chords:
     - !OnIndex
       index: 0
       chord:
-        text: E
-        keynote: E
+        text: G
+        keynote: G
         minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 12
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 15
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 19
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Всё идет по плану,
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 0
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 12
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 15
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 19
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 21
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Всё идет по плану.
-- title: Куплет
-  lines:
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 6
-      chord:
-        text: Am
-        keynote: A
-        minor: true
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
@@ -1255,167 +1257,69 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 21
+      index: 19
       chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 30
-      chord:
-        text: E
+        text: Em
         keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: А при коммунизме все будет заебись,
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 6
-      chord:
-        text: Am
-        keynote: A
         minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 13
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 24
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 36
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Он наступит скоро, надо только подождать.
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 8
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 18
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 29
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 41
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Там все будет бесплатно, там все будет в кайф.
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 6
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 17
-      chord:
-        text: F
-        keynote: F
-        minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
       index: 28
       chord:
-        text: C
-        keynote: C
+        text: D
+        keynote: D
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    - !OnIndex
-      index: 37
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Там наверное вообще не надо будет умирать
+    text: One more special message to go
   - !TextBlock
     rhythm: null
     chords:
     - !OnIndex
-      index: 6
+      index: 0
       chord:
-        text: Am
-        keynote: A
-        minor: true
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 10
+      chord:
+        text: F
+        keynote: F
+        minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
       index: 18
       chord:
-        text: F
-        keynote: F
-        minor: false
+        text: Em
+        keynote: E
+        minor: true
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 27
+      index: 29
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Then I'm done and I can go home
+  - !TextBlock
+    rhythm: null
+    chords:
+    - !OnIndex
+      index: 0
       chord:
         text: C
         keynote: C
@@ -1423,175 +1327,144 @@ blocks:
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-    text: Я проснулся среди ночи и понял что
-- title: Припев
+    - !OnIndex
+      index: 5
+      chord:
+        text: Bm
+        keynote: B
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 14
+      chord:
+        text: A
+        keynote: A
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 25
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 35
+      chord:
+        text: G
+        keynote: G
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 42
+      chord:
+        text: F
+        keynote: F
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 51
+      chord:
+        text: Em
+        keynote: E
+        minor: true
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    - !OnIndex
+      index: 66
+      chord:
+        text: D
+        keynote: D
+        minor: false
+        chord_type: Norm
+        fifth_state: Norm
+        sus_or_add: No
+    text: Love myself, Better than you, I know it's wrong so what should I do?
+- title: Chorus
   lines:
   - !TextBlock
     rhythm: null
     chords:
-    - !OnIndex
-      index: 0
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 12
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 15
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 19
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Всё идет по плану,
+    - !UpBeat
+      text: D
+      keynote: D
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: G
+      keynote: G
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: F
+      keynote: F
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    text: I'm on a plain
   - !TextBlock
     rhythm: null
     chords:
-    - !OnIndex
-      index: 0
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 12
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 15
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 19
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Всё идет по плану.
+    - !UpBeat
+      text: D
+      keynote: D
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: G
+      keynote: G
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: F
+      keynote: F
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    text: I can't complain
   - !TextBlock
     rhythm: null
     chords:
-    - !OnIndex
-      index: 0
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 12
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 15
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 19
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Всё идет по плану,
-  - !TextBlock
-    rhythm: null
-    chords:
-    - !OnIndex
-      index: 0
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 12
-      chord:
-        text: Am
-        keynote: A
-        minor: true
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 15
-      chord:
-        text: F
-        keynote: F
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 19
-      chord:
-        text: C
-        keynote: C
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    - !OnIndex
-      index: 21
-      chord:
-        text: E
-        keynote: E
-        minor: false
-        chord_type: Norm
-        fifth_state: Norm
-        sus_or_add: No
-    text: Всё идет по плану.
+    - !UpBeat
+      text: D
+      keynote: D
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: G
+      keynote: G
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    - !UpBeat
+      text: F
+      keynote: F
+      minor: false
+      chord_type: Norm
+      fifth_state: Norm
+      sus_or_add: No
+    text: I'm on a Plain

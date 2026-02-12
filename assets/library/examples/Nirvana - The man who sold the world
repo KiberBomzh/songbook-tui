@@ -1,7 +1,7 @@
 metadata:
   title: The man who sold the world
   artist: Nirvana
-  key: null
+  key: F
 chord_list:
 - text: A
   keynote: A
@@ -66,7 +66,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      21:
+    - !OnIndex
+      index: 20
+      chord:
         text: A
         keynote: A
         minor: false
@@ -77,7 +79,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      21:
+    - !OnIndex
+      index: 20
+      chord:
         text: Dm
         keynote: D
         minor: true
@@ -88,7 +92,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      21:
+    - !OnIndex
+      index: 20
+      chord:
         text: A
         keynote: A
         minor: false
@@ -99,7 +105,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      23:
+    - !OnIndex
+      index: 22
+      chord:
         text: F
         keynote: F
         minor: false
@@ -110,7 +118,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      21:
+    - !OnIndex
+      index: 20
+      chord:
         text: C
         keynote: C
         minor: false
@@ -121,7 +131,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      19:
+    - !OnIndex
+      index: 18
+      chord:
         text: A
         keynote: A
         minor: false
@@ -132,7 +144,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      21:
+    - !OnIndex
+      index: 20
+      chord:
         text: Dm
         keynote: D
         minor: true
@@ -143,7 +157,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      19:
+    - !OnIndex
+      index: 18
+      chord:
         text: C
         keynote: C
         minor: false
@@ -156,7 +172,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      12:
+    - !OnIndex
+      index: 11
+      chord:
         text: F
         keynote: F
         minor: false
@@ -167,14 +185,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      4:
+    - !OnIndex
+      index: 3
+      chord:
         text: Db
         keynote: CSharp
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      20:
+    - !OnIndex
+      index: 19
+      chord:
         text: F
         keynote: F
         minor: false
@@ -185,14 +207,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      6:
+    - !OnIndex
+      index: 5
+      chord:
         text: C
         keynote: C
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      14:
+    - !OnIndex
+      index: 13
+      chord:
         text: F
         keynote: F
         minor: false
@@ -203,7 +229,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      8:
+    - !OnIndex
+      index: 7
+      chord:
         text: Db
         keynote: CSharp
         minor: false
@@ -216,7 +244,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      26:
+    - !OnIndex
+      index: 25
+      chord:
         text: A
         keynote: A
         minor: false
@@ -227,7 +257,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      22:
+    - !OnIndex
+      index: 21
+      chord:
         text: Dm
         keynote: D
         minor: true
@@ -238,7 +270,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      25:
+    - !OnIndex
+      index: 24
+      chord:
         text: A
         keynote: A
         minor: false
@@ -249,7 +283,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      24:
+    - !OnIndex
+      index: 23
+      chord:
         text: F
         keynote: F
         minor: false
@@ -260,7 +296,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      22:
+    - !OnIndex
+      index: 21
+      chord:
         text: C
         keynote: C
         minor: false
@@ -271,7 +309,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      22:
+    - !OnIndex
+      index: 21
+      chord:
         text: A
         keynote: A
         minor: false
@@ -282,7 +322,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      19:
+    - !OnIndex
+      index: 18
+      chord:
         text: Dm
         keynote: D
         minor: true
@@ -293,7 +335,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      19:
+    - !OnIndex
+      index: 18
+      chord:
         text: C
         keynote: C
         minor: false
@@ -306,7 +350,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      16:
+    - !OnIndex
+      index: 15
+      chord:
         text: F
         keynote: F
         minor: false
@@ -317,14 +363,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      4:
+    - !OnIndex
+      index: 3
+      chord:
         text: Db
         keynote: CSharp
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      20:
+    - !OnIndex
+      index: 19
+      chord:
         text: F
         keynote: F
         minor: false
@@ -335,14 +385,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      9:
+    - !OnIndex
+      index: 8
+      chord:
         text: C
         keynote: C
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      17:
+    - !OnIndex
+      index: 16
+      chord:
         text: F
         keynote: F
         minor: false
@@ -353,7 +407,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      10:
+    - !OnIndex
+      index: 9
+      chord:
         text: Db
         keynote: CSharp
         minor: false
@@ -365,7 +421,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      17:
+    - !OnIndex
+      index: 16
+      chord:
         text: F
         keynote: F
         minor: false
@@ -376,14 +434,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      5:
+    - !OnIndex
+      index: 4
+      chord:
         text: Db
         keynote: CSharp
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      21:
+    - !OnIndex
+      index: 20
+      chord:
         text: F
         keynote: F
         minor: false
@@ -394,14 +456,18 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      9:
+    - !OnIndex
+      index: 8
+      chord:
         text: C
         keynote: C
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
-      17:
+    - !OnIndex
+      index: 16
+      chord:
         text: F
         keynote: F
         minor: false
@@ -412,7 +478,9 @@ blocks:
   - !TextBlock
     rhythm: null
     chords:
-      8:
+    - !OnIndex
+      index: 7
+      chord:
         text: Db
         keynote: CSharp
         minor: false
