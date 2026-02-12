@@ -34,7 +34,8 @@ pub fn show(
     key: Option<crate::Note>,
     chords: bool, // show chords
     rhythm: bool, // show rhythm
-    fingerings: bool // show fingerings
+    fingerings: bool, // show fingerings
+    is_colored: bool
 ) -> Result<()> {
     let mut path = get_lib_path()?;
     path = path.join(song_path);
@@ -51,8 +52,22 @@ pub fn show(
         } else { println!("Add a key before transposing, try 'songbook edit <song_name> -t meta'") }
     }
 
-    let text = song.get_song_as_text(chords, rhythm, fingerings);
-    print(&text)?;
+    if is_colored {
+        if let Ok(mut child) = Command::new("less")
+                                .arg("-R")
+                                .stdin(Stdio::piped())
+                                .spawn() {
+            if let Some(mut stdin) = child.stdin.take() {
+                song.print_colored(&mut stdin, chords, rhythm, fingerings)?
+            }
+            child.wait()?;
+        } else {
+            song.print_colored(&mut std::io::stdout(), chords, rhythm, fingerings)?;
+        }
+    } else {
+        let text = song.get_song_as_text(chords, rhythm, fingerings);
+        print(&text)?;
+    }
 
 
     Ok(())

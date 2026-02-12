@@ -1,6 +1,5 @@
 use serde::{Serialize, Deserialize};
 
-use std::io::stdout;
 use crossterm::{
     execute,
     style::{Color, Print, ResetColor, SetForegroundColor}
@@ -55,32 +54,34 @@ impl Row {
     }
 
 
-    pub fn print_colored(&self) {
+    pub fn print_colored(&self, out: &mut impl std::io::Write, chords: bool, rhythm: bool) -> std::io::Result<()> {
         let (chords_line, rhythm_line, text) = self.get_strings();
 
-        if !chords_line.is_empty(){
+        if !chords_line.is_empty() && chords {
             execute!(
-                stdout(),
+                out,
                 SetForegroundColor(Color::Magenta),
                 Print(chords_line),
                 Print("\n"),
                 ResetColor
-            ).unwrap_or(());
+            )?;
         }
 
-        if !rhythm_line.is_empty() {
+        if !rhythm_line.is_empty() && rhythm {
             execute!(
-                stdout(),
+                out,
                 SetForegroundColor(Color::Blue),
                 Print(rhythm_line),
                 Print("\n"),
                 ResetColor
-            ).unwrap_or(());
+            )?;
         }
 
         if !text.is_empty() {
-            println!("{}", text);
+            write!(out, "{}", text)?;
         }
+        
+        Ok(())
     }
 
 

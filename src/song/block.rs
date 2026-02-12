@@ -1,4 +1,3 @@
-use std::io::stdout;
 use crossterm::{
     execute,
     style::{Color, Print, ResetColor, SetForegroundColor}
@@ -33,25 +32,27 @@ pub enum Line {
 }
 
 impl Line {
-    pub fn print_colored(&self) {
+    pub fn print_colored(&self, out: &mut impl std::io::Write, needs_chords: bool, needs_rhythm: bool) -> std::io::Result<()> {
         match self {
-            Line::TextBlock(row) => row.print_colored(),
-            Line::ChordsLine(chords) => {
+            Line::TextBlock(row) => row.print_colored(out, needs_chords, needs_rhythm)?,
+            Line::ChordsLine(chords) => if needs_chords {
                 let mut s = String::new();
                 for chord in chords {
                     s.push_str(&chord.text);
                     s.push(' ');
                 }
                 execute!(
-                    stdout(),
+                    out,
                     SetForegroundColor(Color::Magenta),
                     Print(s),
                     Print("\n"),
                     ResetColor
-                ).unwrap_or(());
+                )?;
             },
-            Line::EmptyLine => println!()
+            Line::EmptyLine => writeln!(out)?
         }
+        
+        Ok(())
     }
 }
 

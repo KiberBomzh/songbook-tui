@@ -138,23 +138,49 @@ impl Song {
         return s
     }
 
-    pub fn print_colored(&self) {
+    pub fn print_colored(&self, out: &mut impl std::io::Write, chords: bool, rhythm: bool, fingerings: bool) -> std::io::Result<()> {
+        if chords && fingerings {
+            let mut fings = Vec::new();
+            
+            #[cfg(not(feature = "song_library"))]
+            for f in self.get_fingerings() {
+                fings.push(f[0].clone());
+            }
+            
+            #[cfg(feature = "song_library")]
+            for chord in &self.chord_list {
+                if let Ok(Some(f)) = crate::song_library::get_fingering(&chord.text) {
+                    fings.push(f)
+                } else {
+                    fings.push( chord.get_fingerings(&STANDART_TUNING)[0].clone() )
+                }
+            }
+
+            
+            if let Some(text) = sum_text_in_fingerings(&fings) {
+                write!(out, "{}", text)?;
+            }
+        }
+        
         let mut is_first = true;
         for block in &self.blocks {
             if is_first { is_first = false }
-            else { print!("\n\n") }
+            else { write!(out, "\n\n")? }
 
             if let Some(title) = &block.title {
-                print!("{}", &title);
-                if !block.lines.is_empty() { print!("\n") }
+                write!(out, "{}", &title)?;
+                if !block.lines.is_empty() { write!(out, "\n")? }
             }
+            
             let mut is_first_line = true;
             for line in &block.lines {
                 if is_first_line { is_first_line = false }
-                else { print!("\n") }
-                line.print_colored();
+                else { write!(out, "\n")? }
+                line.print_colored(out, chords, rhythm)?;
             }
         }
+        
+        Ok(())
     }
 
     pub fn transpose(&mut self, steps: i32) {
