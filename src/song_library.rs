@@ -132,6 +132,67 @@ pub fn add(song: &Song) -> Result<()> {
 }
 
 
+pub fn sort() -> Result<()> {
+    let path = get_lib_path()?;
+    recursive_sort(&path, &path)?;
+    loop {
+        if !remove_empty_folders(&path)? { break }
+    }
+
+    Ok(())
+}
+fn recursive_sort(path: &Path, lib_path: &Path) -> Result<()> {
+    for entry in fs::read_dir(&path)? {
+        let entry = entry?;
+        if entry.path().is_dir() { recursive_sort(&entry.path(), lib_path)?; continue }
+
+        let file = File::open(entry.path())?;
+        let reader = BufReader::new(file);
+        let song: Song = serde_yaml::from_reader(reader)?;
+
+        let artist = get_without_forbidden_chars(song.metadata.artist.clone());
+        let title = get_without_forbidden_chars(song.metadata.title.clone());
+        let mut new_path = lib_path.join(&artist);
+        if !new_path.exists() { fs::create_dir_all(&new_path)? }
+        new_path = new_path.join(&title);
+        let is_the_same = if new_path != entry.path() {
+            new_path = get_free_path(new_path, &title);
+            false
+        } else { true };
+
+        let file = File::create(&new_path)?;
+        let writer = BufWriter::new(file);
+        serde_yaml::to_writer(writer, &song)?;
+
+        if !is_the_same {
+            fs::remove_file(entry.path())?;
+        }
+    }
+
+    Ok(())
+}
+fn remove_empty_folders(path: &Path) -> Result<bool> {
+    let mut is_something_deleted = false;
+    for entry in fs::read_dir(path)? {
+        let entry = entry?;
+        let current_path = entry.path();
+        if current_path.is_file() { continue }
+
+        if current_path.is_dir() {
+            if fs::read_dir(&current_path)?.next().is_none() {
+                fs::remove_dir(&current_path)?;
+                is_something_deleted = true;
+            } else {
+                let is_del = remove_empty_folders(&current_path)?;
+                if !is_something_deleted { is_something_deleted = is_del }
+            }
+        }
+    }
+
+    return Ok(is_something_deleted)
+}
+
+
 pub fn rm(added_path: &Path) -> Result<()> {
     let mut path = get_lib_path()?;
     path = path.join(added_path);

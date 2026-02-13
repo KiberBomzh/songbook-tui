@@ -82,6 +82,9 @@ enum Command {
     #[command(subcommand)]
     Add(AddSubcommand),
 
+    /// Sort songs in folders: artist/song
+    Sort,
+
     /// Remove a song from the library
     Rm { paths: Vec<PathBuf> },
 
@@ -243,6 +246,8 @@ fn main() {
                         .expect("Error during adding a song!");
                 }
             },
+            Command::Sort => song_library::sort()
+                .expect("Error during sorting!"),
             Command::Rm { paths } => {
                 for path in &paths {
                     song_library::rm(&path)
