@@ -6,11 +6,17 @@ use serde::{Serialize, Deserialize};
 use anyhow::Result;
 use crossterm::{
     execute,
-    style::{Color, Print, ResetColor, SetForegroundColor}
+    style::{Print, ResetColor, SetForegroundColor}
 };
 
 use crate::Fingering;
-use crate::{BLOCK_START, BLOCK_END, STANDART_TUNING};
+use crate::{
+    BLOCK_START,
+    BLOCK_END,
+    STANDART_TUNING,
+    
+    TITLE_COLOR
+};
 use crate::Note;
 use crate::sum_text_in_fingerings;
 use crate::song::chord::Chord;
@@ -177,7 +183,7 @@ impl Song {
                 if !is_first && !title.is_empty() { writeln!(out)? }
                 execute!(
                     out,
-                    SetForegroundColor(Color::Green),
+                    SetForegroundColor(TITLE_COLOR),
                     Print(title),
                     ResetColor
                 )?;

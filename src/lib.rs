@@ -6,6 +6,7 @@ mod song;
 pub mod song_library;
 
 use serde::{Serialize, Deserialize};
+use crossterm::style::Color;
 
 use crate::Note::*;
 pub use crate::chord_generator::chord_fingerings::Fingering;
@@ -33,6 +34,11 @@ const PLAIN_TEXT_END: &str = "{:plain_text}";
 const CHORDS_SYMBOL: &str = "{C}|";
 const RHYTHM_SYMBOL: &str = "{R}|";
 const TEXT_SYMBOL: &str = "{T}|";
+
+
+const TITLE_COLOR: Color = Color::DarkGreen;
+const CHORDS_COLOR: Color = Color::Cyan;
+const RHYTHM_COLOR: Color = Color::Yellow;
 
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]

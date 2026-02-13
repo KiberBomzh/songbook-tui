@@ -1,6 +1,6 @@
 use crossterm::{
     execute,
-    style::{Color, Print, ResetColor, SetForegroundColor}
+    style::{Print, ResetColor, SetForegroundColor}
 };
 use serde::{Serialize, Deserialize};
 
@@ -16,7 +16,9 @@ use crate::{
     EMPTY_LINE_SYMBOL,
     CHORDS_LINE_SYMBOL,
     PLAIN_TEXT_START,
-    PLAIN_TEXT_END
+    PLAIN_TEXT_END,
+    
+    CHORDS_COLOR
 };
 
 
@@ -46,7 +48,7 @@ impl Line {
                 }
                 execute!(
                     out,
-                    SetForegroundColor(Color::Magenta),
+                    SetForegroundColor(CHORDS_COLOR),
                     Print(s),
                     Print("\n"),
                     ResetColor

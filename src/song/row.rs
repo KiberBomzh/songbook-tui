@@ -2,11 +2,18 @@ use serde::{Serialize, Deserialize};
 
 use crossterm::{
     execute,
-    style::{Color, Print, ResetColor, SetForegroundColor}
+    style::{Print, ResetColor, SetForegroundColor}
 };
 
 use crate::song::chord::Chord;
-use crate::{CHORDS_SYMBOL, RHYTHM_SYMBOL, TEXT_SYMBOL};
+use crate::{
+    CHORDS_SYMBOL,
+    RHYTHM_SYMBOL,
+    TEXT_SYMBOL,
+    
+    CHORDS_COLOR,
+    RHYTHM_COLOR
+};
 
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -60,7 +67,7 @@ impl Row {
         if !chords_line.is_empty() && chords {
             execute!(
                 out,
-                SetForegroundColor(Color::Magenta),
+                SetForegroundColor(CHORDS_COLOR),
                 Print(chords_line),
                 Print("\n"),
                 ResetColor
@@ -70,7 +77,7 @@ impl Row {
         if !rhythm_line.is_empty() && rhythm {
             execute!(
                 out,
-                SetForegroundColor(Color::Blue),
+                SetForegroundColor(RHYTHM_COLOR),
                 Print(rhythm_line),
                 Print("\n"),
                 ResetColor
