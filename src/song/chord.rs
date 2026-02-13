@@ -136,6 +136,10 @@ impl Chord {
         }
     }
 
+    pub fn get_keynote(&self) -> Note {
+        self.keynote
+    }
+
     pub fn get_fingerings(&self, tuning: &[Note; STRINGS]) -> Vec<Fingering> {
         let mut notes: Vec<Note> = Vec::new();
         let key = self.keynote;

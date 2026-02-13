@@ -41,10 +41,27 @@ const CHORDS_COLOR: Color = Color::Cyan;
 const RHYTHM_COLOR: Color = Color::Yellow;
 
 
+const KEYS: [[Note; 6]; 12] = [
+    [C, D, E, F, G, A],
+    [G, A, B, C, D, E],
+    [D, E, FSharp, G, A, B],
+    [A, B, CSharp, D, E, FSharp],
+    [E, FSharp, GSharp, A, B, CSharp],
+    [B, CSharp, DSharp, E, FSharp, GSharp],
+    [FSharp, GSharp, ASharp, B, CSharp, DSharp],
+    [CSharp, DSharp, F, FSharp, GSharp, ASharp],
+    [GSharp, ASharp, C, CSharp, FSharp, F],
+    [FSharp, F, G, GSharp, ASharp, C],
+    [ASharp, C, D, DSharp, F, G],
+    [F, G, A, ASharp, C, D]
+];
+
+
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
 pub enum Note {
     A,
     ASharp,
+
     B,
     C,
     CSharp,

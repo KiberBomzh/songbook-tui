@@ -17,9 +17,13 @@ impl Song {
         let (blocks, chord_list) = txt_reader::read_from_txt(
             &fs::read_to_string(file_path)?
         );
+        let mut song = Self { blocks, chord_list, metadata };
+        if song.metadata.key == None {
+            song.detect_key();
+        }
 
-        // Написать определение тональности
-        Ok( Self { blocks, chord_list, metadata} )
+
+        Ok(song)
     }
 
     pub fn from_chordpro(file_path: &Path) -> Result<Self> {

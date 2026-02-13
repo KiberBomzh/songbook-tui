@@ -15,7 +15,9 @@ use crate::{
     BLOCK_END,
     STANDART_TUNING,
     
-    TITLE_COLOR
+    TITLE_COLOR,
+
+    KEYS
 };
 use crate::Note;
 use crate::sum_text_in_fingerings;
@@ -199,6 +201,35 @@ impl Song {
         }
         
         Ok(())
+    }
+
+    pub fn detect_key(&mut self) -> Note {
+        let this_keys: Vec<Note> = self.chord_list
+            .iter()
+            .map(|c| c.get_keynote() )
+            .collect();
+
+        let total: f32 = this_keys.len() as f32;
+        let mut key = Note::C;
+        let mut similarity: f32 = 0.0; // Значение в процентах
+
+        for key_block in KEYS {
+            let keynote = key_block[0];
+            let mut matches = 0.0;
+            for key in &this_keys {
+                if key_block.iter().any(|k| k == key) {
+                    matches += 1.0
+                }
+            }
+            let this_precent: f32 = (matches * 100.0) / total;
+            if this_precent > similarity {
+                similarity = this_precent;
+                key = keynote;
+            }
+        }
+
+        self.metadata.key = Some(key);
+        return key
     }
 
     pub fn transpose(&mut self, steps: i32) {
