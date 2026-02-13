@@ -77,6 +77,26 @@ impl Note {
             _ => return None
         } )
     }
+    
+    pub fn get_key(text: &str) -> Option<Self> {
+        match text {
+            "C" | "c" | "Am" | "am" => Self::new("C"),
+            "C#" | "c#" | "A#m" | "a#m"
+                | "Db" | "db" | "Bbm" | "bbm" => Self::new("C#"),
+            "D" | "d" | "Bm" | "bm" => Self::new("D"),
+            "D#" | "d#" | "Cm" | "cm" | "Eb" | "eb" => Self::new("D#"),
+            "E" | "e" | "C#m" | "c#m" | "Dbm" | "dbm" => Self::new("E"),
+            "F" | "f" | "Dm" | "dm" => Self::new("F"),
+            "F#" | "f#" | "D#m" | "d#m"
+                | "Gb" | "gb" | "Ebm" | "ebm" => Self::new("F#"),
+            "G" | "g" | "Em" | "em" => Self::new("G"),
+            "G#" | "g#" | "Fm" | "fm" | "Ab" | "ab" => Self::new("G#"),
+            "A" | "a" | "F#m" | "f#m" | "Gbm" | "gbm" => Self::new("A"),
+            "A#" | "a#" | "Gm" | "gm" | "Bb" | "bb" => Self::new("A#"),
+            "B" | "b" | "G#m" | "g#m" | "Abm" | "abm" => Self::new("B"),
+            _ => None
+        }
+    }
 
     pub fn get_text(&self) -> String {
         (

@@ -122,7 +122,9 @@ enum AddSubcommand {
         #[arg(long, short)]
         title: String,
     },
-    // FromChordPro { path: PathBuf },
+    
+    FromChordpro { path: PathBuf },
+    
     Empty {
         /// Song's artist
         #[arg(long, short)]
@@ -204,26 +206,8 @@ fn main() {
                 song_library::add_fingering(&fing).expect("Error during saving a fingering!");
             },
             Command::Show { path, key, chords, rhythm, fingerings, colored } => {
-                let key = if let Some(k) = key.as_deref() { match k {
-                    "C" | "c" | "Am" | "am" => Note::new("C"),
-                    "C#" | "c#" | "A#m" | "a#m"
-                        | "Db" | "db" | "Bbm" | "bbm" => Note::new("C#"),
-                    "D" | "d" | "Bm" | "bm" => Note::new("D"),
-                    "D#" | "d#" | "Cm" | "cm" | "Eb" | "eb" => Note::new("D#"),
-                    "E" | "e" | "C#m" | "c#m" | "Dbm" | "dbm" => Note::new("E"),
-                    "F" | "f" | "Dm" | "dm" => Note::new("F"),
-                    "F#" | "f#" | "D#m" | "d#m"
-                        | "Gb" | "gb" | "Ebm" | "ebm" => Note::new("F#"),
-                    "G" | "g" | "Em" | "em" => Note::new("G"),
-                    "G#" | "g#" | "Fm" | "fm" | "Ab" | "ab" => Note::new("G#"),
-                    "A" | "a" | "F#m" | "f#m" | "Gbm" | "gbm" => Note::new("A"),
-                    "A#" | "a#" | "Gm" | "gm" | "Bb" | "bb" => Note::new("A#"),
-                    "B" | "b" | "G#m" | "g#m" | "Abm" | "abm" => Note::new("B"),
-                    _ => {
-                        println!("Unknown key: {k}!");
-                        None
-                    }
-                } } else { None };
+                let key = if let Some(k) = key.as_deref() { Note::get_key(k) }
+                else { None };
 
                 song_library::show(&path, key, chords, rhythm, fingerings, colored)
                     .expect("Error during geting song!");
@@ -242,6 +226,13 @@ fn main() {
                         &path,
                         Metadata { title, artist, key: None }
                         ).expect("Error during adding a song!");
+
+                    song_library::add(&song)
+                        .expect("Error during adding a song!");
+                },
+                AddSubcommand::FromChordpro { path } => {
+                    let song = Song::from_chordpro(&path)
+                        .expect("Error during adding a song!");
 
                     song_library::add(&song)
                         .expect("Error during adding a song!");

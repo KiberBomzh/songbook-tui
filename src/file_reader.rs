@@ -1,4 +1,5 @@
 pub mod txt_reader;
+pub mod chordpro_reader;
 
 use std::path::Path;
 use std::fs;
@@ -21,5 +22,11 @@ impl Song {
         Ok( Self { blocks, chord_list, metadata} )
     }
 
-    // pub fn from_chordpro(file_path: &Path) -> Result<Song> { }
+    pub fn from_chordpro(file_path: &Path) -> Result<Self> {
+        let (metadata, blocks, chord_list) = chordpro_reader::read_from_chordpro(
+            &fs::read_to_string(file_path)?
+        );
+        let metadata = metadata.expect("Cannot read metadata(title or artist)!");
+        Ok( Self { blocks, chord_list, metadata} )
+    }
 }
