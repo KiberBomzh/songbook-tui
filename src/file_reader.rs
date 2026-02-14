@@ -10,14 +10,14 @@ use crate::{Song, Metadata};
 impl Song {
     pub fn from_str(song: &str, meta: &str) -> anyhow::Result<Self> {
         let (blocks, chord_list) = txt_reader::read_from_txt(song);
-        return Ok( Self { blocks, chord_list, metadata: Metadata::from_str(meta)? } )
+        return Ok( Self { blocks, chord_list, metadata: Metadata::from_str(meta)?, notes: None } )
     }
 
     pub fn from_txt(file_path: &Path, metadata: Metadata) -> Result<Self> {
         let (blocks, chord_list) = txt_reader::read_from_txt(
             &fs::read_to_string(file_path)?
         );
-        let mut song = Self { blocks, chord_list, metadata };
+        let mut song = Self { blocks, chord_list, metadata, notes: None };
         if song.metadata.key == None {
             song.detect_key();
         }
@@ -31,6 +31,6 @@ impl Song {
             &fs::read_to_string(file_path)?
         );
         let metadata = metadata.expect("Cannot read metadata(title or artist)!");
-        Ok( Self { blocks, chord_list, metadata} )
+        Ok( Self { blocks, chord_list, metadata, notes: None } )
     }
 }

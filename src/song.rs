@@ -16,6 +16,9 @@ use crate::{
     STANDART_TUNING,
     
     TITLE_COLOR,
+    NOTES_COLOR,
+
+    SONG_NOTE_SYMBOL,
 
     KEYS
 };
@@ -31,6 +34,7 @@ pub struct Song {
     pub metadata: Metadata,
     pub chord_list: Vec<Chord>,
     pub blocks: Vec<Block>,
+    pub notes: Option<String> // Заметки по песне в общем
 }
 // Тональности:
 // Am - C
@@ -73,17 +77,29 @@ impl Song {
                 key: None
             },
             chord_list: Vec::new(),
-            blocks: Vec::new()
+            blocks: Vec::new(),
+            notes: None
         }
     }
 
-    pub fn get_song_as_text(&self, chords: bool, rhythm: bool, fingerings: bool) -> String {
+    pub fn get_song_as_text(
+        &self,
+        chords: bool,
+        rhythm: bool,
+        fingerings: bool,
+        notes: bool
+    ) -> String {
         let mut s = String::new();
 
 
         if !self.metadata.artist.is_empty() && !self.metadata.title.is_empty() {
             s.push_str( &format!("{} - {}", self.metadata.artist, self.metadata.title) );
             s.push_str("\n\n");
+        }
+
+        if let Some(n) = &self.notes && notes {
+            s.push_str(n);
+            s.push('\n');
         }
 
         if chords && fingerings {
@@ -109,17 +125,17 @@ impl Song {
             }
         }
 
-        s.push_str(&self.to_string(chords, rhythm));
+        s.push_str(&self.to_string(chords, rhythm, notes));
 
 
         return s
     }
 
-    pub fn print(&self, chords: bool, rhythm: bool, fingerings: bool) {
-        println!("{}", self.get_song_as_text(chords, rhythm, fingerings));
+    pub fn print(&self, chords: bool, rhythm: bool, fingerings: bool, notes: bool) {
+        println!("{}", self.get_song_as_text(chords, rhythm, fingerings, notes));
     }
 
-    pub fn to_string(&self, chords: bool, rhythm: bool) -> String {
+    pub fn to_string(&self, chords: bool, rhythm: bool, notes: bool) -> String {
         let mut s = String::new();
         let mut is_first = true;
         for block in &self.blocks {
@@ -129,8 +145,13 @@ impl Song {
             if let Some(title) = &block.title {
                 if !is_first && !title.is_empty() { s.push('\n') }
                 s.push_str(&title);
-                if !block.lines.is_empty() { s.push('\n') }
             }
+            if let Some(n) = &block.notes && notes {
+                s.push_str(" ");
+                s.push_str(n);
+            }
+            if !block.lines.is_empty() { s.push('\n') }
+
             let mut is_first_line = true;
             for line in &block.lines {
                 if is_first_line { is_first_line = false }
@@ -152,7 +173,29 @@ impl Song {
         return s
     }
 
-    pub fn print_colored(&self, out: &mut impl std::io::Write, chords: bool, rhythm: bool, fingerings: bool) -> std::io::Result<()> {
+    pub fn print_colored(
+        &self,
+        out: &mut impl std::io::Write,
+        chords: bool,
+        rhythm: bool,
+        fingerings: bool,
+        notes: bool
+    ) -> std::io::Result<()> {
+
+        if !self.metadata.artist.is_empty() && !self.metadata.title.is_empty() {
+            write!(out, "{} - {}", self.metadata.artist, self.metadata.title)?;
+            write!(out, "\n\n")?;
+        }
+
+        if let Some(n) = &self.notes && notes {
+            execute!(out,
+                SetForegroundColor(NOTES_COLOR),
+                Print(n),
+                Print('\n'),
+                ResetColor
+            )?;
+        }
+
         if chords && fingerings {
             let mut fings = Vec::new();
             
@@ -189,8 +232,17 @@ impl Song {
                     Print(title),
                     ResetColor
                 )?;
-                if !block.lines.is_empty() { write!(out, "\n")? }
             }
+            if let Some(n) = &block.notes && notes {
+                execute!(
+                    out,
+                    SetForegroundColor(NOTES_COLOR),
+                    Print(" "),
+                    Print(n),
+                    ResetColor
+                )?;
+            }
+            if !block.lines.is_empty() { write!(out, "\n")? }
             
             let mut is_first_line = true;
             for line in &block.lines {
@@ -270,6 +322,12 @@ impl Song {
 
     pub fn get_for_editing(&self) -> String {
         let mut s = String::new();
+        if let Some(n) = &self.notes {
+            s.push_str(SONG_NOTE_SYMBOL);
+            s.push_str(n);
+            s.push('\n');
+        }
+
         let mut is_first = true;
         for block in &self.blocks {
             if is_first { is_first = false }
@@ -286,7 +344,10 @@ impl Song {
         let mut block_buf = String::new();
         let mut is_in_block = false;
         for line in text.lines() {
-            if line.starts_with(BLOCK_START) { is_in_block = true }
+            if line.starts_with(SONG_NOTE_SYMBOL) {
+                let note = line[SONG_NOTE_SYMBOL.len()..].trim().to_string();
+                self.notes = if note.is_empty() { None } else { Some(note) };
+            } else if line.starts_with(BLOCK_START) { is_in_block = true }
             else if line.starts_with(BLOCK_END) {
                 is_in_block = false;
                 blocks.push( Block::from_edited(&block_buf) );

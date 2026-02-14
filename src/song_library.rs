@@ -32,9 +32,10 @@ pub fn init() -> Result<(), Box<dyn std::error::Error>> {
 pub fn show(
     song_path: &Path,
     key: Option<crate::Note>,
-    chords: bool, // show chords
-    rhythm: bool, // show rhythm
+    chords: bool,     // show chords
+    rhythm: bool,     // show rhythm
     fingerings: bool, // show fingerings
+    notes: bool,      // show notes
     is_colored: bool
 ) -> Result<()> {
     let mut path = get_lib_path()?;
@@ -58,14 +59,14 @@ pub fn show(
                                 .stdin(Stdio::piped())
                                 .spawn() {
             if let Some(mut stdin) = child.stdin.take() {
-                song.print_colored(&mut stdin, chords, rhythm, fingerings)?
+                song.print_colored(&mut stdin, chords, rhythm, fingerings, notes)?
             }
             child.wait()?;
         } else {
-            song.print_colored(&mut std::io::stdout(), chords, rhythm, fingerings)?;
+            song.print_colored(&mut std::io::stdout(), chords, rhythm, fingerings, notes)?;
         }
     } else {
-        let text = song.get_song_as_text(chords, rhythm, fingerings);
+        let text = song.get_song_as_text(chords, rhythm, fingerings, notes);
         print(&text)?;
     }
 

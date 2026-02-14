@@ -21,7 +21,8 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
             if !rows.is_empty() {
                 blocks.push(Block {
                     title: if title.is_empty() { None } else { Some(title) },
-                    lines: rows.iter().map(|r| Line::TextBlock(r.clone())).collect()
+                    lines: rows.iter().map(|r| Line::TextBlock(r.clone())).collect(),
+                    notes: None
                 });
                 title = String::new();
                 rows.clear();
@@ -30,8 +31,9 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
                     blocks.push(Block {
                         title: if title.is_empty() { None } else { Some(title) },
                         lines: vec!(Line::TextBlock(
-                                Row { chords: Some(chords), text: None, rhythm: None })
-                        )
+                                Row { chords: Some(chords), text: None, rhythm: None }),
+                        ),
+                        notes: None
                     });
                     title = String::new();
                     chords = Vec::new();
@@ -40,7 +42,8 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
             } else if !title.is_empty() {
                 blocks.push(Block {
                     title: Some(title),
-                    lines: vec!(Line::EmptyLine)
+                    lines: vec!(Line::EmptyLine),
+                    notes: None
                 });
                 title = String::new();
             }
@@ -95,7 +98,8 @@ pub fn read_from_txt(txt: &str) -> (Vec<Block>, Vec<Chord>) {
     if !rows.is_empty() {
         blocks.push(Block {
             title: if title.is_empty() { None } else { Some(title) },
-            lines: rows.iter().map(|r| Line::TextBlock(r.clone())).collect()
+            lines: rows.iter().map(|r| Line::TextBlock(r.clone())).collect(),
+            notes: None
         });
     }
 

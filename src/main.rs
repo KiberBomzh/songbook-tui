@@ -70,6 +70,10 @@ enum Command {
         /// Show fingerings
         #[arg(short, long)]
         fingerings: bool,
+
+        /// Show notes
+        #[arg(short, long)]
+        notes: bool,
         
         /// Use colored chords and rhythm
         #[arg(long)]
@@ -221,11 +225,11 @@ fn main() {
                 let fing = Fingering::new(strings, Some(chord)).unwrap();
                 song_library::add_fingering(&fing).expect("Error during saving a fingering!");
             },
-            Command::Show { path, key, chords, rhythm, fingerings, colored } => {
+            Command::Show { path, key, chords, rhythm, fingerings, notes, colored } => {
                 let key = if let Some(k) = key.as_deref() { Note::get_key(k) }
                 else { None };
 
-                song_library::show(&path, key, chords, rhythm, fingerings, colored)
+                song_library::show(&path, key, chords, rhythm, fingerings, notes, colored)
                     .expect("Error during geting song!");
             },
             Command::Edit { path, target } => {

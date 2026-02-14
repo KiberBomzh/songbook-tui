@@ -46,7 +46,8 @@ pub fn read_from_chordpro(text: &str) -> (Option<Metadata>, Vec<Block>, Vec<Chor
             is_in_block = false;
             blocks.push( Block {
                 title: if block_title.is_empty() { None } else { Some(block_title) },
-                lines: block_lines
+                lines: block_lines,
+                notes: None
             } );
             
             block_title = String::new();
@@ -94,7 +95,8 @@ pub fn read_from_chordpro(text: &str) -> (Option<Metadata>, Vec<Block>, Vec<Chor
         } else if line.is_empty() && !block_lines.is_empty() {
             blocks.push( Block {
                 title: if block_title.is_empty() { None } else { Some(block_title) },
-                lines: block_lines
+                lines: block_lines,
+                notes: None
             } );
             
             block_title = String::new();

@@ -17,6 +17,7 @@ use crate::{
     CHORDS_LINE_SYMBOL,
     PLAIN_TEXT_START,
     PLAIN_TEXT_END,
+    BLOCK_NOTE_SYMBOL,
     
     CHORDS_COLOR
 };
@@ -26,6 +27,7 @@ use crate::{
 pub struct Block {
     pub title: Option<String>,
     pub lines: Vec<Line>,
+    pub notes: Option<String>
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -37,7 +39,12 @@ pub enum Line {
 }
 
 impl Line {
-    pub fn print_colored(&self, out: &mut impl std::io::Write, needs_chords: bool, needs_rhythm: bool) -> std::io::Result<()> {
+    pub fn print_colored(
+        &self,
+        out: &mut impl std::io::Write,
+        needs_chords: bool,
+        needs_rhythm: bool
+    ) -> std::io::Result<()> {
         match self {
             Line::TextBlock(row) => row.print_colored(out, needs_chords, needs_rhythm)?,
             Line::ChordsLine(chords) => if needs_chords {
@@ -67,9 +74,14 @@ impl Block {
         s.push_str(BLOCK_START);
         s.push('\n');
 
-        s.push_str(TITLE_SYMBOL);
         if let Some(title) = &self.title {
+            s.push_str(TITLE_SYMBOL);
             s.push_str(&title);
+        }
+        if let Some(n) = &self.notes {
+            s.push('\n');
+            s.push_str(BLOCK_NOTE_SYMBOL);
+            s.push_str(n);
         }
         if !self.lines.is_empty() { s.push('\n') }
 
@@ -111,6 +123,7 @@ impl Block {
 
     pub fn from_edited(text: &str) -> Self {
         let mut title: Option<String> = None;
+        let mut notes: Option<String> = None;
         let mut lines: Vec<Line> = Vec::new();
 
 
@@ -133,6 +146,9 @@ impl Block {
             
             } else if line.starts_with(TITLE_SYMBOL) {
                 title = Some(line[TITLE_SYMBOL.len()..].to_string());
+            } else if line.starts_with(BLOCK_NOTE_SYMBOL) {
+                let n = line[BLOCK_NOTE_SYMBOL.len()..].trim().to_string();
+                if !n.is_empty() { notes = Some(n) }
             } else if line.starts_with(EMPTY_LINE_SYMBOL) {
                 lines.push(Line::EmptyLine);
             } else if line.starts_with(CHORDS_LINE_SYMBOL) {
@@ -153,6 +169,6 @@ impl Block {
             }
         }
 
-        return Self { title, lines }
+        return Self { title, lines, notes }
     }
 }

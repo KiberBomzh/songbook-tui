@@ -36,10 +36,14 @@ const CHORDS_SYMBOL: &str = "{C}|";
 const RHYTHM_SYMBOL: &str = "{R}|";
 const TEXT_SYMBOL: &str = "{T}|";
 
+const SONG_NOTE_SYMBOL: &str = "{snote:} ";
+const BLOCK_NOTE_SYMBOL: &str = "{bnote:} ";
+
 
 const TITLE_COLOR: Color = Color::DarkGreen;
 const CHORDS_COLOR: Color = Color::Cyan;
 const RHYTHM_COLOR: Color = Color::Yellow;
+const NOTES_COLOR: Color = Color::DarkGrey;
 
 
 const KEYS: [[Note; 6]; 12] = [
