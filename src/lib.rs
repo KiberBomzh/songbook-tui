@@ -51,7 +51,7 @@ const KEYS: [[Note; 6]; 12] = [
     [FSharp, GSharp, ASharp, B, CSharp, DSharp],
     [CSharp, DSharp, F, FSharp, GSharp, ASharp],
     [GSharp, ASharp, C, CSharp, FSharp, F],
-    [FSharp, F, G, GSharp, ASharp, C],
+    [DSharp, F, G, GSharp, ASharp, C],
     [ASharp, C, D, DSharp, F, G],
     [F, G, A, ASharp, C, D]
 ];
