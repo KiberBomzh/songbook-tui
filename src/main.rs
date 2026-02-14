@@ -28,6 +28,14 @@ enum Command {
         tuning: String
     },
 
+    /// Print circle of fifth, alias - cof
+    #[clap(alias = "cof")]
+    CircleOfFifth {
+        /// Print only some key, not all keys
+        #[arg(short, long)]
+        key: Option<String>
+    },
+
     /// Print chord's fingerings
     Chord { chord: String },
     
@@ -166,6 +174,11 @@ fn main() {
                 }
 
                 songbook::print_fretboard(&notes);
+            },
+            Command::CircleOfFifth{key} => {
+                let key = if let Some(k) = key.as_deref() { Note::get_key(k) }
+                else { None };
+                songbook::print_circle_of_fifth(key);
             },
             Command::Chord { chord } => {
                 if let Some(chord) = songbook::Chord::new(&chord) {

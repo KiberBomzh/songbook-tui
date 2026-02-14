@@ -5,6 +5,7 @@ mod song;
 #[cfg(feature = "song_library")]
 pub mod song_library;
 
+use std::collections::BTreeMap;
 use serde::{Serialize, Deserialize};
 use crossterm::style::Color;
 
@@ -57,7 +58,7 @@ const KEYS: [[Note; 6]; 12] = [
 ];
 
 
-#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Note {
     A,
     ASharp,
@@ -221,4 +222,99 @@ pub fn print_fretboard(tuning: &[Note; STRINGS]) {
     }
 
     println!("{s}");
+}
+
+
+pub fn print_circle_of_fifth(needed_key: Option<Note>) {
+    let mut s = String::new();
+    let one_key_width = 18;
+    let width = if let Ok( (cols, _rows) ) =  crossterm::terminal::size() {
+        <u16 as Into<usize>>::into(cols)
+    } else { one_key_width };
+    let max_keys = width / one_key_width;
+
+    let mut keys_already_in_line = 0;
+    let mut keys_first_line = String::new();
+    let mut keys_second_line = String::new();
+
+    let mut keys = BTreeMap::new();
+    for k in KEYS {
+        let first = k[0].get_text();
+        let second = k[1].get_text() + "m";
+        let third = k[2].get_text() + "m";
+        let fourth = k[3].get_text();
+        let fifth = k[4].get_text();
+        let sixth = k[5].get_text() + "m";
+        
+        let width: usize = 5;
+
+
+        let mut first_line = String::new();
+        first_line.push_str(&fourth);
+        first_line.push_str( &" ".repeat(width - fourth.len()) );
+
+        first_line.push_str(&first);
+        first_line.push_str( &" ".repeat(width - first.len()) );
+
+        first_line.push_str(&fifth);
+        first_line.push_str( &" ".repeat(width - fifth.len()) );
+
+
+        let mut second_line = String::new();
+        second_line.push_str(&second);
+        second_line.push_str( &" ".repeat(width - second.len()) );
+
+        second_line.push_str(&sixth);
+        second_line.push_str( &" ".repeat(width - sixth.len()) );
+
+        second_line.push_str(&third);
+        second_line.push_str( &" ".repeat(width - third.len()) );
+
+
+        if keys_already_in_line < max_keys {
+            keys_already_in_line += 1;
+
+            keys_first_line.push_str(&first_line);
+            keys_first_line.push_str("|  ");
+
+            keys_second_line.push_str(&second_line);
+            keys_second_line.push_str("|  ");
+        } else {
+            keys_already_in_line = 0;
+
+            s.push_str(&keys_first_line);
+            s.push('\n');
+
+            s.push_str(&keys_second_line);
+            s.push('\n');
+
+            s.push_str( &"-".repeat((max_keys * one_key_width) - 2) );
+            s.push('\n');
+
+            keys_first_line.clear();
+            keys_second_line.clear();
+        }
+
+        keys.insert(k[0], (first_line, second_line));
+    }
+
+    // Подтягивание последнего блока
+    if !keys_first_line.is_empty() && !keys_second_line.is_empty() {
+        s.push_str(&keys_first_line);
+        s.push('\n');
+        s.push_str(&keys_second_line);
+        s.push('\n');
+
+        keys_first_line.clear();
+        keys_second_line.clear();
+    }
+
+
+    if let Some(needed_k) = needed_key {
+        if let Some( (f_line, s_line) ) = keys.get(&needed_k) {
+            println!("| {f_line}|\n| {s_line}|");
+        }
+    } else {
+        println!("{s}");
+    }
 }
