@@ -145,9 +145,10 @@ impl Song {
             if let Some(title) = &block.title {
                 if !is_first && !title.is_empty() { s.push('\n') }
                 s.push_str(&title);
+                s.push(' ');
             }
             if let Some(n) = &block.notes && notes {
-                s.push_str(" ");
+                if !is_first && block.title.is_none() { s.push('\n') }
                 s.push_str(n);
             }
             if !block.lines.is_empty() { s.push('\n') }
@@ -230,14 +231,15 @@ impl Song {
                     out,
                     SetForegroundColor(TITLE_COLOR),
                     Print(title),
+                    Print(" "),
                     ResetColor
                 )?;
             }
             if let Some(n) = &block.notes && notes {
+                if !is_first && block.title.is_none() { writeln!(out)? }
                 execute!(
                     out,
                     SetForegroundColor(NOTES_COLOR),
-                    Print(" "),
                     Print(n),
                     ResetColor
                 )?;

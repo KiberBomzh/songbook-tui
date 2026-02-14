@@ -72,9 +72,9 @@ impl Line {
 impl Block {
     pub fn get_for_editing(&self, s: &mut String) {
         s.push_str(BLOCK_START);
-        s.push('\n');
 
         if let Some(title) = &self.title {
+            s.push('\n');
             s.push_str(TITLE_SYMBOL);
             s.push_str(&title);
         }
@@ -145,7 +145,8 @@ impl Block {
                 is_plain_text = true;
             
             } else if line.starts_with(TITLE_SYMBOL) {
-                title = Some(line[TITLE_SYMBOL.len()..].to_string());
+                let t = line[TITLE_SYMBOL.len()..].trim().to_string();
+                if !t.is_empty() { title = Some(t) }
             } else if line.starts_with(BLOCK_NOTE_SYMBOL) {
                 let n = line[BLOCK_NOTE_SYMBOL.len()..].trim().to_string();
                 if !n.is_empty() { notes = Some(n) }
