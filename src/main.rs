@@ -295,6 +295,7 @@ fn main() {
         println!("There's a command required! Try 'songbook help' for more information");
 
         #[cfg(feature = "tui")]
-        println!("TUI is still in development");
+        tui::main()
+            .expect("Error in TUI!");
     }
 }

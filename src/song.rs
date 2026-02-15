@@ -3,11 +3,8 @@ pub mod row;
 pub mod chord;
 
 use serde::{Serialize, Deserialize};
+use crossterm::style::Stylize;
 use anyhow::Result;
-use crossterm::{
-    execute,
-    style::{Print, ResetColor, SetForegroundColor}
-};
 
 use crate::Fingering;
 use crate::{
@@ -174,27 +171,22 @@ impl Song {
         return s
     }
 
-    pub fn print_colored(
+    pub fn get_colored(
         &self,
-        out: &mut impl std::io::Write,
         chords: bool,
         rhythm: bool,
         fingerings: bool,
         notes: bool
-    ) -> std::io::Result<()> {
+    ) -> String {
 
+        let mut s = String::new();
         if !self.metadata.artist.is_empty() && !self.metadata.title.is_empty() {
-            write!(out, "{} - {}", self.metadata.artist, self.metadata.title)?;
-            write!(out, "\n\n")?;
+            s.push_str(& format!("{} - {}\n\n", self.metadata.artist, self.metadata.title));
         }
 
         if let Some(n) = &self.notes && notes {
-            execute!(out,
-                SetForegroundColor(NOTES_COLOR),
-                Print(n),
-                Print('\n'),
-                ResetColor
-            )?;
+            s.push_str(&format!("{}", n.clone().with(NOTES_COLOR)));
+            s.push('\n');
         }
 
         if chords && fingerings {
@@ -216,45 +208,35 @@ impl Song {
 
             
             if let Some(text) = sum_text_in_fingerings(&fings) {
-                write!(out, "{}", text)?;
+                s.push_str(&text);
             }
         }
         
         let mut is_first = true;
         for block in &self.blocks {
             if is_first { is_first = false }
-            else { write!(out, "\n")? }
+            else { s.push('\n') }
 
             if let Some(title) = &block.title {
-                if !is_first && !title.is_empty() { writeln!(out)? }
-                execute!(
-                    out,
-                    SetForegroundColor(TITLE_COLOR),
-                    Print(title),
-                    Print(" "),
-                    ResetColor
-                )?;
+                if !is_first && !title.is_empty() { s.push('\n') }
+                s.push_str(&format!("{}", title.clone().with(TITLE_COLOR)));
+                s.push(' ');
             }
             if let Some(n) = &block.notes && notes {
-                if !is_first && block.title.is_none() { writeln!(out)? }
-                execute!(
-                    out,
-                    SetForegroundColor(NOTES_COLOR),
-                    Print(n),
-                    ResetColor
-                )?;
+                if !is_first && block.title.is_none() { s.push('\n') }
+                s.push_str(&format!("{}", n.clone().with(NOTES_COLOR)));
             }
-            if !block.lines.is_empty() { write!(out, "\n")? }
+            if !block.lines.is_empty() { s.push('\n') }
             
             let mut is_first_line = true;
             for line in &block.lines {
                 if is_first_line { is_first_line = false }
-                else { write!(out, "\n")? }
-                line.print_colored(out, chords, rhythm)?;
+                else { s.push('\n') }
+                line.get_colored(&mut s, chords, rhythm);
             }
         }
         
-        Ok(())
+        return s
     }
 
     pub fn detect_key(&mut self) -> Note {

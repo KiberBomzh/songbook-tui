@@ -1,3 +1,5 @@
+pub mod lib_functions;
+
 use std::path::{PathBuf, Path};
 use std::fs::{self, File};
 use std::io::{BufWriter, BufReader, Write, Error, ErrorKind, stdout};
@@ -54,16 +56,17 @@ pub fn show(
     }
 
     if is_colored {
+        let text = song.get_colored(chords, rhythm, fingerings, notes);
         if let Ok(mut child) = Command::new("less")
                                 .arg("-R")
                                 .stdin(Stdio::piped())
                                 .spawn() {
             if let Some(mut stdin) = child.stdin.take() {
-                song.print_colored(&mut stdin, chords, rhythm, fingerings, notes)?
+                write!(stdin, "{text}")?;
             }
             child.wait()?;
         } else {
-            song.print_colored(&mut std::io::stdout(), chords, rhythm, fingerings, notes)?;
+            write!(std::io::stdout(), "{text}")?;
         }
     } else {
         let text = song.get_song_as_text(chords, rhythm, fingerings, notes);

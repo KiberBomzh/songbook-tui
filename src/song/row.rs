@@ -1,9 +1,5 @@
 use serde::{Serialize, Deserialize};
-
-use crossterm::{
-    execute,
-    style::{Print, ResetColor, SetForegroundColor}
-};
+use crossterm::style::Stylize;
 
 use crate::song::chord::Chord;
 use crate::{
@@ -61,34 +57,22 @@ impl Row {
     }
 
 
-    pub fn print_colored(&self, out: &mut impl std::io::Write, chords: bool, rhythm: bool) -> std::io::Result<()> {
+    pub fn get_colored(&self, s: &mut String, chords: bool, rhythm: bool) {
         let (chords_line, rhythm_line, text) = self.get_strings();
 
         if !chords_line.is_empty() && chords {
-            execute!(
-                out,
-                SetForegroundColor(CHORDS_COLOR),
-                Print(chords_line),
-                Print("\n"),
-                ResetColor
-            )?;
+            s.push_str(&format!("{}", chords_line.with(CHORDS_COLOR)));
+            s.push('\n');
         }
 
         if !rhythm_line.is_empty() && rhythm {
-            execute!(
-                out,
-                SetForegroundColor(RHYTHM_COLOR),
-                Print(rhythm_line),
-                Print("\n"),
-                ResetColor
-            )?;
+            s.push_str(&format!("{}", rhythm_line.with(RHYTHM_COLOR)));
+            s.push('\n');
         }
 
         if !text.is_empty() {
-            write!(out, "{}", text)?;
+            s.push_str(&text);
         }
-        
-        Ok(())
     }
 
 
@@ -142,7 +126,7 @@ impl Row {
     }
     
     
-    fn get_strings(&self) -> (String, String, String) {
+    pub fn get_strings(&self) -> (String, String, String) {
         let mut chord_string = String::new();
         let mut rhythm_string = String::new();
         let mut text_string = String::new();

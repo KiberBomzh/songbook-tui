@@ -1,8 +1,5 @@
-use crossterm::{
-    execute,
-    style::{Print, ResetColor, SetForegroundColor}
-};
 use serde::{Serialize, Deserialize};
+use crossterm::style::Stylize;
 
 use crate::song::row::Row;
 use crate::song::chord::Chord;
@@ -39,33 +36,26 @@ pub enum Line {
 }
 
 impl Line {
-    pub fn print_colored(
+    pub fn get_colored(
         &self,
-        out: &mut impl std::io::Write,
+        s: &mut String,
         needs_chords: bool,
         needs_rhythm: bool
-    ) -> std::io::Result<()> {
+    ) {
         match self {
-            Line::TextBlock(row) => row.print_colored(out, needs_chords, needs_rhythm)?,
+            Line::TextBlock(row) => row.get_colored(s, needs_chords, needs_rhythm),
             Line::ChordsLine(chords) => if needs_chords {
-                let mut s = String::new();
+                let mut c = String::new();
                 for chord in chords {
-                    s.push_str(&chord.text);
-                    s.push(' ');
+                    c.push_str(&chord.text);
+                    c.push(' ');
                 }
-                execute!(
-                    out,
-                    SetForegroundColor(CHORDS_COLOR),
-                    Print(s),
-                    Print("\n"),
-                    ResetColor
-                )?;
+                s.push_str(&format!("{}", c.with(CHORDS_COLOR)));
+                s.push('\n');
             },
-            Line::PlainText(text) => write!(out, "{}", text)?,
-            Line::EmptyLine => writeln!(out)?
+            Line::PlainText(text) => s.push_str(&text),
+            Line::EmptyLine => s.push('\n')
         }
-        
-        Ok(())
     }
 }
 
