@@ -34,7 +34,7 @@ chord_list:
   fifth_state: Norm
   sus_or_add: No
 blocks:
-- title: ''
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -124,7 +124,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Отважно смакуя леденцы на палочке
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -214,7 +215,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: И нерукотворными пиздюлями
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -360,7 +362,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Покончить с собою — уничтожить весь мир
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -718,7 +721,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Русское поле экспериментов
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -896,7 +900,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Устами ребенка глаголет пуля
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -1254,7 +1259,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Русское поле экспериментов
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -1416,7 +1422,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Искусство быть посторонним
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -1578,7 +1585,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Новейшее средство находить виновных
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -1740,7 +1748,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Русское поле экспериментов
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -1830,7 +1839,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Понадо-понадо-пона-надобился...
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -1890,7 +1900,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Русское поле источает снег...
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -1950,6 +1961,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Иных хоронили в упаковке газет...
+  notes: null
 - title: Проигрыш
   lines:
   - !ChordsLine
@@ -1977,7 +1989,8 @@ blocks:
       chord_type: Norm
       fifth_state: Norm
       sus_or_add: No
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -2067,7 +2080,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Всеобщая воля, да всеобщая старость...
-- title: ''
+  notes: null
+- title: Проигрыш
   lines:
   - !ChordsLine
     - text: Bm
@@ -2094,7 +2108,8 @@ blocks:
       chord_type: Norm
       fifth_state: Norm
       sus_or_add: No
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -2256,7 +2271,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Что и требовалось доказать!
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -2346,7 +2362,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Эмалированные части головных систем
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -2436,7 +2453,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Слово «Люди» пишется с большой буквы!
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -2614,7 +2632,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: да-да-да-да, да-да-да-да?!
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -2792,7 +2811,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: А на второе — кровавые мальчики
-- title: (8р.)
+  notes: null
+- title: Проигрыш
   lines:
   - !ChordsLine
     - text: Bm
@@ -2819,7 +2839,8 @@ blocks:
       chord_type: Norm
       fifth_state: Norm
       sus_or_add: No
-- title: ''
+  notes: (8р.)
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -2909,7 +2930,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Отточенный серп для созревших колосьев
-- title: ''
+  notes: null
+- title: Проигрыш
   lines:
   - !ChordsLine
     - text: Bm
@@ -2936,7 +2958,8 @@ blocks:
       chord_type: Norm
       fifth_state: Norm
       sus_or_add: No
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -2982,7 +3005,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Кашу слезами не испортишь, нет
-- title: ''
+  notes: null
+- title: Проигрыш
   lines:
   - !ChordsLine
     - text: Bm
@@ -3009,7 +3033,8 @@ blocks:
       chord_type: Norm
       fifth_state: Norm
       sus_or_add: No
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -3099,7 +3124,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: А так же всякие иные предметы...
-- title: ''
+  notes: null
+- title: Проигрыш
   lines:
   - !ChordsLine
     - text: Bm
@@ -3126,7 +3152,8 @@ blocks:
       chord_type: Norm
       fifth_state: Norm
       sus_or_add: No
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -3216,7 +3243,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: В Сталинградской битве озверевшей похоти?
-- title: ''
+  notes: null
+- title: Проигрыш
   lines:
   - !ChordsLine
     - text: Bm
@@ -3243,7 +3271,8 @@ blocks:
       chord_type: Norm
       fifth_state: Norm
       sus_or_add: No
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -3333,7 +3362,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: В бугорок обетованной Землицы...
-- title: (8р.)
+  notes: null
+- title: Проигрыш
   lines:
   - !ChordsLine
     - text: Bm
@@ -3360,7 +3390,8 @@ blocks:
       chord_type: Norm
       fifth_state: Norm
       sus_or_add: No
-- title: ''
+  notes: (8р.)
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -3582,7 +3613,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Свою нелюбимую куклу
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -3868,7 +3900,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Русское поле экспериментов
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -4014,3 +4047,5 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Вечность пахнет нефтью...
+  notes: null
+notes: null
