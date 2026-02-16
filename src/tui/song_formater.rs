@@ -12,10 +12,23 @@ use super::{
 use songbook::song::block;
 
 
-pub fn get_as_paragraph<'a>(song: &'a Song) -> (Paragraph<'a>, usize, usize) {
+pub fn get_as_paragraph<'a>(
+    song: &'a Song,
+    needs_chords: bool,
+    needs_rhythm: bool,
+    needs_fingerings: bool, // дописать
+    needs_notes: bool
+) -> (Paragraph<'a>, usize, usize) {
     let mut lines = Vec::new();
-    let mut is_first = true;
     let mut columns = 0;
+
+    if let Some(n) = &song.notes && !n.is_empty() && needs_notes {
+        if n.chars().count() > columns { columns = n.chars().count() }
+        lines.push( Line::styled(n, Style::new().fg(NOTES_COLOR)) )
+    }
+
+
+    let mut is_first = true;
     for block in &song.blocks {
         if is_first { is_first = false }
         else { lines.push(Line::default()) }
@@ -27,7 +40,7 @@ pub fn get_as_paragraph<'a>(song: &'a Song) -> (Paragraph<'a>, usize, usize) {
                 Span::styled(title.to_string() + " ", Style::new().fg(TITLE_COLOR))
             )
         }
-        if let Some(n) = &block.notes && !n.is_empty() {
+        if let Some(n) = &block.notes && !n.is_empty() && needs_notes {
             if n.chars().count() > columns { columns = n.chars().count() }
             head_block_spans.push(
                 Span::styled(n, Style::new().fg(NOTES_COLOR))
@@ -40,13 +53,13 @@ pub fn get_as_paragraph<'a>(song: &'a Song) -> (Paragraph<'a>, usize, usize) {
             match line {
                 block::Line::TextBlock(row) => {
                     let (chord_line, rhythm_line, text) = row.get_strings();
-                    if !chord_line.is_empty() {
+                    if !chord_line.is_empty() && needs_chords {
                         if chord_line.chars().count() > columns {
                             columns = chord_line.chars().count()
                         }
                         lines.push(Line::styled(chord_line, Style::new().fg(CHORDS_COLOR)))
                     }
-                    if !rhythm_line.is_empty() {
+                    if !rhythm_line.is_empty() && needs_rhythm {
                         if rhythm_line.chars().count() > columns {
                             columns = rhythm_line.chars().count()
                         }
@@ -59,7 +72,7 @@ pub fn get_as_paragraph<'a>(song: &'a Song) -> (Paragraph<'a>, usize, usize) {
                         lines.push(Line::from(text))
                     }
                 },
-                block::Line::ChordsLine(chords) => {
+                block::Line::ChordsLine(chords) => if needs_chords {
                     let mut chord_line = String::new();
                     for chord in chords {
                         chord_line.push_str(&chord.text);

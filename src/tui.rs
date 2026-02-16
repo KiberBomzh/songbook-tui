@@ -31,6 +31,10 @@ pub fn main() -> Result<()> {
         current_dir,
         last_dirs: Vec::new(),
         current_song: None,
+        show_chords: true,
+        show_rhythm: true,
+        show_fingerings: false,
+        show_notes: true,
         scroll_y: 0,
         scroll_x: 0,
         scroll_y_max: 0,
@@ -64,6 +68,10 @@ struct App {
     last_dirs: Vec<PathBuf>,
 
     current_song: Option<Song>,
+    show_chords: bool,
+    show_rhythm: bool,
+    show_fingerings: bool,
+    show_notes: bool,
 
     scroll_y: u16,
     scroll_x: u16,
@@ -129,7 +137,13 @@ impl App {
         let title: String;
         let song = if let Some(song) = &self.current_song {
             title = format!("{} - {}", song.metadata.artist, song.metadata.title);
-            let (p, lines, columns) = song_formater::get_as_paragraph(song);
+            let (p, lines, columns) = song_formater::get_as_paragraph(
+                &song,
+                self.show_chords,
+                self.show_rhythm,
+                self.show_fingerings,
+                self.show_notes
+            );
 
             let height = <u16 as Into<usize>>::into(inner_song_area.height);
             let width = <u16 as Into<usize>>::into(inner_song_area.width);
@@ -202,6 +216,35 @@ impl App {
             KeyCode::Char('h') | KeyCode::Left =>
                 self.scroll_x = self.scroll_x.saturating_sub(1),
 
+
+            KeyCode::Char('C') => {
+                if self.show_chords {
+                    self.show_chords = false
+                } else {
+                    self.show_chords = true
+                }
+            },
+            KeyCode::Char('R') => {
+                if self.show_rhythm {
+                    self.show_rhythm = false
+                } else {
+                    self.show_rhythm = true
+                }
+            },
+            KeyCode::Char('F') => {
+                if self.show_fingerings {
+                    self.show_fingerings = false
+                } else {
+                    self.show_fingerings = true
+                }
+            },
+            KeyCode::Char('N') => {
+                if self.show_notes {
+                    self.show_notes = false
+                } else {
+                    self.show_notes = true
+                }
+            },
             
             KeyCode::Char(';') => self.switch_lib(),
             _ => {}
