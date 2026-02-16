@@ -361,7 +361,7 @@ pub fn get_fingering(chord_name: &str) -> Result<Option<Fingering>, Box<dyn std:
 
 
 fn print(text: &str) -> Result<()> {
-    if let Ok(mut child) = Command::new("less").stdin(Stdio::piped()).spawn() {
+    if let Ok(mut child) = Command::new("less").arg("-R").stdin(Stdio::piped()).spawn() {
         if let Some(mut stdin) = child.stdin.take() {
             stdin.write_all(text.as_bytes())?;
         }
