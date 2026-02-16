@@ -107,12 +107,17 @@ impl App {
 
 
         let items: Vec<ListItem> = self.lib_list.iter()
-            .map(|(s, _f)| ListItem::new(s.as_str()) )
+            .map(|(s, f)|
+                if f.is_dir() { ListItem::new(s.as_str()).style(
+                    Style::new().blue()
+                )}
+                else { ListItem::new(s.as_str()) }
+            )
             .collect();
 
         if !self.hide_lib {
             let list = List::new(items)
-                .highlight_style(Style::new().reversed().bold())
+                .highlight_style(Style::new())
                 .highlight_symbol("->")
                 .block(
                     Block::bordered().title("Library")

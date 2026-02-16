@@ -89,7 +89,6 @@ enum Command {
         target: EditTarget,
     },
 
-    // добавить вариант с созданием песни с буфера обмена (text но с буфера)
     /// Add a song to the library
     #[command(subcommand)]
     Add(AddSubcommand),
