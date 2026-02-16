@@ -8,7 +8,8 @@ use crate::Song;
 use crate::song_library::get_lib_path;
 
 
-pub fn get_files_in_dir(added_path: Option<&Path>) -> Result<Vec<(String, PathBuf)>> {
+// returns files in directory(file_name, file_path) and directory
+pub fn get_files_in_dir(added_path: Option<&Path>) -> Result<(Vec<(String, PathBuf)>, PathBuf)> {
     let mut path = get_lib_path()?;
     if let Some(p) = added_path { path = path.join(p) }
     if !path.exists() {
@@ -16,7 +17,7 @@ pub fn get_files_in_dir(added_path: Option<&Path>) -> Result<Vec<(String, PathBu
     }
 
     let mut files = Vec::new();
-    for entry in fs::read_dir(path)? {
+    for entry in fs::read_dir(&path)? {
         let entry = entry?;
         if let Some(name) = entry.file_name().to_str() {
             let name = if entry.path().is_dir() { format!("📁{}", name) }
@@ -25,7 +26,7 @@ pub fn get_files_in_dir(added_path: Option<&Path>) -> Result<Vec<(String, PathBu
         }
     }
 
-    Ok(files)
+    Ok( (files, path) )
 }
 
 

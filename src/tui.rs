@@ -21,12 +21,15 @@ const NOTES_COLOR: Color = Color::DarkGray;
 
 pub fn main() -> Result<()> {
     let mut terminal = ratatui::init();
+    let (lib_list, current_dir) = get_files_in_dir(None)?;
     let mut app = App {
         exit: false,
         focus: Focus::Library,
         hide_lib: false,
         lib_list_state: ListState::default(),
-        lib_list: get_files_in_dir(None)?,
+        lib_list,
+        current_dir,
+        last_dirs: Vec::new(),
         current_song: None,
         scroll_y: 0,
         scroll_x: 0,
@@ -51,11 +54,17 @@ enum Focus {
 
 struct App {
     exit: bool,
+
     focus: Focus,
     hide_lib: bool,
+
     lib_list_state: ListState,
     lib_list: Vec<(String, PathBuf)>,
+    current_dir: PathBuf,
+    last_dirs: Vec<PathBuf>,
+
     current_song: Option<Song>,
+
     scroll_y: u16,
     scroll_x: u16,
     scroll_y_max: usize,
@@ -153,13 +162,12 @@ impl App {
         match key_event.code {
             KeyCode::Char('j') | KeyCode::Down => self.lib_list_state.select_next(),
             KeyCode::Char('k') | KeyCode::Up => self.lib_list_state.select_previous(),
-            KeyCode::Char('l') | KeyCode::Right => {},
-            KeyCode::Char('h') | KeyCode::Left => {},
-            KeyCode::Enter => {
+            KeyCode::Char('l') | KeyCode::Right | KeyCode::Enter => {
                 if let Some(selected) = self.lib_list_state.selected() {
                     let (_name, path) = &self.lib_list[selected];
                     if path.is_dir() {
-                        self.lib_list = get_files_in_dir(Some(&path))?;
+                        self.last_dirs.push(self.current_dir.clone());
+                        (self.lib_list, self.current_dir) = get_files_in_dir(Some(&path))?;
                         self.lib_list_state.select_first();
                     } else if path.is_file() {
                         self.current_song = Some(get_song(&path)?);
@@ -169,8 +177,9 @@ impl App {
                     }
                 }
             },
-            KeyCode::Backspace => {
-                self.lib_list = get_files_in_dir(None)?;
+            KeyCode::Char('h') | KeyCode::Left | KeyCode::Backspace => {
+                (self.lib_list, self.current_dir) =
+                    get_files_in_dir( self.last_dirs.pop().as_deref() )?;
                 self.lib_list_state.select_first();
             },
             _ => {}
