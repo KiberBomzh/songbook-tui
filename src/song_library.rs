@@ -55,23 +55,13 @@ pub fn show(
         } else { println!("Add a key before transposing, try 'songbook edit <song_name> -t meta'") }
     }
 
-    if is_colored {
-        let text = song.get_colored(chords, rhythm, fingerings, notes);
-        if let Ok(mut child) = Command::new("less")
-                                .arg("-R")
-                                .stdin(Stdio::piped())
-                                .spawn() {
-            if let Some(mut stdin) = child.stdin.take() {
-                write!(stdin, "{text}")?;
-            }
-            child.wait()?;
+    let text =
+        if is_colored {
+            song.get_colored(chords, rhythm, fingerings, notes)
         } else {
-            write!(std::io::stdout(), "{text}")?;
-        }
-    } else {
-        let text = song.get_song_as_text(chords, rhythm, fingerings, notes);
-        print(&text)?;
-    }
+            song.get_song_as_text(chords, rhythm, fingerings, notes)
+        };
+    print(&text)?;
 
 
     Ok(())
