@@ -187,7 +187,7 @@ fn main() {
             Command::Chord { chord } => {
                 if let Some(chord) = songbook::Chord::new(&chord) {
                     let fings = chord.get_fingerings(&songbook::STANDART_TUNING);
-                    if let Some(text) = songbook::sum_text_in_fingerings(&fings) {
+                    if let Some(text) = songbook::sum_text_in_fingerings(&fings, None) {
                         println!("{text}");
                     }
                 } else {

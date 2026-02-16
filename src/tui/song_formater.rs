@@ -2,18 +2,21 @@ use ratatui::style::Style;
 use ratatui::text::{Line, Span};
 use ratatui::widgets::Paragraph;
 
-use songbook::Song;
+use songbook::{Song, STANDART_TUNING};
+use songbook::song::block;
+use songbook::chord_generator::chord_fingerings::sum_text_in_fingerings;
+
 use super::{
     TITLE_COLOR,
     CHORDS_COLOR,
     RHYTHM_COLOR,
     NOTES_COLOR,
 };
-use songbook::song::block;
 
 
 pub fn get_as_paragraph<'a>(
     song: &'a Song,
+    available_width: usize,
     needs_chords: bool,
     needs_rhythm: bool,
     needs_fingerings: bool, // дописать
@@ -24,7 +27,28 @@ pub fn get_as_paragraph<'a>(
 
     if let Some(n) = &song.notes && !n.is_empty() && needs_notes {
         if n.chars().count() > columns { columns = n.chars().count() }
-        lines.push( Line::styled(n, Style::new().fg(NOTES_COLOR)) )
+        lines.push( Line::styled(n, Style::new().fg(NOTES_COLOR)) );
+        lines.push(Line::default());
+    }
+
+    if needs_chords && needs_fingerings {
+        let mut fings = Vec::new();
+        
+        for chord in &song.chord_list {
+            if let Ok(Some(f)) = songbook::song_library::get_fingering(&chord.text) {
+                fings.push(f)
+            } else {
+                fings.push( chord.get_fingerings(&STANDART_TUNING)[0].clone() )
+            }
+        }
+
+        
+        if let Some(text) = sum_text_in_fingerings(&fings, Some(available_width)) {
+            lines.extend( text.lines()
+                .map(|l| Line::from(l.to_string()))
+                .collect::<Vec<Line>>()
+            );
+        }
     }
 
 
@@ -85,7 +109,7 @@ pub fn get_as_paragraph<'a>(
                     lines.extend(text.lines()
                         .map(|l| Line::from(l))
                         .collect::<Vec<Line>>()
-                        );
+                    );
                     for l in text.lines() {
                         if l.chars().count() > columns { columns = l.chars().count() }
                     }
@@ -98,4 +122,3 @@ pub fn get_as_paragraph<'a>(
     let lines_len = lines.len();
     return (Paragraph::new(lines), lines_len, columns)
 }
-

@@ -1,5 +1,5 @@
 mod file_reader;
-mod chord_generator;
+pub mod chord_generator;
 pub mod song;
 
 #[cfg(feature = "song_library")]

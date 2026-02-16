@@ -137,16 +137,19 @@ impl App {
         let title: String;
         let song = if let Some(song) = &self.current_song {
             title = format!("{} - {}", song.metadata.artist, song.metadata.title);
+
+            let height = <u16 as Into<usize>>::into(inner_song_area.height);
+            let width = <u16 as Into<usize>>::into(inner_song_area.width);
+
             let (p, lines, columns) = song_formater::get_as_paragraph(
                 &song,
+                width,
                 self.show_chords,
                 self.show_rhythm,
                 self.show_fingerings,
                 self.show_notes
             );
 
-            let height = <u16 as Into<usize>>::into(inner_song_area.height);
-            let width = <u16 as Into<usize>>::into(inner_song_area.width);
             self.scroll_y_max = lines.saturating_sub(height);
             self.scroll_x_max = columns.saturating_sub(width);
 

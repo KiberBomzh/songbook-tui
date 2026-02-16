@@ -117,7 +117,7 @@ impl Song {
             }
 
             
-            if let Some(text) = sum_text_in_fingerings(&fings) {
+            if let Some(text) = sum_text_in_fingerings(&fings, None) {
                 s.push_str(&text);
             }
         }
@@ -207,7 +207,7 @@ impl Song {
             }
 
             
-            if let Some(text) = sum_text_in_fingerings(&fings) {
+            if let Some(text) = sum_text_in_fingerings(&fings, None) {
                 s.push_str(&text);
             }
         }

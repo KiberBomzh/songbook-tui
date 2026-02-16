@@ -159,10 +159,12 @@ impl Fingering {
     }
 }
 
-pub fn sum_text_in_fingerings(fingerings: &Vec<Fingering>) -> Option<String> {
-    let width = <u16 as Into<usize>>::into(
+pub fn sum_text_in_fingerings(fingerings: &Vec<Fingering>, width: Option<usize>) -> Option<String> {
+    let width = if let Some(width) = width { width }
+    else { <u16 as Into<usize>>::into(
         if let Ok( (cols, _rows) ) = size() { cols } else { return None }
-    );
+    )};
+
     let indent: usize = 5;
     let line_width: usize = 14;
     let fingerings_in_line: usize = width / (line_width + indent);
