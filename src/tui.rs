@@ -259,12 +259,14 @@ impl App {
                     }
                 }
             },
-
             KeyCode::Char('K') | KeyCode::PageUp => {
                 if let Some(height) = self.song_area_height {
                     self.scroll_y = self.scroll_y.saturating_sub(height.try_into()?);
                 }
             },
+
+            KeyCode::Home => self.scroll_y = 0,
+            KeyCode::End => self.scroll_y = self.scroll_y_max.try_into()?,
 
 
             KeyCode::Char('C') => {
