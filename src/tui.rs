@@ -31,6 +31,8 @@ pub fn main() -> Result<()> {
         current_dir,
         last_dirs: Vec::new(),
         current_song: None,
+        song_area_height: None,
+        song_area_width: None,
         show_chords: true,
         show_rhythm: true,
         show_fingerings: false,
@@ -68,6 +70,8 @@ struct App {
     last_dirs: Vec<PathBuf>,
 
     current_song: Option<(Song, PathBuf)>,
+    song_area_height: Option<usize>,
+    song_area_width: Option<usize>,
     show_chords: bool,
     show_rhythm: bool,
     show_fingerings: bool,
@@ -151,6 +155,8 @@ impl App {
 
             let height = <u16 as Into<usize>>::into(inner_song_area.height);
             let width = <u16 as Into<usize>>::into(inner_song_area.width);
+            self.song_area_height = Some(height);
+            self.song_area_width = Some(width);
 
             let (p, lines, columns) = song_formater::get_as_paragraph(
                 &song,
@@ -241,6 +247,24 @@ impl App {
 
             KeyCode::Char('h') | KeyCode::Left =>
                 self.scroll_x = self.scroll_x.saturating_sub(1),
+
+
+            KeyCode::Char('J') | KeyCode::PageDown => {
+                if let Some(height) = self.song_area_height {
+                    let height: u16 = height.try_into()?;
+                    if self.scroll_y_max > (self.scroll_y + height).into() {
+                        self.scroll_y += height;
+                    } else if self.scroll_y_max > self.scroll_y.into() {
+                        self.scroll_y = self.scroll_y_max.try_into()?;
+                    }
+                }
+            },
+
+            KeyCode::Char('K') | KeyCode::PageUp => {
+                if let Some(height) = self.song_area_height {
+                    self.scroll_y = self.scroll_y.saturating_sub(height.try_into()?);
+                }
+            },
 
 
             KeyCode::Char('C') => {
