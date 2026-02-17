@@ -120,7 +120,13 @@ impl App {
                 .highlight_style(Style::new())
                 .highlight_symbol("->")
                 .block(
-                    Block::bordered().title("Library")
+                    Block::bordered().title(
+                        self.current_dir
+                            .file_name()
+                            .and_then(|n| n.to_str())
+                            .unwrap_or("library")
+                        )
+
                         .border_style(if self.focus == Focus::Library {
                             Style::new().fg(focus_color)
                         } else {
