@@ -102,7 +102,7 @@ impl App {
         };
         let [lib_area, song_area] = horizontal.areas(frame.area());
 
-        let focus_color = Color::White;
+        let focus_color = Color::Green;
         let unfocus_color = Color::DarkGray;
 
 
