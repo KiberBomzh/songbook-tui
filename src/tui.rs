@@ -67,7 +67,7 @@ struct App {
     current_dir: PathBuf,
     last_dirs: Vec<PathBuf>,
 
-    current_song: Option<Song>,
+    current_song: Option<(Song, PathBuf)>,
     show_chords: bool,
     show_rhythm: bool,
     show_fingerings: bool,
@@ -84,7 +84,7 @@ impl App {
         while !self.exit {
             terminal.draw(|frame| self.draw(frame))?;
             match crossterm::event::read()? {
-                Event::Key(key_event) => self.handle_key_event(key_event)?,
+                Event::Key(key_event) => self.handle_key_event(key_event, terminal)?,
                 _ => {}
             }
         }
@@ -140,7 +140,7 @@ impl App {
         let inner_song_area = song_block.inner(song_area);
 
         let title: String;
-        let song = if let Some(song) = &self.current_song {
+        let song = if let Some((song, _p)) = &self.current_song {
             title = format!("{} - {}", song.metadata.artist, song.metadata.title);
 
             let height = <u16 as Into<usize>>::into(inner_song_area.height);
@@ -166,14 +166,14 @@ impl App {
         frame.render_widget(song, song_area);
     }
 
-    fn handle_key_event(&mut self, key_event: KeyEvent) -> Result<()> {
+    fn handle_key_event(&mut self, key_event: KeyEvent, terminal: &mut DefaultTerminal) -> Result<()> {
         if key_event.kind == KeyEventKind::Press {
             if key_event.code == KeyCode::Char('q') { self.exit = true }
             else if key_event.code == KeyCode::Tab && !self.hide_lib { self.switch_focus() }
             else {
                 match self.focus {
                     Focus::Library => self.handle_lib_key_event(key_event)?,
-                    Focus::Song => self.handle_song_key_event(key_event)?
+                    Focus::Song => self.handle_song_key_event(key_event, terminal)?
                 }
             }
         }
@@ -192,7 +192,7 @@ impl App {
                         (self.lib_list, self.current_dir) = get_files_in_dir(Some(&path))?;
                         self.lib_list_state.select_first();
                     } else if path.is_file() {
-                        self.current_song = Some(get_song(&path)?);
+                        self.current_song = Some( (get_song(&path)?, path.to_path_buf()) );
                         self.focus = Focus::Song;
                         self.scroll_y = 0;
                         self.scroll_x = 0;
@@ -218,7 +218,11 @@ impl App {
         Ok(())
     }
 
-    fn handle_song_key_event(&mut self, key_event: KeyEvent) -> Result<()> {
+    fn handle_song_key_event(
+        &mut self,
+        key_event: KeyEvent,
+        terminal: &mut DefaultTerminal
+    ) -> Result<()> {
         match key_event.code {
             KeyCode::Char('j') | KeyCode::Down =>
                 if self.scroll_y_max > self.scroll_y.into() { self.scroll_y += 1 },
@@ -263,6 +267,18 @@ impl App {
             },
             
             KeyCode::Char(';') => self.switch_lib(),
+
+
+            KeyCode::Char('E') => {
+                if let Some( (_s, path) ) = &self.current_song {
+                    ratatui::restore();
+
+                    songbook::song_library::edit(path, "song")?;
+                    self.current_song = Some( (get_song(path)?, path.to_path_buf()) );
+
+                    *terminal = ratatui::init();
+                }
+            },
             _ => {}
         }
 
