@@ -204,6 +204,14 @@ impl App {
                     get_files_in_dir( self.last_dirs.pop().as_deref() )?;
                 self.lib_list_state.select_first();
             },
+
+
+            KeyCode::Char('S') => {
+                songbook::song_library::sort()?;
+                self.last_dirs.clear();
+                (self.lib_list, self.current_dir) = get_files_in_dir(None)?;
+                self.lib_list_state.select_first();
+            },
             _ => {}
         }
 
