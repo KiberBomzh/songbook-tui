@@ -255,7 +255,20 @@ impl App {
                 (self.lib_list, self.current_dir) = get_files_in_dir(None)?;
                 self.lib_list_state.select_first();
             },
+
+            KeyCode::Char('D') => {
+                if let Some(selected) = self.lib_list_state.selected() {
+                    let (_name, path) = &self.lib_list[selected];
+                    songbook::song_library::rm(path)?;
+                    (self.lib_list, self.current_dir) = get_files_in_dir( Some(&self.current_dir) )?;
+                }
+            },
             _ => {}
+        }
+
+
+        if let Some( (_s, path) ) = &self.current_song {
+            if !path.is_file() { self.current_song = None }
         }
 
         Ok(())
@@ -266,6 +279,7 @@ impl App {
         key_event: KeyEvent,
         terminal: &mut DefaultTerminal
     ) -> Result<()> {
+        let mut is_song_changed = false;
         match key_event.code {
             KeyCode::Char(c) if self.is_long_command => self.long_command.push(c),
             KeyCode::Enter if self.is_long_command => {
@@ -279,6 +293,7 @@ impl App {
                                         song.transpose(1);
                                         song_key = song.metadata.key.unwrap();
                                     }
+                                    is_song_changed = true;
                                 }
                             },
                             'c' => if let Ok(capo) = command_data.parse::<u8>() {
@@ -292,6 +307,7 @@ impl App {
                                 song.metadata.capo =
                                     if capo == 0 { None }
                                     else { Some(capo) };
+                                is_song_changed = true;
                             },
                             _ => {}
                         }
@@ -337,28 +353,28 @@ impl App {
             KeyCode::End => self.scroll_y = self.scroll_y_max.try_into()?,
 
 
-            KeyCode::Char('C') => {
+            KeyCode::Char('c') => {
                 if self.show_chords {
                     self.show_chords = false
                 } else {
                     self.show_chords = true
                 }
             },
-            KeyCode::Char('R') => {
+            KeyCode::Char('r') => {
                 if self.show_rhythm {
                     self.show_rhythm = false
                 } else {
                     self.show_rhythm = true
                 }
             },
-            KeyCode::Char('F') => {
+            KeyCode::Char('f') => {
                 if self.show_fingerings {
                     self.show_fingerings = false
                 } else {
                     self.show_fingerings = true
                 }
             },
-            KeyCode::Char('N') => {
+            KeyCode::Char('n') => {
                 if self.show_notes {
                     self.show_notes = false
                 } else {
@@ -369,17 +385,21 @@ impl App {
             KeyCode::Char(';') => self.switch_lib(),
 
 
-            KeyCode::Char('E') => {
-                if let Some( (_s, path) ) = &self.current_song {
+            KeyCode::Char('e') => {
+                if let Some( (song, _path) ) = &mut self.current_song {
                     ratatui::restore();
-
-                    songbook::song_library::edit(path)?;
-                    self.current_song = Some( (get_song(path)?, path.to_path_buf()) );
-
+                    edit(song)?;
+                    is_song_changed = true;
                     *terminal = ratatui::init();
                 }
             },
             _ => {}
+        }
+
+        if is_song_changed {
+            if let Some( (song, path) ) = &self.current_song {
+                save(song, path)?;
+            }
         }
 
         Ok(())
