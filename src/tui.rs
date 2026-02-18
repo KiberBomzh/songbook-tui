@@ -373,7 +373,7 @@ impl App {
                 if let Some( (_s, path) ) = &self.current_song {
                     ratatui::restore();
 
-                    songbook::song_library::edit(path, "song")?;
+                    songbook::song_library::edit(path)?;
                     self.current_song = Some( (get_song(path)?, path.to_path_buf()) );
 
                     *terminal = ratatui::init();

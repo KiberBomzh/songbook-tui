@@ -3,7 +3,7 @@ mod tui;
 
 use std::path::PathBuf;
 
-use clap::{Parser, Subcommand, ValueEnum};
+use clap::{Parser, Subcommand};
 use songbook::{Song, Metadata, Note, STRINGS};
 use songbook::song_library;
 use songbook::{Fingering, StringState};
@@ -81,13 +81,7 @@ enum Command {
     },
 
     /// Edit song
-    Edit {
-        path: PathBuf,
-        
-        /// Target for editing
-        #[arg(short, long)]
-        target: EditTarget,
-    },
+    Edit { path: PathBuf },
 
     /// Add a song to the library
     #[command(subcommand)]
@@ -117,11 +111,6 @@ enum Command {
     Mkdir { path: PathBuf },
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Debug, ValueEnum)]
-enum EditTarget {
-    Song,
-    Meta
-}
 
 #[derive(Subcommand, Debug, Clone)]
 enum AddSubcommand {
@@ -231,12 +220,8 @@ fn main() {
                 song_library::show(&path, key, chords, rhythm, fingerings, notes, colored)
                     .expect("Error during geting song!");
             },
-            Command::Edit { path, target } => {
-                let target = match target {
-                    EditTarget::Song => "song",
-                    EditTarget::Meta => "meta"
-                };
-                song_library::edit(&path, target)
+            Command::Edit { path } => {
+                song_library::edit(&path)
                     .expect("Error during editing song!");
             },
             Command::Add(subcommand) => match subcommand {

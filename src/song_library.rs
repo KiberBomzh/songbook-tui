@@ -13,7 +13,7 @@ use crossterm::{
     style::{Color, Print, ResetColor, SetForegroundColor}
 };
 
-use crate::{Song, Metadata, Fingering};
+use crate::{Song, Fingering};
 
 
 const FORBIDDEN_CHARS: [char; 9] = ['<', '>', ':', '/', '\\', '|', '?', '*', '`'];
@@ -68,7 +68,7 @@ pub fn show(
 }
 
 
-pub fn edit(added_path: &Path, target: &str) -> Result<()> {
+pub fn edit(added_path: &Path) -> Result<()> {
     let mut path = get_lib_path()?;
     path = path.join(added_path);
     if !path.exists() {
@@ -79,22 +79,9 @@ pub fn edit(added_path: &Path, target: &str) -> Result<()> {
     let reader = BufReader::new(file);
     let mut song: Song = serde_yaml::from_reader(reader)?;
 
-    match target {
-        "meta" => {
-            let metadata = &mut song.metadata;
-            let mut data = Metadata::to_string(&metadata)?;
-            data = edit::edit(data)?;
-
-            *metadata = Metadata::from_str(&data)?;
-        },
-        "song" => {
-            let mut text = song.get_for_editing();
-            text = edit::edit(text)?;
-            
-            song.change_from_edited_str(&text);
-        },
-        _ => { println!("There's no such option!"); return Ok(()) }
-    }
+    let mut text = song.get_for_editing();
+    text = edit::edit(text)?;
+    song.change_from_edited_str(&text);
 
     let file = File::create(path)?;
     let writer = BufWriter::new(file);

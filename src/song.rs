@@ -8,6 +8,13 @@ use anyhow::Result;
 
 use crate::Fingering;
 use crate::{
+    METADATA_START,
+    METADATA_END,
+    SONG_TITLE_SYMBOL,
+    SONG_ARTIST_SYMBOL,
+    SONG_KEY_SYMBOL,
+    SONG_CAPO_SYMBOL,
+
     BLOCK_START,
     BLOCK_END,
     STANDART_TUNING,
@@ -62,6 +69,65 @@ impl Metadata {
 
     pub fn to_string(&self) -> Result<String> {
         Ok(serde_yaml::to_string(&self)?)
+    }
+
+    fn get_for_editing(&self, s: &mut String) {
+        s.push_str(METADATA_START);
+        s.push('\n');
+
+
+        s.push_str(SONG_TITLE_SYMBOL);
+        s.push_str(&self.title);
+        s.push('\n');
+
+        s.push_str(SONG_ARTIST_SYMBOL);
+        s.push_str(&self.artist);
+        s.push('\n');
+
+        s.push_str(SONG_KEY_SYMBOL);
+        if let Some(key) = self.key {
+            s.push_str(&key.get_text())
+        }
+        s.push('\n');
+
+        s.push_str(SONG_CAPO_SYMBOL);
+        if let Some(capo) = self.capo {
+            s.push_str(&capo.to_string())
+        }
+        s.push('\n');
+
+
+        s.push_str(METADATA_END);
+        s.push('\n');
+
+        s.push('\n');
+        s.push('\n');
+    }
+
+    fn change_from_edited_str(&mut self, text: &str) {
+        let mut title = String::new();
+        let mut artist = String::new();
+        let mut key: Option<Note> = None;
+        let mut capo: Option<u8> = None;
+        for line in text.lines() {
+            if line.starts_with(SONG_TITLE_SYMBOL) {
+                title = line[SONG_TITLE_SYMBOL.len()..].trim().to_string();
+            } else if line.starts_with(SONG_ARTIST_SYMBOL) {
+                artist = line[SONG_ARTIST_SYMBOL.len()..].trim().to_string();
+            } else if line.starts_with(SONG_KEY_SYMBOL) {
+                let k = line[SONG_KEY_SYMBOL.len()..].trim();
+                key = Note::get_key(k);
+            } else if line.starts_with(SONG_CAPO_SYMBOL) {
+                if let Ok(c) = line[SONG_CAPO_SYMBOL.len()..].trim().parse::<u8>() {
+                    capo = Some(c)
+                }
+            }
+        }
+
+        if !title.is_empty() { self.title = title }
+        if !artist.is_empty() { self.artist = artist }
+        self.key = key;
+        self.capo = capo;
     }
 }
 
@@ -308,6 +374,10 @@ impl Song {
 
     pub fn get_for_editing(&self) -> String {
         let mut s = String::new();
+
+        self.metadata.get_for_editing(&mut s);
+
+
         if let Some(n) = &self.notes {
             s.push_str(SONG_NOTE_SYMBOL);
             s.push_str(n);
@@ -326,9 +396,11 @@ impl Song {
 
     pub fn change_from_edited_str(&mut self, text: &str) {
         let mut blocks: Vec<Block> = Vec::new();
+        let mut metadata_text = String::new();
 
         let mut block_buf = String::new();
         let mut is_in_block = false;
+        let mut is_in_metadata = false;
         for line in text.lines() {
             if line.starts_with(SONG_NOTE_SYMBOL) {
                 let note = line[SONG_NOTE_SYMBOL.len()..].trim().to_string();
@@ -339,6 +411,15 @@ impl Song {
                 blocks.push( Block::from_edited(&block_buf) );
                 block_buf.clear();
             } else if is_in_block { block_buf.push_str(line); block_buf.push('\n'); }
+
+            else if line.starts_with(METADATA_START) { is_in_metadata = true }
+            else if line.starts_with(METADATA_END) {
+                is_in_metadata = false;
+                self.metadata.change_from_edited_str(&metadata_text);
+            } else if is_in_metadata {
+                metadata_text.push_str(line);
+                metadata_text.push('\n');
+            }
         }
 
 

@@ -21,8 +21,18 @@ pub use crate::song::chord::Chord;
 
 pub const STANDART_TUNING: [Note; STRINGS] = [E, B, G, D, A, E];
 
-const BLOCK_START: &str = "{block start}";
-const BLOCK_END: &str = "{block end}";
+
+const METADATA_START: &str = "{metadata:}";
+const METADATA_END: &str = "{:metadata}";
+
+const SONG_TITLE_SYMBOL: &str = "{song_title:} ";
+const SONG_ARTIST_SYMBOL: &str = "{song_artist:} ";
+const SONG_KEY_SYMBOL: &str = "{song_key:} ";
+const SONG_CAPO_SYMBOL: &str = "{song_capo:} ";
+
+
+const BLOCK_START: &str = "{block:}";
+const BLOCK_END: &str = "{:block}";
 
 const TITLE_SYMBOL: &str = "{title:} ";
 
