@@ -51,7 +51,8 @@ pub struct Song {
 pub struct Metadata {
     pub title: String,
     pub artist: String,
-    pub key: Option<Note>
+    pub key: Option<Note>,
+    pub capo: Option<u8>
 }
 
 impl Metadata {
@@ -71,7 +72,8 @@ impl Song {
             metadata: Metadata {
                 title: title.to_string(), 
                 artist: artist.to_string(),
-                key: None
+                key: None,
+                capo: None
             },
             chord_list: Vec::new(),
             blocks: Vec::new(),

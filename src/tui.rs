@@ -11,12 +11,16 @@ use ratatui::prelude::*;
 use crossterm::event::{Event, KeyEvent, KeyEventKind, KeyCode};
 
 use songbook::song_library::lib_functions::*;
-use songbook::Song;
+use songbook::{Song, Note};
 
 const TITLE_COLOR: Color = Color::Green;
 const CHORDS_COLOR: Color = Color::Cyan;
 const RHYTHM_COLOR: Color = Color::Yellow;
 const NOTES_COLOR: Color = Color::DarkGray;
+
+const FOCUS_COLOR: Color = Color::LightGreen;
+const UNFOCUS_COLOR: Color = Color::DarkGray;
+
 
 
 pub fn main() -> Result<()> {
@@ -26,6 +30,8 @@ pub fn main() -> Result<()> {
         exit: false,
         focus: Focus::Library,
         hide_lib: false,
+        is_long_command: false,
+        long_command: String::new(),
         lib_list_state: ListState::default(),
         lib_list,
         current_dir,
@@ -63,6 +69,9 @@ struct App {
 
     focus: Focus,
     hide_lib: bool,
+
+    is_long_command: bool,
+    long_command: String,
 
     lib_list_state: ListState,
     lib_list: Vec<(String, PathBuf)>,
@@ -106,9 +115,6 @@ impl App {
         };
         let [lib_area, song_area] = horizontal.areas(frame.area());
 
-        let focus_color = Color::Green;
-        let unfocus_color = Color::DarkGray;
-
 
         let items: Vec<ListItem> = self.lib_list.iter()
             .map(|(s, f)|
@@ -132,9 +138,9 @@ impl App {
                         )
 
                         .border_style(if self.focus == Focus::Library {
-                            Style::new().fg(focus_color)
+                            Style::new().fg(FOCUS_COLOR)
                         } else {
-                            Style::new().fg(unfocus_color)
+                            Style::new().fg(UNFOCUS_COLOR)
                         })
                 );
             frame.render_stateful_widget(list, lib_area, &mut self.lib_list_state);
@@ -143,15 +149,34 @@ impl App {
 
         let song_block = Block::bordered()
             .border_style(if self.focus == Focus::Song {
-                Style::new().fg(focus_color)
+                Style::new().fg(FOCUS_COLOR)
             } else {
-                Style::new().fg(unfocus_color)
+                Style::new().fg(UNFOCUS_COLOR)
             });
         let inner_song_area = song_block.inner(song_area);
 
         let title: String;
+        let title_top: String;
+        let title_bottom =
+            if self.is_long_command { String::from("L") + &self.long_command }
+            else { String::new() };
+
         let song = if let Some((song, _p)) = &self.current_song {
             title = format!("{} - {}", song.metadata.artist, song.metadata.title);
+
+            let mut t_top_buf = String::new();
+            if let Some(key) = &song.metadata.key {
+                t_top_buf.push_str("Key: ");
+                t_top_buf.push_str(&key.get_text());
+            }
+            if let Some(capo) = &song.metadata.capo {
+                if !t_top_buf.is_empty() { t_top_buf.push_str(", ") }
+                t_top_buf.push_str("Capo: ");
+                t_top_buf.push_str(&capo.to_string());
+            }
+            title_top = t_top_buf;
+
+
 
             let height = <u16 as Into<usize>>::into(inner_song_area.height);
             let width = <u16 as Into<usize>>::into(inner_song_area.width);
@@ -173,8 +198,14 @@ impl App {
             p.scroll( (self.scroll_y, self.scroll_x) )
         } else {
             title = "Nothing to show".to_string();
+            title_top = String::new();
             Paragraph::default()
-        }.block(song_block.title(title));
+        }.block(
+            song_block
+                .title(title)
+                .title_bottom(Line::from(title_bottom).right_aligned())
+                .title_top(Line::from(title_top).right_aligned())
+        );
         frame.render_widget(song, song_area);
     }
 
@@ -236,6 +267,43 @@ impl App {
         terminal: &mut DefaultTerminal
     ) -> Result<()> {
         match key_event.code {
+            KeyCode::Char(c) if self.is_long_command => self.long_command.push(c),
+            KeyCode::Enter if self.is_long_command => {
+                if let Some(command) = &self.long_command.chars().next() {
+                    let command_data = &self.long_command[1..];
+                    if let Some( (song, _p) ) = &mut self.current_song {
+                        match command {
+                            'k' => if let Some(key) = Note::get_key(command_data) {
+                                if let Some(mut song_key) = song.metadata.key {
+                                    while key != song_key {
+                                        song.transpose(1);
+                                        song_key = song.metadata.key.unwrap();
+                                    }
+                                }
+                            },
+                            'c' => if let Ok(capo) = command_data.parse::<u8>() {
+                                if let Some(song_capo) = song.metadata.capo {
+                                    let song_capo: i32 = song_capo.into();
+                                    let capo: i32 = capo.into();
+                                    song.transpose(capo - song_capo);
+                                } else {
+                                    song.transpose(capo.into());
+                                }
+                                song.metadata.capo =
+                                    if capo == 0 { None }
+                                    else { Some(capo) };
+                            },
+                            _ => {}
+                        }
+                    }
+                }
+
+                self.is_long_command = false;
+                self.long_command.clear();
+            },
+            KeyCode::Char('L') => self.is_long_command = true,
+
+
             KeyCode::Char('j') | KeyCode::Down =>
                 if self.scroll_y_max > self.scroll_y.into() { self.scroll_y += 1 },
 

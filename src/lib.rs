@@ -66,7 +66,6 @@ const KEYS: [[Note; 6]; 12] = [
 pub enum Note {
     A,
     ASharp,
-
     B,
     C,
     CSharp,

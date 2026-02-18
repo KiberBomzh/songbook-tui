@@ -243,7 +243,7 @@ fn main() {
                 AddSubcommand::FromTxt { path, title, artist } => {
                     let song = Song::from_txt(
                         &path,
-                        Metadata { title, artist, key: None }
+                        Metadata { title, artist, key: None, capo: None }
                         ).expect("Error during adding a song!");
 
                     song_library::add(&song)

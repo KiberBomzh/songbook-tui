@@ -111,7 +111,8 @@ pub fn read_from_chordpro(text: &str) -> (Option<Metadata>, Vec<Block>, Vec<Chor
         if !title.is_empty() && !artist.is_empty() { Some( Metadata {
             title,
             artist,
-            key: crate::Note::get_key(&key_text)
+            key: crate::Note::get_key(&key_text),
+            capo: None
         } ) } else { None },
         blocks,
         chord_list
