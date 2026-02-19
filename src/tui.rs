@@ -243,6 +243,13 @@ impl App {
 
     fn handle_lib_key_event(&mut self, key_event: KeyEvent) -> Result<()> {
         match key_event.code {
+            KeyCode::Char('n') => {
+                self.is_long_command = true;
+                if let KeyCode::Char(c) = key_event.code {
+                    self.long_command.push(c)
+                }
+            },
+
             KeyCode::Char('j') | KeyCode::Down => self.lib_list_state.select_next(),
             KeyCode::Char('k') | KeyCode::Up => self.lib_list_state.select_previous(),
             KeyCode::Char('l') | KeyCode::Right | KeyCode::Enter => {
@@ -423,6 +430,19 @@ impl App {
     }
 
     fn handle_long_command_in_library(&mut self) -> Result<()> {
+        let command = if let Some(c) = self.long_command.chars().next() { c }
+            else { return Ok(()) };
+        let command_data: String = self.long_command.chars().skip(1).collect();
+        match command {
+            'n' => if !command_data.is_empty() {
+                songbook::song_library::mkdir(
+                    &self.current_dir.join(command_data)
+                )?;
+                (self.lib_list, self.current_dir) = get_files_in_dir( Some(&self.current_dir) )?;
+            },
+            _ => {}
+        }
+
         Ok(())
     }
 
