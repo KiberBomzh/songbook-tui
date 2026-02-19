@@ -11,7 +11,7 @@ use ratatui::prelude::*;
 use crossterm::event::{Event, KeyEvent, KeyEventKind, KeyCode};
 
 use songbook::song_library::lib_functions::*;
-use songbook::{Song, Note};
+use songbook::Song;
 
 const TITLE_COLOR: Color = Color::Green;
 const CHORDS_COLOR: Color = Color::Cyan;
@@ -157,10 +157,6 @@ impl App {
 
         let title: String;
         let title_top: String;
-        let title_bottom =
-            if self.is_long_command { String::from("L") + &self.long_command }
-            else { String::new() };
-
         let song = if let Some((song, _p)) = &self.current_song {
             title = format!("{} - {}", song.metadata.artist, song.metadata.title);
 
@@ -203,23 +199,45 @@ impl App {
         }.block(
             song_block
                 .title(title)
-                .title_bottom(Line::from(title_bottom).right_aligned())
+                .title_bottom(Line::from(&self.long_command[..]).right_aligned())
                 .title_top(Line::from(title_top).right_aligned())
         );
         frame.render_widget(song, song_area);
     }
 
     fn handle_key_event(&mut self, key_event: KeyEvent, terminal: &mut DefaultTerminal) -> Result<()> {
+        let mut is_song_changed = false;
         if key_event.kind == KeyEventKind::Press {
-            if key_event.code == KeyCode::Char('q') { self.exit = true }
-            else if key_event.code == KeyCode::Tab && !self.hide_lib { self.switch_focus() }
-            else {
-                match self.focus {
-                    Focus::Library => self.handle_lib_key_event(key_event)?,
-                    Focus::Song => self.handle_song_key_event(key_event, terminal)?
+            match key_event.code {
+                KeyCode::Char(c) if self.is_long_command => self.long_command.push(c),
+                KeyCode::Enter if self.is_long_command => {
+                    if !self.long_command.is_empty() {
+                        match self.focus {
+                            Focus::Library => self.handle_long_command_in_library()?,
+                            Focus::Song => self.handle_long_command_in_song(&mut is_song_changed)?
+                        }
+                    }
+
+                    self.is_long_command = false;
+                    self.long_command.clear();
+                },
+                KeyCode::Char('q') => self.exit = true,
+                KeyCode::Tab => if !self.hide_lib { self.switch_focus() },
+                _ => {
+                    match self.focus {
+                        Focus::Library => self.handle_lib_key_event(key_event)?,
+                        Focus::Song => self.handle_song_key_event(key_event, terminal, &mut is_song_changed)?
+                    }
                 }
             }
         }
+
+        if is_song_changed {
+            if let Some( (song, path) ) = &self.current_song {
+                save(song, path)?;
+            }
+        }
+
         Ok(())
     }
 
@@ -277,47 +295,16 @@ impl App {
     fn handle_song_key_event(
         &mut self,
         key_event: KeyEvent,
-        terminal: &mut DefaultTerminal
+        terminal: &mut DefaultTerminal,
+        is_song_changed: &mut bool
     ) -> Result<()> {
-        let mut is_song_changed = false;
         match key_event.code {
-            KeyCode::Char(c) if self.is_long_command => self.long_command.push(c),
-            KeyCode::Enter if self.is_long_command => {
-                if let Some(command) = &self.long_command.chars().next() {
-                    let command_data = &self.long_command[1..];
-                    if let Some( (song, _p) ) = &mut self.current_song {
-                        match command {
-                            'k' => if let Some(key) = Note::get_key(command_data) {
-                                if let Some(mut song_key) = song.metadata.key {
-                                    while key != song_key {
-                                        song.transpose(1);
-                                        song_key = song.metadata.key.unwrap();
-                                    }
-                                    is_song_changed = true;
-                                }
-                            },
-                            'c' => if let Ok(capo) = command_data.parse::<u8>() {
-                                if let Some(song_capo) = song.metadata.capo {
-                                    let song_capo: i32 = song_capo.into();
-                                    let capo: i32 = capo.into();
-                                    song.transpose(capo - song_capo);
-                                } else {
-                                    song.transpose(capo.into());
-                                }
-                                song.metadata.capo =
-                                    if capo == 0 { None }
-                                    else { Some(capo) };
-                                is_song_changed = true;
-                            },
-                            _ => {}
-                        }
-                    }
+            KeyCode::Char('T') | KeyCode::Char('C') => {
+                self.is_long_command = true;
+                if let KeyCode::Char(c) = key_event.code {
+                    self.long_command.push(c)
                 }
-
-                self.is_long_command = false;
-                self.long_command.clear();
             },
-            KeyCode::Char('L') => self.is_long_command = true,
 
 
             KeyCode::Char('j') | KeyCode::Down =>
@@ -389,19 +376,53 @@ impl App {
                 if let Some( (song, _path) ) = &mut self.current_song {
                     ratatui::restore();
                     edit(song)?;
-                    is_song_changed = true;
+                    *is_song_changed = true;
                     *terminal = ratatui::init();
                 }
             },
             _ => {}
         }
 
-        if is_song_changed {
-            if let Some( (song, path) ) = &self.current_song {
-                save(song, path)?;
-            }
+        Ok(())
+    }
+
+    fn handle_long_command_in_song(
+        &mut self,
+        is_song_changed: &mut bool
+    ) -> Result<()> {
+        let song = if let Some( (song, _p) ) = &mut self.current_song { song }
+            else { return Ok(()) };
+
+        let command = if let Some(c) = self.long_command.chars().next() { c }
+            else { return Ok(()) };
+        let command_data: String = self.long_command.chars().skip(1).collect();
+        match command {
+            'T' => {
+                let steps: i32 = if let Ok(s) = command_data.parse() { s }
+                    else { return Ok(()) };
+                song.transpose(steps);
+                *is_song_changed = true;
+            },
+            'C' => if let Ok(capo) = command_data.parse::<u8>() {
+                if let Some(song_capo) = song.metadata.capo {
+                    let song_capo: i32 = song_capo.into();
+                    let capo: i32 = capo.into();
+                    song.transpose(capo - song_capo);
+                } else {
+                    song.transpose(capo.into());
+                }
+                song.metadata.capo =
+                    if capo == 0 { None }
+                    else { Some(capo) };
+                *is_song_changed = true;
+            },
+            _ => {}
         }
 
+        Ok(())
+    }
+
+    fn handle_long_command_in_library(&mut self) -> Result<()> {
         Ok(())
     }
 
