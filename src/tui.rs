@@ -211,6 +211,10 @@ impl App {
         if key_event.kind == KeyEventKind::Press {
             match key_event.code {
                 KeyCode::Char(c) if self.is_long_command => self.long_command.push(c),
+                KeyCode::Backspace if self.is_long_command => {
+                    self.long_command.pop();
+                    if self.long_command.is_empty() { self.is_long_command = false }
+                },
                 KeyCode::Enter if self.is_long_command => {
                     if !self.long_command.is_empty() {
                         match self.focus {
@@ -222,6 +226,8 @@ impl App {
                     self.is_long_command = false;
                     self.long_command.clear();
                 },
+
+
                 KeyCode::Char('q') => self.exit = true,
                 KeyCode::Tab => if !self.hide_lib { self.switch_focus() },
                 _ => {
@@ -244,7 +250,7 @@ impl App {
 
     fn handle_lib_key_event(&mut self, key_event: KeyEvent) -> Result<()> {
         match key_event.code {
-            KeyCode::Char('n') => {
+            KeyCode::Char('n') | KeyCode::Char('r') => {
                 self.is_long_command = true;
                 if let KeyCode::Char(c) = key_event.code {
                     self.long_command.push(c)
@@ -450,6 +456,13 @@ impl App {
                     &self.current_dir.join(command_data)
                 )?;
                 (self.lib_list, self.current_dir) = get_files_in_dir( Some(&self.current_dir) )?;
+            },
+            'r' => if !command_data.is_empty() {
+                if let Some(selected) = self.lib_list_state.selected() {
+                    let (_name, path) = &self.lib_list[selected];
+                    songbook::song_library::mv(path, &self.current_dir.join(command_data))?;
+                    (self.lib_list, self.current_dir) = get_files_in_dir( Some(&self.current_dir) )?;
+                }
             },
             _ => {}
         }
