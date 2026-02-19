@@ -6,28 +6,23 @@ use songbook::{Song, STANDART_TUNING};
 use songbook::song::block;
 use songbook::chord_generator::chord_fingerings::sum_text_in_fingerings;
 
-use super::{
-    TITLE_COLOR,
-    CHORDS_COLOR,
-    RHYTHM_COLOR,
-    NOTES_COLOR,
-};
-
 
 pub fn get_as_paragraph<'a>(
     song: &'a Song,
     available_width: usize,
     needs_chords: bool,
     needs_rhythm: bool,
-    needs_fingerings: bool, // дописать
-    needs_notes: bool
+    needs_fingerings: bool,
+    needs_notes: bool,
+    colors: [ratatui::style::Color; 5]
 ) -> (Paragraph<'a>, usize, usize) {
     let mut lines = Vec::new();
     let mut columns = 0;
+    let [title_color, chords_color, rhythm_color, notes_color, text_color] = colors;
 
     if let Some(n) = &song.notes && !n.is_empty() && needs_notes {
         if n.chars().count() > columns { columns = n.chars().count() }
-        lines.push( Line::styled(n, Style::new().fg(NOTES_COLOR)) );
+        lines.push( Line::styled(n, Style::new().fg(notes_color)) );
         lines.push(Line::default());
     }
 
@@ -61,13 +56,13 @@ pub fn get_as_paragraph<'a>(
         if let Some(title) = &block.title && !title.is_empty() {
             if title.chars().count() > columns { columns = title.chars().count() }
             head_block_spans.push(
-                Span::styled(title.to_string() + " ", Style::new().fg(TITLE_COLOR))
+                Span::styled(title.to_string() + " ", Style::new().fg(title_color))
             )
         }
         if let Some(n) = &block.notes && !n.is_empty() && needs_notes {
             if n.chars().count() > columns { columns = n.chars().count() }
             head_block_spans.push(
-                Span::styled(n, Style::new().fg(NOTES_COLOR))
+                Span::styled(n, Style::new().fg(notes_color))
             )
         }
         if !head_block_spans.is_empty() { lines.push(Line::from(head_block_spans)) }
@@ -81,19 +76,19 @@ pub fn get_as_paragraph<'a>(
                         if chord_line.chars().count() > columns {
                             columns = chord_line.chars().count()
                         }
-                        lines.push(Line::styled(chord_line, Style::new().fg(CHORDS_COLOR)))
+                        lines.push(Line::styled(chord_line, Style::new().fg(chords_color)))
                     }
                     if !rhythm_line.is_empty() && needs_rhythm {
                         if rhythm_line.chars().count() > columns {
                             columns = rhythm_line.chars().count()
                         }
-                        lines.push(Line::styled(rhythm_line, Style::new().fg(RHYTHM_COLOR)))
+                        lines.push(Line::styled(rhythm_line, Style::new().fg(rhythm_color)))
                     }
                     if !text.is_empty() {
                         if text.chars().count() > columns {
                             columns = text.chars().count()
                         }
-                        lines.push(Line::from(text))
+                        lines.push(Line::styled(text, Style::new().fg(text_color)))
                     }
                 },
                 block::Line::ChordsLine(chords) => if needs_chords {
@@ -103,11 +98,11 @@ pub fn get_as_paragraph<'a>(
                         chord_line.push(' ');
                     }
                     if chord_line.chars().count() > columns { columns = chord_line.chars().count() }
-                    lines.push(Line::styled(chord_line, Style::new().fg(CHORDS_COLOR)));
+                    lines.push(Line::styled(chord_line, Style::new().fg(chords_color)));
                 },
                 block::Line::PlainText(text) => {
                     lines.extend(text.lines()
-                        .map(|l| Line::from(l))
+                        .map(|l| Line::styled(l, Style::new().fg(text_color)))
                         .collect::<Vec<Line>>()
                     );
                     for l in text.lines() {

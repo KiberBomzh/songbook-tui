@@ -1,0 +1,12 @@
+[colors]
+focus = "light_green"
+unfocus = "dark_gray"
+directories = "rgb(100, 149, 237)"
+songs = "white"
+
+[colors.song]
+title = "green"
+chords = "cyan"
+rhythm = "yellow"
+notes = "dark_gray"
+text = "white"

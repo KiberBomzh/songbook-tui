@@ -1,4 +1,5 @@
 mod song_formater;
+mod config;
 
 use std::path::PathBuf;
 use anyhow::Result;
@@ -15,14 +16,18 @@ use rfd::FileDialog;
 use songbook::song_library::lib_functions::*;
 use songbook::Song;
 
+use config::Config;
+
+const FOCUS_COLOR: Color = Color::LightGreen;
+const UNFOCUS_COLOR: Color = Color::DarkGray;
+const DIRECTORIES_COLOR: Color = Color::Blue;
+const SONGS_COLOR: Color = Color::White;
+
 const TITLE_COLOR: Color = Color::Green;
 const CHORDS_COLOR: Color = Color::Cyan;
 const RHYTHM_COLOR: Color = Color::Yellow;
 const NOTES_COLOR: Color = Color::DarkGray;
-
-const FOCUS_COLOR: Color = Color::LightGreen;
-const UNFOCUS_COLOR: Color = Color::DarkGray;
-
+const TEXT_COLOR: Color = Color::White;
 
 
 pub fn main() -> Result<()> {
@@ -30,6 +35,7 @@ pub fn main() -> Result<()> {
     let (lib_list, current_dir) = get_files_in_dir(None)?;
     let mut app = App {
         exit: false,
+        config: Config::new(),
         focus: Focus::Library,
         hide_lib: false,
         is_long_command: false,
@@ -69,6 +75,7 @@ enum Focus {
 
 struct App {
     exit: bool,
+    config: Config,
 
     focus: Focus,
     hide_lib: bool,
@@ -120,10 +127,49 @@ impl App {
         let [lib_area, song_area] = horizontal.areas(frame.area());
 
 
+        let focus_color =
+            if let Some(c) = self.config.colors.get_focus_color() { c }
+            else { FOCUS_COLOR };
+
+        let unfocus_color =
+            if let Some(c) = self.config.colors.get_unfocus_color() { c }
+            else { UNFOCUS_COLOR };
+
+        let directories_color =
+            if let Some(c) = self.config.colors.get_directories_color() { c }
+            else { DIRECTORIES_COLOR };
+
+        let songs_color =
+            if let Some(c) = self.config.colors.get_songs_color() { c }
+            else { SONGS_COLOR };
+
+
+        let title_color =
+            if let Some(c) = self.config.colors.get_title_color() { c }
+            else { TITLE_COLOR };
+
+        let chords_color =
+            if let Some(c) = self.config.colors.get_chords_color() { c }
+            else { CHORDS_COLOR };
+
+        let rhythm_color =
+            if let Some(c) = self.config.colors.get_rhythm_color() { c }
+            else { RHYTHM_COLOR };
+
+        let notes_color =
+            if let Some(c) = self.config.colors.get_notes_color() { c }
+            else { NOTES_COLOR };
+
+        let text_color =
+            if let Some(c) = self.config.colors.get_text_color() { c }
+            else { TEXT_COLOR };
+
+
         let mut items: Vec<ListItem> = Vec::new();
         for (name, path) in &self.lib_list {
             let mut style = Style::new();
-            if path.is_dir() { style = style.blue(); }
+            if path.is_dir() { style = style.fg(directories_color); }
+            else if path.is_file() { style = style.fg(songs_color); }
             if let Some(c_path) = &self.cutted_path && c_path == path { style = style.dim(); }
             items.push(ListItem::new(name.as_str()).style(style));
         }
@@ -141,9 +187,9 @@ impl App {
                         )
 
                         .border_style(if self.focus == Focus::Library {
-                            Style::new().fg(FOCUS_COLOR)
+                            Style::new().fg(focus_color)
                         } else {
-                            Style::new().fg(UNFOCUS_COLOR)
+                            Style::new().fg(unfocus_color)
                         })
                 );
             frame.render_stateful_widget(list, lib_area, &mut self.lib_list_state);
@@ -152,9 +198,9 @@ impl App {
 
         let song_block = Block::bordered()
             .border_style(if self.focus == Focus::Song {
-                Style::new().fg(FOCUS_COLOR)
+                Style::new().fg(focus_color)
             } else {
-                Style::new().fg(UNFOCUS_COLOR)
+                Style::new().fg(unfocus_color)
             });
         let inner_song_area = song_block.inner(song_area);
 
@@ -188,7 +234,8 @@ impl App {
                 self.show_chords,
                 self.show_rhythm,
                 self.show_fingerings,
-                self.show_notes
+                self.show_notes,
+                [title_color, chords_color, rhythm_color, notes_color, text_color]
             );
 
             self.scroll_y_max = lines.saturating_sub(height);
