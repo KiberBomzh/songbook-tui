@@ -461,7 +461,9 @@ impl App {
             'r' => {
                 if let Some(selected) = self.lib_list_state.selected() {
                     let (_name, path) = &self.lib_list[selected];
-                    songbook::song_library::mv(path, &self.current_dir.join(command_data))?;
+                    let parent_path = if let Some(p) = path.parent() { p }
+                        else { &self.current_dir };
+                    songbook::song_library::mv(path, &parent_path.join(command_data))?;
                     (self.lib_list, self.current_dir) = get_files_in_dir( Some(&self.current_dir) )?;
                 }
             },
