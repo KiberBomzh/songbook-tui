@@ -10,6 +10,8 @@ use ratatui::prelude::*;
 
 use crossterm::event::{Event, KeyEvent, KeyEventKind, KeyCode};
 
+use rfd::FileDialog;
+
 use songbook::song_library::lib_functions::*;
 use songbook::Song;
 
@@ -250,7 +252,10 @@ impl App {
 
     fn handle_lib_key_event(&mut self, key_event: KeyEvent) -> Result<()> {
         match key_event.code {
-            KeyCode::Char('n') | KeyCode::Char('r') | KeyCode::Char('f') => {
+            KeyCode::Char('n') |
+            KeyCode::Char('r') |
+            KeyCode::Char('f') |
+            KeyCode::Char('a') => {
                 self.is_long_command = true;
                 if let KeyCode::Char(c) = key_event.code {
                     self.long_command.push(c)
@@ -470,6 +475,51 @@ impl App {
             'f' => {
                 self.current_dir = songbook::song_library::get_lib_path()?;
                 self.lib_list = find(&command_data)?;
+            },
+            'a' => {
+                let subcommand = if let Some(c) = command_data.chars().nth(0) { c }
+                    else { return Ok(()) };
+                let meta: Option<(String, String)> = if let [artist, title, ..] =
+                    command_data
+                        .chars()
+                        .skip(1)
+                        .collect::<String>()
+                        .split(" - ")
+                        .collect::<Vec<&str>>()
+                        .as_slice() { Some( (artist.trim().to_string(), title.trim().to_string()) ) }
+                        else { None };
+
+                let song: Option<Song> = match subcommand {
+                    'e' => if let Some( (artist, title) ) = meta {
+                        Some(Song::new(&title, &artist))
+                    } else { None },
+                    't' => if let Some( (artist, title) ) = meta {
+                        if let Some(file) = FileDialog::new()
+                            .add_filter("text", &["txt"])
+                            .pick_file() {
+                            Some(Song::from_txt(&file, &title, &artist)?)
+                        } else { None }
+                    } else { None },
+                    'c' => {
+                        if let Some(file) = FileDialog::new()
+                            .add_filter("text", &["chordpo", "cho"])
+                            .pick_file() {
+                            let mut song = Song::from_chordpro(&file)?;
+                            if let Some( (artist, title) ) = meta {
+                                song.metadata.title = title;
+                                song.metadata.artist = artist;
+                            }
+
+                            Some(song)
+                        } else { None }
+                    },
+                    _ => None
+                };
+
+                
+                if let Some(s) = &song {
+                    songbook::song_library::add(s)?;
+                }
             },
             _ => {}
         }

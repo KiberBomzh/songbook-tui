@@ -4,7 +4,7 @@ mod tui;
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
-use songbook::{Song, Metadata, Note, STRINGS};
+use songbook::{Song, Note, STRINGS};
 use songbook::song_library;
 use songbook::{Fingering, StringState};
 
@@ -226,10 +226,8 @@ fn main() {
             },
             Command::Add(subcommand) => match subcommand {
                 AddSubcommand::FromTxt { path, title, artist } => {
-                    let song = Song::from_txt(
-                        &path,
-                        Metadata { title, artist, key: None, capo: None }
-                        ).expect("Error during adding a song!");
+                    let song = Song::from_txt( &path, &title, &artist)
+                        .expect("Error during adding a song!");
 
                     song_library::add(&song)
                         .expect("Error during adding a song!");

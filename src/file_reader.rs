@@ -13,14 +13,18 @@ impl Song {
         return Ok( Self { blocks, chord_list, metadata: Metadata::from_str(meta)?, notes: None } )
     }
 
-    pub fn from_txt(file_path: &Path, metadata: Metadata) -> Result<Self> {
+    pub fn from_txt(file_path: &Path, title: &str, artist: &str) -> Result<Self> {
         let (blocks, chord_list) = txt_reader::read_from_txt(
             &fs::read_to_string(file_path)?
         );
+        let metadata = Metadata {
+            artist: artist.to_string(),
+            title: title.to_string(),
+            key: None,
+            capo: None
+        };
         let mut song = Self { blocks, chord_list, metadata, notes: None };
-        if song.metadata.key == None {
-            song.detect_key();
-        }
+        song.detect_key();
 
 
         Ok(song)
