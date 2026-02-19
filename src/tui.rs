@@ -250,7 +250,7 @@ impl App {
 
     fn handle_lib_key_event(&mut self, key_event: KeyEvent) -> Result<()> {
         match key_event.code {
-            KeyCode::Char('n') | KeyCode::Char('r') => {
+            KeyCode::Char('n') | KeyCode::Char('r') | KeyCode::Char('f') => {
                 self.is_long_command = true;
                 if let KeyCode::Char(c) = key_event.code {
                     self.long_command.push(c)
@@ -450,19 +450,24 @@ impl App {
         let command = if let Some(c) = self.long_command.chars().next() { c }
             else { return Ok(()) };
         let command_data: String = self.long_command.chars().skip(1).collect();
+        if command_data.is_empty() { return Ok(()) }
         match command {
-            'n' => if !command_data.is_empty() {
+            'n' => {
                 songbook::song_library::mkdir(
                     &self.current_dir.join(command_data)
                 )?;
                 (self.lib_list, self.current_dir) = get_files_in_dir( Some(&self.current_dir) )?;
             },
-            'r' => if !command_data.is_empty() {
+            'r' => {
                 if let Some(selected) = self.lib_list_state.selected() {
                     let (_name, path) = &self.lib_list[selected];
                     songbook::song_library::mv(path, &self.current_dir.join(command_data))?;
                     (self.lib_list, self.current_dir) = get_files_in_dir( Some(&self.current_dir) )?;
                 }
+            },
+            'f' => {
+                self.current_dir = songbook::song_library::get_lib_path()?;
+                self.lib_list = find(&command_data)?;
             },
             _ => {}
         }

@@ -377,7 +377,7 @@ fn get_free_path(mut path: PathBuf, name: &str) -> PathBuf {
     return path
 }
 
-fn get_lib_path() -> Result<PathBuf> {
+pub fn get_lib_path() -> Result<PathBuf> {
     if let Some(mut path) = dirs::data_dir() {
         path.push("songbook");
         path.push("library");

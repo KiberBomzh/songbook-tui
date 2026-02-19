@@ -59,3 +59,23 @@ pub fn edit(song: &mut Song) -> Result<()> {
 
     Ok(())
 }
+
+pub fn find(query: &str) -> Result<Vec<(String, PathBuf)>> {
+    let path = get_lib_path()?;
+    let mut files = Vec::new();
+    recursive_find(&path, &mut files, query)?;
+
+    return Ok(files)
+}
+fn recursive_find(dir: &Path, files: &mut Vec<(String, PathBuf)>, query: &str) -> Result<()> {
+    for entry in fs::read_dir(dir)? {
+        let path = entry?.path();
+        if path.is_dir() {
+            recursive_find(&path, files, query)?;
+        } else if let Some(name) = path.file_name().and_then(|n: &std::ffi::OsStr| n.to_str()) {
+            if name.contains(query) { files.push( (name.to_string(), path.to_path_buf()) ) }
+        }
+    }
+
+    Ok(())
+}
