@@ -36,6 +36,7 @@ pub fn main() -> Result<()> {
         lib_list,
         current_dir,
         last_dirs: Vec::new(),
+        cutted_path: None,
         current_song: None,
         song_area_height: None,
         song_area_width: None,
@@ -77,6 +78,7 @@ struct App {
     lib_list: Vec<(String, PathBuf)>,
     current_dir: PathBuf,
     last_dirs: Vec<PathBuf>,
+    cutted_path: Option<PathBuf>,
 
     current_song: Option<(Song, PathBuf)>,
     song_area_height: Option<usize>,
@@ -116,14 +118,13 @@ impl App {
         let [lib_area, song_area] = horizontal.areas(frame.area());
 
 
-        let items: Vec<ListItem> = self.lib_list.iter()
-            .map(|(s, f)|
-                if f.is_dir() { ListItem::new(s.as_str()).style(
-                    Style::new().blue()
-                )}
-                else { ListItem::new(s.as_str()) }
-            )
-            .collect();
+        let mut items: Vec<ListItem> = Vec::new();
+        for (name, path) in &self.lib_list {
+            let mut style = Style::new();
+            if path.is_dir() { style = style.blue(); }
+            if let Some(c_path) = &self.cutted_path && c_path == path { style = style.dim(); }
+            items.push(ListItem::new(name.as_str()).style(style));
+        }
 
         if !self.hide_lib {
             let list = List::new(items)
@@ -199,7 +200,7 @@ impl App {
         }.block(
             song_block
                 .title(title)
-                .title_bottom(Line::from(&self.long_command[..]).right_aligned())
+                .title_bottom(Line::from(self.long_command.as_str()).right_aligned())
                 .title_top(Line::from(title_top).right_aligned())
         );
         frame.render_widget(song, song_area);
@@ -248,6 +249,16 @@ impl App {
                 if let KeyCode::Char(c) = key_event.code {
                     self.long_command.push(c)
                 }
+            },
+
+            KeyCode::Char('c') => if let Some(selected) = self.lib_list_state.selected() {
+                let (_name, path) = &self.lib_list[selected];
+                self.cutted_path = Some(path.to_path_buf());
+            },
+            KeyCode::Char('p') => if let Some(path) = &self.cutted_path {
+                songbook::song_library::mv(path, &self.current_dir)?;
+                (self.lib_list, self.current_dir) = get_files_in_dir(Some(&self.current_dir))?;
+                self.cutted_path = None;
             },
 
             KeyCode::Char('j') | KeyCode::Down => self.lib_list_state.select_next(),
