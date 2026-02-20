@@ -16,16 +16,23 @@ pub fn get_files_in_dir(added_path: Option<&Path>) -> Result<(Vec<(String, PathB
         return Err( Error::new(ErrorKind::NotFound, "There's no such dir!").into() )
     }
 
+    let mut buf_for_sorting = Vec::new();
     let mut files = Vec::new();
     for entry in fs::read_dir(&path)? {
         let entry = entry?;
         if let Some(name) = entry.file_name().to_str() {
-            let name = if entry.path().is_dir() { format!("📁{}", name) }
-            else { format!("{}", name) };
-            files.push( (name, entry.path()) );
+            if entry.path().is_dir() {
+                let name = format!("📁{}", name);
+                files.push( (name, entry.path()) );
+            }
+            else {
+                let name = format!("{}", name);
+                buf_for_sorting.push( (name, entry.path()) );
+            };
         }
     }
 
+    files.extend(buf_for_sorting);
     Ok( (files, path) )
 }
 
