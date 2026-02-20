@@ -511,7 +511,7 @@ impl App {
 
             KeyCode::Char('a') =>
                 if self.autoscroll { self.autoscroll = false }
-                else { self.autoscroll = true },
+                else { self.autoscroll = true; self.last_scroll_time = Instant::now() },
 
 
             KeyCode::Char('e') => {
