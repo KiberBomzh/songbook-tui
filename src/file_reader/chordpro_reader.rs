@@ -38,6 +38,7 @@ pub fn read_from_chordpro(text: &str) -> (Option<Metadata>, Vec<Block>, Vec<Chor
     let mut artist = String::new();
     let mut key_text = String::new();
     
+    let mut bnote = String::new();
     let mut is_in_block = false;
     let mut block_lines: Vec<Line> = Vec::new();
     let mut block_title = String::new();
@@ -90,22 +91,42 @@ pub fn read_from_chordpro(text: &str) -> (Option<Metadata>, Vec<Block>, Vec<Chor
             if let Some(end_index) = line.find("}") {
                 key_text = line[5..end_index].trim().to_string()
             }
+
+
+        } else if line.starts_with("{comment:") || line.starts_with("{c:") {
+            if let Some(end_index) = line.find("}") {
+                bnote = if line.starts_with("{c:") {
+                    line[3..end_index].trim()
+                } else {
+                    line[9..end_index].trim()
+                }.to_string();
+            }
         
         
         } else if line.is_empty() && !block_lines.is_empty() {
             blocks.push( Block {
                 title: if block_title.is_empty() { None } else { Some(block_title) },
                 lines: block_lines,
-                notes: None
+                notes: if bnote.is_empty() { None } else { Some(bnote) }
             } );
             
+            bnote = String::new();
             block_title = String::new();
             block_lines = Vec::new();
         } else {
             read_line(line, &mut block_lines, &mut chord_list);
         }
     }
-    
+
+    // Последний block
+    if !block_lines.is_empty() {
+        blocks.push( Block {
+            title: if block_title.is_empty() { None } else { Some(block_title) },
+            lines: block_lines,
+            notes: None
+        } );
+    }
+
     
     return ( 
         if !title.is_empty() && !artist.is_empty() { Some( Metadata {
