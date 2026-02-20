@@ -329,10 +329,12 @@ impl App {
                         (self.lib_list, self.current_dir) = get_files_in_dir(Some(&path))?;
                         self.lib_list_state.select_first();
                     } else if path.is_file() {
-                        self.current_song = Some( (get_song(&path)?, path.to_path_buf()) );
-                        self.focus = Focus::Song;
-                        self.scroll_y = 0;
-                        self.scroll_x = 0;
+                        if let Ok(song) = get_song(&path) {
+                            self.current_song = Some( (song, path.to_path_buf()) );
+                            self.focus = Focus::Song;
+                            self.scroll_y = 0;
+                            self.scroll_x = 0;
+                        }
                     }
                 }
             },
