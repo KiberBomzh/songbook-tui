@@ -2,6 +2,7 @@ mod song_formater;
 mod config;
 
 use std::path::PathBuf;
+use std::time::{Instant, Duration};
 use anyhow::Result;
 
 use ratatui::{DefaultTerminal, Frame};
@@ -18,6 +19,7 @@ use songbook::Song;
 
 use config::Config;
 
+
 const FOCUS_COLOR: Color = Color::LightGreen;
 const UNFOCUS_COLOR: Color = Color::DarkGray;
 const DIRECTORIES_COLOR: Color = Color::Blue;
@@ -28,6 +30,9 @@ const CHORDS_COLOR: Color = Color::Cyan;
 const RHYTHM_COLOR: Color = Color::Yellow;
 const NOTES_COLOR: Color = Color::DarkGray;
 const TEXT_COLOR: Color = Color::White;
+
+
+const DEFAULT_AUTOSCROLL_SPEED: Duration = Duration::from_millis(2500);
 
 
 pub fn main() -> Result<()> {
@@ -55,7 +60,10 @@ pub fn main() -> Result<()> {
         scroll_y: 0,
         scroll_x: 0,
         scroll_y_max: 0,
-        scroll_x_max: 0
+        scroll_x_max: 0,
+        autoscroll: false,
+        autoscroll_speed: DEFAULT_AUTOSCROLL_SPEED,
+        last_scroll_time: Instant::now()
     };
     app.lib_list_state.select(Some(0));
 
@@ -100,16 +108,23 @@ struct App {
     scroll_y: u16,
     scroll_x: u16,
     scroll_y_max: usize,
-    scroll_x_max: usize
+    scroll_x_max: usize,
+
+    autoscroll: bool,
+    autoscroll_speed: Duration,
+    last_scroll_time: Instant
 }
 
 impl App {
     fn run(&mut self, terminal: &mut DefaultTerminal) -> Result<()> {
         while !self.exit {
             terminal.draw(|frame| self.draw(frame))?;
-            match crossterm::event::read()? {
-                Event::Key(key_event) => self.handle_key_event(key_event, terminal)?,
-                _ => {}
+            self.update_scroll();
+            if crossterm::event::poll(Duration::from_millis(10))? {
+                match crossterm::event::read()? {
+                    Event::Key(key_event) => self.handle_key_event(key_event, terminal)?,
+                    _ => {}
+                }
             }
         }
 
@@ -249,8 +264,12 @@ impl App {
         }.block(
             song_block
                 .title(title)
-                .title_bottom(Line::from(self.long_command.as_str()).right_aligned())
                 .title_top(Line::from(title_top).right_aligned())
+                .title_bottom(Line::from(self.long_command.as_str()).right_aligned())
+                .title_bottom(Line::from(
+                    if self.autoscroll { self.autoscroll_speed.as_millis().to_string() + "ms" }
+                    else { String::new() }
+                ))
         );
         frame.render_widget(song, song_area);
     }
@@ -287,6 +306,18 @@ impl App {
                 }
             }
         }
+
+        if let Some( (song, _p) ) = &mut self.current_song {
+            if let Some(speed) = song.metadata.autoscroll_speed &&
+                Duration::from_millis(speed) == self.autoscroll_speed {
+            } else {
+                if let Ok(new_speed) = self.autoscroll_speed.as_millis().try_into() {
+                    is_song_changed = true;
+                    song.metadata.autoscroll_speed = Some(new_speed);
+                }
+            }
+        }
+
 
         if is_song_changed {
             if let Some( (song, path) ) = &self.current_song {
@@ -330,10 +361,17 @@ impl App {
                         self.lib_list_state.select_first();
                     } else if path.is_file() {
                         if let Ok(song) = get_song(&path) {
-                            self.current_song = Some( (song, path.to_path_buf()) );
                             self.focus = Focus::Song;
                             self.scroll_y = 0;
                             self.scroll_x = 0;
+                            self.autoscroll = false;
+                            self.autoscroll_speed = if let Some(speed) = song.metadata.autoscroll_speed {
+                                Duration::from_millis(speed)
+                            } else {
+                                DEFAULT_AUTOSCROLL_SPEED
+                            };
+
+                            self.current_song = Some( (song, path.to_path_buf()) );
                         }
                     }
                 }
@@ -382,6 +420,21 @@ impl App {
                 if let KeyCode::Char(c) = key_event.code {
                     self.long_command.push(c)
                 }
+            },
+            KeyCode::Char('s') if self.autoscroll => {
+                self.is_long_command = true;
+                self.long_command.push('s')
+            },
+
+
+            KeyCode::Char('h') | KeyCode::Left if self.autoscroll =>
+                if self.autoscroll_speed.as_millis() > 0 {
+                    self.autoscroll_speed =
+                        self.autoscroll_speed.saturating_sub(Duration::from_millis(50));
+            },
+
+            KeyCode::Char('l') | KeyCode::Right if self.autoscroll => {
+                self.autoscroll_speed += Duration::from_millis(50);
             },
 
 
@@ -449,6 +502,10 @@ impl App {
             
             KeyCode::Char(';') => self.switch_lib(),
 
+            KeyCode::Char('a') =>
+                if self.autoscroll { self.autoscroll = false }
+                else { self.autoscroll = true },
+
 
             KeyCode::Char('e') => {
                 if let Some( (song, _path) ) = &mut self.current_song {
@@ -481,6 +538,7 @@ impl App {
                 song.transpose(steps);
                 *is_song_changed = true;
             },
+
             'C' => if let Ok(capo) = command_data.parse::<u8>() {
                 if let Some(song_capo) = song.metadata.capo {
                     let song_capo: i32 = song_capo.into();
@@ -494,6 +552,13 @@ impl App {
                     else { Some(capo) };
                 *is_song_changed = true;
             },
+
+            's' if self.autoscroll => {
+                if let Ok(speed) = command_data.parse::<u64>() {
+                    self.autoscroll_speed = Duration::from_millis(speed)
+                }
+            },
+
             _ => {}
         }
 
@@ -574,6 +639,16 @@ impl App {
         }
 
         Ok(())
+    }
+
+    fn update_scroll(&mut self) {
+        if !self.autoscroll { return }
+        if self.last_scroll_time.elapsed() < self.autoscroll_speed { return }
+
+        if self.scroll_y_max > self.scroll_y.into() {
+            self.scroll_y += 1;
+            self.last_scroll_time = Instant::now();
+        } else { self.autoscroll = false }
     }
 
     fn switch_focus(&mut self) {

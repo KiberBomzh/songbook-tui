@@ -29,6 +29,7 @@ const SONG_TITLE_SYMBOL: &str = "{song_title:} ";
 const SONG_ARTIST_SYMBOL: &str = "{song_artist:} ";
 const SONG_KEY_SYMBOL: &str = "{song_key:} ";
 const SONG_CAPO_SYMBOL: &str = "{song_capo:} ";
+const SONG_AUTOSCROLL_SPEED_SYMBOL: &str = "{song_autoscroll_speed:} ";
 
 
 const BLOCK_START: &str = "{block:}";

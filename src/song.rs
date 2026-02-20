@@ -14,6 +14,7 @@ use crate::{
     SONG_ARTIST_SYMBOL,
     SONG_KEY_SYMBOL,
     SONG_CAPO_SYMBOL,
+    SONG_AUTOSCROLL_SPEED_SYMBOL,
 
     BLOCK_START,
     BLOCK_END,
@@ -59,7 +60,8 @@ pub struct Metadata {
     pub title: String,
     pub artist: String,
     pub key: Option<Note>,
-    pub capo: Option<u8>
+    pub capo: Option<u8>,
+    pub autoscroll_speed: Option<u64>, // in milliseconds
 }
 
 impl Metadata {
@@ -96,6 +98,12 @@ impl Metadata {
         }
         s.push('\n');
 
+        s.push_str(SONG_AUTOSCROLL_SPEED_SYMBOL);
+        if let Some(speed) = self.autoscroll_speed {
+            s.push_str(&speed.to_string())
+        }
+        s.push('\n');
+
 
         s.push_str(METADATA_END);
         s.push('\n');
@@ -109,6 +117,7 @@ impl Metadata {
         let mut artist = String::new();
         let mut key: Option<Note> = None;
         let mut capo: Option<u8> = None;
+        let mut autoscroll_speed: Option<u64> = None;
         for line in text.lines() {
             if line.starts_with(SONG_TITLE_SYMBOL) {
                 title = line[SONG_TITLE_SYMBOL.len()..].trim().to_string();
@@ -121,6 +130,10 @@ impl Metadata {
                 if let Ok(c) = line[SONG_CAPO_SYMBOL.len()..].trim().parse::<u8>() {
                     capo = Some(c)
                 }
+            } else if line.starts_with(SONG_AUTOSCROLL_SPEED_SYMBOL) {
+                if let Ok(s) = line[SONG_AUTOSCROLL_SPEED_SYMBOL.len()..].trim().parse::<u64>() {
+                    autoscroll_speed = Some(s)
+                }
             }
         }
 
@@ -128,6 +141,7 @@ impl Metadata {
         if !artist.is_empty() { self.artist = artist }
         self.key = key;
         self.capo = capo;
+        self.autoscroll_speed = autoscroll_speed;
     }
 }
 
@@ -139,7 +153,8 @@ impl Song {
                 title: title.to_string(), 
                 artist: artist.to_string(),
                 key: None,
-                capo: None
+                capo: None,
+                autoscroll_speed: None
             },
             chord_list: Vec::new(),
             blocks: Vec::new(),

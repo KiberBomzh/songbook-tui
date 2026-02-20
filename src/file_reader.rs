@@ -21,7 +21,8 @@ impl Song {
             artist: artist.to_string(),
             title: title.to_string(),
             key: None,
-            capo: None
+            capo: None,
+            autoscroll_speed: None
         };
         let mut song = Self { blocks, chord_list, metadata, notes: None };
         song.detect_key();

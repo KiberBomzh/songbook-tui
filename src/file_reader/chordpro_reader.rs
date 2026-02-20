@@ -112,7 +112,8 @@ pub fn read_from_chordpro(text: &str) -> (Option<Metadata>, Vec<Block>, Vec<Chor
             title,
             artist,
             key: crate::Note::get_key(&key_text),
-            capo: None
+            capo: None,
+            autoscroll_speed: None
         } ) } else { None },
         blocks,
         chord_list
