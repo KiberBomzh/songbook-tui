@@ -1,7 +1,11 @@
 metadata:
   title: Всё идёт по плану
   artist: Егор Летов
-  key: C
+  key:
+    keynote: C
+    is_minor: true
+  capo: null
+  autoscroll_speed: 2500
 chord_list:
 - text: Am
   keynote: A
@@ -55,10 +59,23 @@ blocks:
       chord_type: Norm
       fifth_state: Norm
       sus_or_add: No
+  notes: null
 - title: Куплет
   lines:
   - !TextBlock
-    rhythm: null
+    rhythm:
+    - !OnIndex
+      index: 3
+      symbol: '1'
+    - !OnIndex
+      index: 9
+      symbol: '2'
+    - !OnIndex
+      index: 17
+      symbol: '3'
+    - !OnIndex
+      index: 28
+      symbol: '4'
     chords:
     - !OnIndex
       index: 3
@@ -248,6 +265,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: И вся грязь превратилась в голый лед,
+  notes: null
 - title: Припев
   lines:
   - !TextBlock
@@ -339,6 +357,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Всё идет по плану.
+  notes: null
 - title: Куплет
   lines:
   - !TextBlock
@@ -532,6 +551,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Лихой фонарь ожидания мотается,
+  notes: null
 - title: Припев
   lines:
   - !TextBlock
@@ -623,6 +643,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Всё идет по плану.
+  notes: null
 - title: Куплет
   lines:
   - !TextBlock
@@ -776,6 +797,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Так закопайте ж ее во Христе,
+  notes: null
 - title: Припев
   lines:
   - !TextBlock
@@ -809,7 +831,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 21
+      index: 20
       chord:
         text: C
         keynote: C
@@ -849,7 +871,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 19
+      index: 18
       chord:
         text: C
         keynote: C
@@ -858,7 +880,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 21
+      index: 20
       chord:
         text: E
         keynote: E
@@ -867,6 +889,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Всё идет по плану.
+  notes: null
 - title: Куплет
   lines:
   - !TextBlock
@@ -1140,6 +1163,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Я уверен, что у них тоже самое,
+  notes: null
 - title: Припев
   lines:
   - !TextBlock
@@ -1173,7 +1197,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 19
+      index: 18
       chord:
         text: C
         keynote: C
@@ -1213,7 +1237,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 19
+      index: 18
       chord:
         text: C
         keynote: C
@@ -1222,7 +1246,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 21
+      index: 20
       chord:
         text: E
         keynote: E
@@ -1231,6 +1255,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Всё идет по плану.
+  notes: null
 - title: Куплет
   lines:
   - !TextBlock
@@ -1424,6 +1449,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Я проснулся среди ночи и понял что
+  notes: null
 - title: Припев
   lines:
   - !TextBlock
@@ -1457,7 +1483,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 19
+      index: 18
       chord:
         text: C
         keynote: C
@@ -1497,7 +1523,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 19
+      index: 18
       chord:
         text: C
         keynote: C
@@ -1537,7 +1563,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 19
+      index: 18
       chord:
         text: C
         keynote: C
@@ -1577,7 +1603,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 19
+      index: 18
       chord:
         text: C
         keynote: C
@@ -1586,7 +1612,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     - !OnIndex
-      index: 21
+      index: 20
       chord:
         text: E
         keynote: E
@@ -1595,3 +1621,5 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Всё идет по плану.
+  notes: null
+notes: null

@@ -33,7 +33,7 @@ pub fn init() -> Result<(), Box<dyn std::error::Error>> {
 
 pub fn show(
     song_path: &Path,
-    key: Option<crate::Note>,
+    key: Option<crate::Key>,
     chords: bool,     // show chords
     rhythm: bool,     // show rhythm
     fingerings: bool, // show fingerings

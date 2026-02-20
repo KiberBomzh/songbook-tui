@@ -1,7 +1,11 @@
 metadata:
   title: The man who sold the world
   artist: Nirvana
-  key: F
+  key:
+    keynote: F
+    is_minor: false
+  capo: null
+  autoscroll_speed: 2500
 chord_list:
 - text: A
   keynote: A
@@ -27,7 +31,7 @@ chord_list:
   chord_type: Norm
   fifth_state: Norm
   sus_or_add: No
-- text: Db
+- text: C#
   keynote: CSharp
   minor: false
   chord_type: Norm
@@ -61,6 +65,7 @@ blocks:
       chord_type: Norm
       fifth_state: Norm
       sus_or_add: No
+  notes: null
 - title: Verse
   lines:
   - !TextBlock
@@ -167,6 +172,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: A long long time ago
+  notes: null
 - title: Chorus
   lines:
   - !TextBlock
@@ -188,7 +194,7 @@ blocks:
     - !OnIndex
       index: 3
       chord:
-        text: Db
+        text: C#
         keynote: CSharp
         minor: false
         chord_type: Norm
@@ -232,13 +238,14 @@ blocks:
     - !OnIndex
       index: 7
       chord:
-        text: Db
+        text: C#
         keynote: CSharp
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     text: To The Man Who Sold The World
+  notes: null
 - title: Verse
   lines:
   - !TextBlock
@@ -345,6 +352,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: A long long time ago
+  notes: null
 - title: Chorus
   lines:
   - !TextBlock
@@ -366,7 +374,7 @@ blocks:
     - !OnIndex
       index: 3
       chord:
-        text: Db
+        text: C#
         keynote: CSharp
         minor: false
         chord_type: Norm
@@ -410,7 +418,7 @@ blocks:
     - !OnIndex
       index: 9
       chord:
-        text: Db
+        text: C#
         keynote: CSharp
         minor: false
         chord_type: Norm
@@ -437,7 +445,7 @@ blocks:
     - !OnIndex
       index: 4
       chord:
-        text: Db
+        text: C#
         keynote: CSharp
         minor: false
         chord_type: Norm
@@ -481,10 +489,12 @@ blocks:
     - !OnIndex
       index: 7
       chord:
-        text: Db
+        text: C#
         keynote: CSharp
         minor: false
         chord_type: Norm
         fifth_state: Norm
         sus_or_add: No
     text: To The Man Who Sold The World
+  notes: null
+notes: null

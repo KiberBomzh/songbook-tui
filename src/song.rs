@@ -27,7 +27,7 @@ use crate::{
 
     KEYS
 };
-use crate::Note;
+use crate::{Note, Key};
 use crate::sum_text_in_fingerings;
 use crate::song::chord::Chord;
 use crate::song::block::{Block, Line};
@@ -59,7 +59,7 @@ pub struct Song {
 pub struct Metadata {
     pub title: String,
     pub artist: String,
-    pub key: Option<Note>,
+    pub key: Option<Key>,
     pub capo: Option<u8>,
     pub autoscroll_speed: Option<u64>, // in milliseconds
 }
@@ -88,7 +88,7 @@ impl Metadata {
 
         s.push_str(SONG_KEY_SYMBOL);
         if let Some(key) = self.key {
-            s.push_str(&key.get_text())
+            s.push_str(&key.to_string())
         }
         s.push('\n');
 
@@ -115,7 +115,7 @@ impl Metadata {
     fn change_from_edited_str(&mut self, text: &str) {
         let mut title = String::new();
         let mut artist = String::new();
-        let mut key: Option<Note> = None;
+        let mut key: Option<Key> = None;
         let mut capo: Option<u8> = None;
         let mut autoscroll_speed: Option<u64> = None;
         for line in text.lines() {
@@ -125,7 +125,7 @@ impl Metadata {
                 artist = line[SONG_ARTIST_SYMBOL.len()..].trim().to_string();
             } else if line.starts_with(SONG_KEY_SYMBOL) {
                 let k = line[SONG_KEY_SYMBOL.len()..].trim();
-                key = Note::get_key(k);
+                key = Key::new(k);
             } else if line.starts_with(SONG_CAPO_SYMBOL) {
                 if let Ok(c) = line[SONG_CAPO_SYMBOL.len()..].trim().parse::<u8>() {
                     capo = Some(c)
@@ -329,7 +329,7 @@ impl Song {
             .collect();
 
         let total: f32 = this_keys.len() as f32;
-        let mut key = Note::C;
+        let mut key: Option<Key> = None;
         let mut similarity: f32 = 0.0; // Значение в процентах
 
         for key_block in KEYS {
@@ -343,12 +343,16 @@ impl Song {
             let this_precent: f32 = (matches * 100.0) / total;
             if this_precent > similarity {
                 similarity = this_precent;
-                key = keynote;
+                key = Some(Key::from_note(keynote));
             }
         }
 
-        self.metadata.key = Some(key);
-        return key
+        self.metadata.key = key;
+        if let Some(k) = key {
+            k.get_note()
+        } else {
+            Note::C
+        }
     }
 
     pub fn transpose(&mut self, steps: i32) {

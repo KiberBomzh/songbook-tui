@@ -6,6 +6,7 @@ pub mod song;
 pub mod song_library;
 
 use std::collections::BTreeMap;
+use std::fmt;
 use serde::{Serialize, Deserialize};
 use crossterm::style::Color;
 
@@ -74,6 +75,112 @@ const KEYS: [[Note; 6]; 12] = [
 
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Key {
+    keynote: Note,
+    is_minor: bool
+}
+
+impl Key {
+    pub fn new(text: &str) -> Option<Self> {
+        Some( match text.to_lowercase().as_str() {
+            "c" => Self { keynote: Note::new("C")?, is_minor: false },
+            "am" => Self { keynote: Note::new("C")?, is_minor: true },
+
+            "c#" | "db" => Self { keynote: Note::new("C#")?, is_minor: false },
+            "a#m" | "bbm" => Self { keynote: Note::new("C#")?, is_minor: true },
+
+            "d" => Self { keynote: Note::new("D")?, is_minor: false },
+            "bm" => Self { keynote: Note::new("D")?, is_minor: true },
+
+            "d#" | "eb" => Self { keynote: Note::new("D#")?, is_minor: false },
+            "cm" => Self { keynote: Note::new("D#")?, is_minor: true },
+
+            "e" => Self { keynote: Note::new("E")?, is_minor: false },
+            "c#m" | "dbm" => Self { keynote: Note::new("E")?, is_minor: true },
+
+            "f" => Self { keynote: Note::new("F")?, is_minor: false },
+            "dm" => Self { keynote: Note::new("F")?, is_minor: true },
+
+            "f#" | "gb" => Self { keynote: Note::new("F#")?, is_minor: false },
+            "d#m" | "ebm" => Self { keynote: Note::new("F#")?, is_minor: true },
+
+            "g" => Self { keynote: Note::new("G")?, is_minor: false },
+            "em" => Self { keynote: Note::new("G")?, is_minor: true },
+
+            "g#" | "ab" => Self { keynote: Note::new("G#")?, is_minor: false },
+            "fm"  => Self { keynote: Note::new("G#")?, is_minor: true },
+
+            "a" => Self { keynote: Note::new("A")?, is_minor: false },
+            "f#m" | "gbm" => Self { keynote: Note::new("A")?, is_minor: true },
+
+            "a#" | "bb" => Self { keynote: Note::new("A#")?, is_minor: false },
+            "gm" => Self { keynote: Note::new("A#")?, is_minor: true },
+
+            "b" => Self { keynote: Note::new("B")?, is_minor: false },
+            "g#m" | "abm" => Self { keynote: Note::new("B")?, is_minor: true },
+            _ => return None
+        })
+    }
+
+    pub fn from_note(note: Note) -> Self {
+        Self { keynote: note, is_minor: false }
+    }
+
+    pub fn transpose(&self, steps: i32) -> Self {
+        Self { keynote: self.keynote.transpose(steps), is_minor: self.is_minor }
+    }
+
+    pub fn get_note(&self) -> Note {
+        self.keynote
+    }
+}
+
+impl fmt::Display for Key {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let s = match self.keynote {
+            A if self.is_minor => String::from("F#m"),
+            A => self.keynote.get_text(),
+
+            ASharp if self.is_minor => String::from("Gm"),
+            ASharp => self.keynote.get_text(),
+
+            B if self.is_minor => String::from("G#m"),
+            B => self.keynote.get_text(),
+
+            C if self.is_minor => String::from("Am"),
+            C => self.keynote.get_text(),
+
+            CSharp if self.is_minor => String::from("A#m"),
+            CSharp => self.keynote.get_text(),
+
+            D if self.is_minor => String::from("Bm"),
+            D => self.keynote.get_text(),
+
+            DSharp if self.is_minor => String::from("Cm"),
+            DSharp => self.keynote.get_text(),
+
+            E if self.is_minor => String::from("C#m"),
+            E => self.keynote.get_text(),
+
+            F if self.is_minor => String::from("Dm"),
+            F => self.keynote.get_text(),
+
+            FSharp if self.is_minor => String::from("D#m"),
+            FSharp => self.keynote.get_text(),
+
+            G if self.is_minor => String::from("Em"),
+            G => self.keynote.get_text(),
+
+            GSharp if self.is_minor =>String::from("Fm"),
+            GSharp => self.keynote.get_text()
+        };
+
+        write!(f, "{}", s)
+    }
+}
+
+
+#[derive(Serialize, Deserialize, Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Note {
     A,
     ASharp,
@@ -110,26 +217,6 @@ impl Note {
         } )
     }
     
-    pub fn get_key(text: &str) -> Option<Self> {
-        match text {
-            "C" | "c" | "Am" | "am" => Self::new("C"),
-            "C#" | "c#" | "A#m" | "a#m"
-                | "Db" | "db" | "Bbm" | "bbm" => Self::new("C#"),
-            "D" | "d" | "Bm" | "bm" => Self::new("D"),
-            "D#" | "d#" | "Cm" | "cm" | "Eb" | "eb" => Self::new("D#"),
-            "E" | "e" | "C#m" | "c#m" | "Dbm" | "dbm" => Self::new("E"),
-            "F" | "f" | "Dm" | "dm" => Self::new("F"),
-            "F#" | "f#" | "D#m" | "d#m"
-                | "Gb" | "gb" | "Ebm" | "ebm" => Self::new("F#"),
-            "G" | "g" | "Em" | "em" => Self::new("G"),
-            "G#" | "g#" | "Fm" | "fm" | "Ab" | "ab" => Self::new("G#"),
-            "A" | "a" | "F#m" | "f#m" | "Gbm" | "gbm" => Self::new("A"),
-            "A#" | "a#" | "Gm" | "gm" | "Bb" | "bb" => Self::new("A#"),
-            "B" | "b" | "G#m" | "g#m" | "Abm" | "abm" => Self::new("B"),
-            _ => None
-        }
-    }
-
     pub fn get_text(&self) -> String {
         (
             match self {
@@ -239,7 +326,7 @@ pub fn print_fretboard(tuning: &[Note; STRINGS]) {
 }
 
 
-pub fn print_circle_of_fifth(needed_key: Option<Note>) {
+pub fn print_circle_of_fifth(needed_key: Option<Key>) {
     let mut s = String::new();
     let one_key_width = 18;
     let width = if let Ok( (cols, _rows) ) =  crossterm::terminal::size() {
@@ -325,7 +412,7 @@ pub fn print_circle_of_fifth(needed_key: Option<Note>) {
 
 
     if let Some(needed_k) = needed_key {
-        if let Some( (f_line, s_line) ) = keys.get(&needed_k) {
+        if let Some( (f_line, s_line) ) = keys.get(&needed_k.get_note()) {
             println!("| {f_line}|\n| {s_line}|");
         }
     } else {

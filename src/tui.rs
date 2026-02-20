@@ -227,7 +227,14 @@ impl App {
             let mut t_top_buf = String::new();
             if let Some(key) = &song.metadata.key {
                 t_top_buf.push_str("Key: ");
-                t_top_buf.push_str(&key.get_text());
+                t_top_buf.push_str(&if let Some(capo) = &song.metadata.capo {
+                    format!("{}/({})",
+                        key.transpose(0 - <u8 as Into<i32>>::into(*capo)).to_string(),
+                        key.to_string()
+                    )
+                } else {
+                    key.to_string()
+                });
             }
             if let Some(capo) = &song.metadata.capo {
                 if !t_top_buf.is_empty() { t_top_buf.push_str(", ") }
@@ -346,7 +353,7 @@ impl App {
             },
             KeyCode::Char('p') => if let Some(path) = &self.cutted_path {
                 songbook::song_library::mv(path, &self.current_dir)?;
-                (self.lib_list, self.current_dir) = get_files_in_dir(Some(&self.current_dir))?;
+                self.update_lib_list()?;
                 self.cutted_path = None;
             },
 
@@ -357,7 +364,7 @@ impl App {
                     let (_name, path) = &self.lib_list[selected];
                     if path.is_dir() {
                         self.last_dirs.push(self.current_dir.clone());
-                        (self.lib_list, self.current_dir) = get_files_in_dir(Some(&path))?;
+                        (self.lib_list, self.current_dir) = get_files_in_dir( Some(&path) )?;
                         self.lib_list_state.select_first();
                     } else if path.is_file() {
                         if let Ok(song) = get_song(&path) {
@@ -394,7 +401,7 @@ impl App {
                 if let Some(selected) = self.lib_list_state.selected() {
                     let (_name, path) = &self.lib_list[selected];
                     songbook::song_library::rm(path)?;
-                    (self.lib_list, self.current_dir) = get_files_in_dir( Some(&self.current_dir) )?;
+                    self.update_lib_list()?;
                 }
             },
             _ => {}
@@ -513,6 +520,8 @@ impl App {
                     edit(song)?;
                     *is_song_changed = true;
                     *terminal = ratatui::init();
+                    self.scroll_y = 0;
+                    self.scroll_x = 0;
                 }
             },
             _ => {}
@@ -575,7 +584,7 @@ impl App {
                 songbook::song_library::mkdir(
                     &self.current_dir.join(command_data)
                 )?;
-                (self.lib_list, self.current_dir) = get_files_in_dir( Some(&self.current_dir) )?;
+                self.update_lib_list()?;
             },
             'r' => {
                 if let Some(selected) = self.lib_list_state.selected() {
@@ -583,7 +592,7 @@ impl App {
                     let parent_path = if let Some(p) = path.parent() { p }
                         else { &self.current_dir };
                     songbook::song_library::mv(path, &parent_path.join(command_data))?;
-                    (self.lib_list, self.current_dir) = get_files_in_dir( Some(&self.current_dir) )?;
+                    self.update_lib_list()?;
                 }
             },
             'f' => {
@@ -633,6 +642,7 @@ impl App {
                 
                 if let Some(s) = &song {
                     songbook::song_library::add(s)?;
+                    self.update_lib_list()?;
                 }
             },
             _ => {}
@@ -665,5 +675,10 @@ impl App {
         } else {
             self.hide_lib = true
         }
+    }
+
+    fn update_lib_list(&mut self) -> Result<()> {
+        (self.lib_list, self.current_dir) = get_files_in_dir( Some(&self.current_dir) )?;
+        Ok(())
     }
 }

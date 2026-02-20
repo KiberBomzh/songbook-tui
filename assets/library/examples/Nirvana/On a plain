@@ -1,7 +1,11 @@
 metadata:
   title: On a plain
   artist: Nirvana
-  key: D
+  key:
+    keynote: D
+    is_minor: false
+  capo: null
+  autoscroll_speed: 2500
 chord_list:
 - text: D
   keynote: D
@@ -375,6 +379,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Love myself, Better than you, I know it's wrong so what should I do?
+  notes: null
 - title: Chorus
   lines:
   - !TextBlock
@@ -479,6 +484,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: I'm on a Plain
+  notes: null
 - title: Verse
   lines:
   - !TextBlock
@@ -802,6 +808,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Love myself, Better than you, I know it's wrong so what should I do?
+  notes: null
 - title: Chorus
   lines:
   - !TextBlock
@@ -906,6 +913,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: I'm on a Plain
+  notes: null
 - title: Bridge
   lines:
   - !TextBlock
@@ -1068,6 +1076,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: What the hell am I trying to say?
+  notes: null
 - title: Verse
   lines:
   - !TextBlock
@@ -1391,6 +1400,7 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Love myself, Better than you, I know it's wrong so what should I do?
+  notes: null
 - title: Chorus
   lines:
   - !TextBlock
@@ -1468,3 +1478,5 @@ blocks:
       fifth_state: Norm
       sus_or_add: No
     text: I'm on a Plain
+  notes: null
+notes: null

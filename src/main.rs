@@ -4,7 +4,7 @@ mod tui;
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
-use songbook::{Song, Note, STRINGS};
+use songbook::{Song, Note, Key, STRINGS};
 use songbook::song_library;
 use songbook::{Fingering, StringState};
 
@@ -168,7 +168,7 @@ fn main() {
                 songbook::print_fretboard(&notes);
             },
             Command::CircleOfFifth{key} => {
-                let key = if let Some(k) = key.as_deref() { Note::get_key(k) }
+                let key = if let Some(k) = key.as_deref() { Key::new(k) }
                 else { None };
                 songbook::print_circle_of_fifth(key);
             },
@@ -214,7 +214,7 @@ fn main() {
                 song_library::add_fingering(&fing).expect("Error during saving a fingering!");
             },
             Command::Show { path, key, chords, rhythm, fingerings, notes, colored } => {
-                let key = if let Some(k) = key.as_deref() { Note::get_key(k) }
+                let key = if let Some(k) = key.as_deref() { Key::new(k) }
                 else { None };
 
                 song_library::show(&path, key, chords, rhythm, fingerings, notes, colored)

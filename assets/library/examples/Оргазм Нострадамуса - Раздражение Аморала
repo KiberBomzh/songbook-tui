@@ -1,7 +1,11 @@
 metadata:
   title: Раздражение Аморала
   artist: Оргазм Нострадамуса
-  key: F
+  key:
+    keynote: F
+    is_minor: true
+  capo: null
+  autoscroll_speed: 2500
 chord_list:
 - text: Dm
   keynote: D
@@ -95,7 +99,8 @@ blocks:
     Пропасти для глубоких
     Нежности и дрожь - ужаса для чутких
     А в общем все редкое для редких...
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -185,7 +190,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: В комнатушке моей стало вдруг светло
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -275,7 +281,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: 'Наклонился и сказал: "Пошли со мной'
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -365,7 +372,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Там всегда светло и там всегда весна
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -455,7 +463,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Не бывает горя и страданий нет
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -545,7 +554,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Ну, давай мне руку, ну, пойдем со мной!"
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -635,7 +645,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Тяжко и свирепо старика я бил
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -725,7 +736,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Мои звери - это слепыши-кроты
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -815,7 +827,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Право харкнуть кровью в морду бытия!
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -905,7 +918,8 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: А душа моя - шершавый лёд."
-- title: ''
+  notes: null
+- title: null
   lines:
   - !TextBlock
     rhythm: null
@@ -995,3 +1009,5 @@ blocks:
         fifth_state: Norm
         sus_or_add: No
     text: Ну а я хуярил мебель до утра...
+  notes: null
+notes: null

@@ -1,7 +1,11 @@
 metadata:
   title: Русское поле экспериментов
   artist: Егор Летов
-  key: D
+  key:
+    keynote: D
+    is_minor: true
+  capo: null
+  autoscroll_speed: 2750
 chord_list:
 - text: Bm
   keynote: B
