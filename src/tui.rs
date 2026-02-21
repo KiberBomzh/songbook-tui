@@ -37,36 +37,7 @@ const DEFAULT_AUTOSCROLL_SPEED: Duration = Duration::from_millis(2500);
 
 pub fn main() -> Result<()> {
     let mut terminal = ratatui::init();
-    let (lib_list, current_dir) = get_files_in_dir(None)?;
-    let mut app = App {
-        exit: false,
-        config: Config::new(),
-        focus: Focus::Library,
-        hide_lib: false,
-        is_long_command: false,
-        long_command: String::new(),
-        lib_list_state: ListState::default(),
-        lib_list,
-        current_dir,
-        last_dirs: Vec::new(),
-        cutted_path: None,
-        current_song: None,
-        song_area_height: None,
-        song_area_width: None,
-        show_chords: true,
-        show_rhythm: true,
-        show_fingerings: false,
-        show_notes: true,
-        scroll_y: 0,
-        scroll_x: 0,
-        scroll_y_max: 0,
-        scroll_x_max: 0,
-        autoscroll: false,
-        autoscroll_speed: DEFAULT_AUTOSCROLL_SPEED,
-        last_scroll_time: Instant::now()
-    };
-    app.lib_list_state.select(Some(0));
-
+    let mut app = App::new()?;
     let app_result = app.run(&mut terminal);
 
     ratatui::restore();
@@ -116,6 +87,39 @@ struct App {
 }
 
 impl App {
+    pub fn new() -> Result<Self> {
+        let (lib_list, current_dir) = get_files_in_dir(None)?;
+        let mut lib_list_state = ListState::default();
+        lib_list_state.select(Some(0));
+
+        Ok( Self {
+            exit: false,
+            config: Config::new(),
+            focus: Focus::Library,
+            hide_lib: false,
+            is_long_command: false,
+            long_command: String::new(),
+            lib_list_state,
+            lib_list,
+            current_dir,
+            last_dirs: Vec::new(),
+            cutted_path: None,
+            current_song: None,
+            song_area_height: None,
+            song_area_width: None,
+            show_chords: true,
+            show_rhythm: true,
+            show_fingerings: false,
+            show_notes: true,
+            scroll_y: 0,
+            scroll_x: 0,
+            scroll_y_max: 0,
+            scroll_x_max: 0,
+            autoscroll: false,
+            autoscroll_speed: DEFAULT_AUTOSCROLL_SPEED,
+            last_scroll_time: Instant::now()
+        })
+    }
     fn run(&mut self, terminal: &mut DefaultTerminal) -> Result<()> {
         while !self.exit {
             terminal.draw(|frame| self.draw(frame))?;
@@ -301,6 +305,7 @@ impl App {
                     self.is_long_command = false;
                     self.long_command.clear();
                 },
+                _ if self.is_long_command => {},
 
 
                 KeyCode::Char('q') => self.exit = true,
@@ -337,10 +342,10 @@ impl App {
 
     fn handle_lib_key_event(&mut self, key_event: KeyEvent) -> Result<()> {
         match key_event.code {
-            KeyCode::Char('n') |
-            KeyCode::Char('r') |
-            KeyCode::Char('f') |
-            KeyCode::Char('a') => {
+            KeyCode::Char('N') |
+            KeyCode::Char('R') |
+            KeyCode::Char('F') |
+            KeyCode::Char('A') => {
                 self.is_long_command = true;
                 if let KeyCode::Char(c) = key_event.code {
                     self.long_command.push(c)
@@ -363,6 +368,9 @@ impl App {
                 if let Some(selected) = self.lib_list_state.selected() {
                     let (_name, path) = &self.lib_list[selected];
                     if path.is_dir() {
+                        if let Some(c_path) = &self.cutted_path {
+                            if path == c_path { return Ok(()) }
+                        }
                         self.last_dirs.push(self.current_dir.clone());
                         (self.lib_list, self.current_dir) = get_files_in_dir( Some(&path) )?;
                         self.lib_list_state.select_first();
@@ -421,6 +429,9 @@ impl App {
         terminal: &mut DefaultTerminal,
         is_song_changed: &mut bool
     ) -> Result<()> {
+        if let Some( (_, _) ) = &self.current_song {
+        } else { return Ok(()) }
+
         match key_event.code {
             KeyCode::Char('T') | KeyCode::Char('C') => {
                 self.is_long_command = true;
@@ -428,9 +439,9 @@ impl App {
                     self.long_command.push(c)
                 }
             },
-            KeyCode::Char('s') if self.autoscroll => {
+            KeyCode::Char('S') if self.autoscroll => {
                 self.is_long_command = true;
-                self.long_command.push('s')
+                self.long_command.push('S')
             },
 
 
@@ -562,7 +573,7 @@ impl App {
                 *is_song_changed = true;
             },
 
-            's' if self.autoscroll => {
+            'S' if self.autoscroll => {
                 if let Ok(speed) = command_data.parse::<u64>() {
                     self.autoscroll_speed = Duration::from_millis(speed)
                 }
@@ -580,13 +591,13 @@ impl App {
         let command_data: String = self.long_command.chars().skip(1).collect();
         if command_data.is_empty() { return Ok(()) }
         match command {
-            'n' => {
+            'N' => {
                 songbook::song_library::mkdir(
                     &self.current_dir.join(command_data)
                 )?;
                 self.update_lib_list()?;
             },
-            'r' => {
+            'R' => {
                 if let Some(selected) = self.lib_list_state.selected() {
                     let (_name, path) = &self.lib_list[selected];
                     let parent_path = if let Some(p) = path.parent() { p }
@@ -595,11 +606,11 @@ impl App {
                     self.update_lib_list()?;
                 }
             },
-            'f' => {
+            'F' => {
                 self.current_dir = songbook::song_library::get_lib_path()?;
                 self.lib_list = find(&command_data)?;
             },
-            'a' => {
+            'A' => {
                 let subcommand = if let Some(c) = command_data.chars().nth(0) { c }
                     else { return Ok(()) };
                 let meta: Option<(String, String)> = if let [artist, title, ..] =
