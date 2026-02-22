@@ -48,11 +48,11 @@ pub fn show(
     let mut song: Song = serde_yaml::from_reader(reader)?;
     if let Some(k) = key {
         if let Some(mut m_key) = song.metadata.key {
-            while m_key != k {
+            while m_key.get_note() != k.get_note() {
                 song.transpose(1);
                 m_key = song.metadata.key.unwrap();
             }
-        } else { println!("Add a key before transposing, try 'songbook edit <song_name> -t meta'") }
+        } else { println!("Add a key before transposing, try 'songbook edit <song_name>'") }
     }
 
     let text =

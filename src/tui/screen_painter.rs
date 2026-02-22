@@ -336,19 +336,19 @@ impl App {
             ]),
 
             Row::new(vec![
-                Line::from("S"),
+                Line::from("S(speed)"),
                 Line::default(),
                 Line::from("Set autoscroll speed")
             ]),
 
             Row::new(vec![
-                Line::from("T(+/-num"),
+                Line::from("T(+/-num)"),
                 Line::default(),
                 Line::from("Transpose song")
             ]),
 
             Row::new(vec![
-                Line::from("C"),
+                Line::from("C(fret num)"),
                 Line::default(),
                 Line::from("Set capo")
             ]),

@@ -2,6 +2,12 @@
 name = "songbook"
 version = "0.1.0"
 edition = "2024"
+description = "Songbook with TUI and CLI"
+license = "GPL-3.0"
+repository = "https://github.com/KiberBomzh/songbook-tui"
+readme = "README.md"
+categories = ["command-line-utilities"]
+keywords = ["song", "chord", "songbook", "guitar", "music", "cli", "tui"]
 
 [lib]
 name = "songbook"
