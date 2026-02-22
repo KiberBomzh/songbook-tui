@@ -2,17 +2,17 @@ mod song_formater;
 mod config;
 mod song_event_handler;
 mod lib_event_handler;
+mod screen_painter;
+
 
 use std::path::PathBuf;
 use std::time::{Instant, Duration};
 use anyhow::Result;
 
 use ratatui::{DefaultTerminal, Frame};
-use ratatui::layout::{Constraint, Layout};
-use ratatui::widgets::{Block, Paragraph, List, ListState, ListItem};
-use ratatui::prelude::*;
+use ratatui::widgets::{ListState, TableState};
 
-use crossterm::event::{Event, KeyEvent, KeyEventKind, KeyCode};
+use crossterm::event::{Event, KeyEvent, KeyCode};
 
 use songbook::song_library::lib_functions::*;
 use songbook::Song;
@@ -20,19 +20,8 @@ use songbook::Song;
 use config::Config;
 
 
-const FOCUS_COLOR: Color = Color::LightGreen;
-const UNFOCUS_COLOR: Color = Color::DarkGray;
-const DIRECTORIES_COLOR: Color = Color::Blue;
-const SONGS_COLOR: Color = Color::White;
-
-const TITLE_COLOR: Color = Color::Green;
-const CHORDS_COLOR: Color = Color::Cyan;
-const RHYTHM_COLOR: Color = Color::Yellow;
-const NOTES_COLOR: Color = Color::DarkGray;
-const TEXT_COLOR: Color = Color::White;
-
-
 const DEFAULT_AUTOSCROLL_SPEED: Duration = Duration::from_millis(2500);
+
 
 
 pub fn main() -> Result<()> {
@@ -52,15 +41,24 @@ enum Focus {
     Song
 }
 
+#[derive(PartialEq)]
+enum Screen {
+    Main,
+    Help
+}
+
 struct App {
     exit: bool,
     config: Config,
 
     focus: Focus,
+    current_screen: Screen,
     hide_lib: bool,
 
     is_long_command: bool,
     long_command: String,
+
+    help_table_state: TableState,
 
     lib_list_state: ListState,
     lib_list: Vec<(String, PathBuf)>,
@@ -89,17 +87,17 @@ struct App {
 impl App {
     pub fn new() -> Result<Self> {
         let (lib_list, current_dir) = get_files_in_dir(None)?;
-        let mut lib_list_state = ListState::default();
-        lib_list_state.select(Some(0));
 
         Ok( Self {
             exit: false,
             config: Config::new(),
             focus: Focus::Library,
+            current_screen: Screen::Main,
             hide_lib: false,
             is_long_command: false,
             long_command: String::new(),
-            lib_list_state,
+            help_table_state: TableState::new().with_selected(Some(0)),
+            lib_list_state: ListState::default().with_selected(Some(0)),
             lib_list,
             current_dir,
             last_dirs: Vec::new(),
@@ -136,159 +134,27 @@ impl App {
     }
 
     fn draw(&mut self, frame: &mut Frame) {
-        use Constraint::Percentage;
-
-        let horizontal = if self.hide_lib {
-            Layout::horizontal([Percentage(0), Percentage(100)])
-        } else {
-            Layout::horizontal([Percentage(25), Percentage(75)])
-        };
-        let [lib_area, song_area] = horizontal.areas(frame.area());
-
-
-        let focus_color =
-            if let Some(c) = self.config.colors.get_focus_color() { c }
-            else { FOCUS_COLOR };
-
-        let unfocus_color =
-            if let Some(c) = self.config.colors.get_unfocus_color() { c }
-            else { UNFOCUS_COLOR };
-
-        let directories_color =
-            if let Some(c) = self.config.colors.get_directories_color() { c }
-            else { DIRECTORIES_COLOR };
-
-        let songs_color =
-            if let Some(c) = self.config.colors.get_songs_color() { c }
-            else { SONGS_COLOR };
-
-
-        let title_color =
-            if let Some(c) = self.config.colors.get_title_color() { c }
-            else { TITLE_COLOR };
-
-        let chords_color =
-            if let Some(c) = self.config.colors.get_chords_color() { c }
-            else { CHORDS_COLOR };
-
-        let rhythm_color =
-            if let Some(c) = self.config.colors.get_rhythm_color() { c }
-            else { RHYTHM_COLOR };
-
-        let notes_color =
-            if let Some(c) = self.config.colors.get_notes_color() { c }
-            else { NOTES_COLOR };
-
-        let text_color =
-            if let Some(c) = self.config.colors.get_text_color() { c }
-            else { TEXT_COLOR };
-
-
-        let mut items: Vec<ListItem> = Vec::new();
-        for (name, path) in &self.lib_list {
-            let mut style = Style::new();
-            if path.is_dir() { style = style.fg(directories_color); }
-            else if path.is_file() { style = style.fg(songs_color); }
-            if let Some(c_path) = &self.cutted_path && c_path == path { style = style.dim(); }
-            items.push(ListItem::new(name.as_str()).style(style));
+        match self.current_screen {
+            Screen::Main => self.draw_main_screen(frame),
+            Screen::Help => self.draw_help_screen(frame),
         }
-
-        if !self.hide_lib {
-            let list = List::new(items)
-                .highlight_style(Style::new())
-                .highlight_symbol("->")
-                .block(
-                    Block::bordered().title(
-                        self.current_dir
-                            .file_name()
-                            .and_then(|n| n.to_str())
-                            .unwrap_or("library")
-                        )
-
-                        .border_style(if self.focus == Focus::Library {
-                            Style::new().fg(focus_color)
-                        } else {
-                            Style::new().fg(unfocus_color)
-                        })
-                );
-            frame.render_stateful_widget(list, lib_area, &mut self.lib_list_state);
-        }
-
-
-        let song_block = Block::bordered()
-            .border_style(if self.focus == Focus::Song {
-                Style::new().fg(focus_color)
-            } else {
-                Style::new().fg(unfocus_color)
-            });
-        let inner_song_area = song_block.inner(song_area);
-
-        let title: String;
-        let title_top: String;
-        let song = if let Some((song, _p)) = &self.current_song {
-            title = format!("{} - {}", song.metadata.artist, song.metadata.title);
-
-            let mut t_top_buf = String::new();
-            if let Some(key) = &song.metadata.key {
-                t_top_buf.push_str("Key: ");
-                t_top_buf.push_str(&if let Some(capo) = &song.metadata.capo {
-                    format!("{}/({})",
-                        key.transpose(0 - <u8 as Into<i32>>::into(*capo)).to_string(),
-                        key.to_string()
-                    )
-                } else {
-                    key.to_string()
-                });
-            }
-            if let Some(capo) = &song.metadata.capo {
-                if !t_top_buf.is_empty() { t_top_buf.push_str(", ") }
-                t_top_buf.push_str("Capo: ");
-                t_top_buf.push_str(&capo.to_string());
-            }
-            title_top = t_top_buf;
-
-
-
-            let height = <u16 as Into<usize>>::into(inner_song_area.height);
-            let width = <u16 as Into<usize>>::into(inner_song_area.width);
-            self.song_area_height = Some(height);
-            self.song_area_width = Some(width);
-
-            let (p, lines, columns) = song_formater::get_as_paragraph(
-                &song,
-                width,
-                self.show_chords,
-                self.show_rhythm,
-                self.show_fingerings,
-                self.show_notes,
-                [title_color, chords_color, rhythm_color, notes_color, text_color]
-            );
-
-            self.scroll_y_max = lines.saturating_sub(height);
-            self.scroll_x_max = columns.saturating_sub(width);
-
-            p.scroll( (self.scroll_y, self.scroll_x) )
-        } else {
-            title = "Nothing to show".to_string();
-            title_top = String::new();
-            Paragraph::default()
-        }.block(
-            song_block
-                .title(title)
-                .title_top(Line::from(title_top).right_aligned())
-                .title_bottom(Line::from(self.long_command.as_str()).right_aligned())
-                .title_bottom(Line::from(
-                    if self.autoscroll { self.autoscroll_speed.as_millis().to_string() + "ms" }
-                    else { String::new() }
-                ))
-        );
-        frame.render_widget(song, song_area);
     }
 
     fn handle_key_event(&mut self, key_event: KeyEvent, terminal: &mut DefaultTerminal) -> Result<()> {
+        match self.current_screen {
+            Screen::Main => self.handle_main_key_event(key_event, terminal)?,
+            Screen::Help => self.handle_help_key_event(key_event)?,
+        }
+        Ok(())
+    }
+
+    fn handle_main_key_event(&mut self, key_event: KeyEvent, terminal: &mut DefaultTerminal) -> Result<()> {
         let mut is_song_changed = false;
-        if key_event.kind == KeyEventKind::Press {
+        if key_event.kind.is_press() {
             match key_event.code {
+                KeyCode::F(1) => self.current_screen = Screen::Help,
+
+
                 KeyCode::Char(c) if self.is_long_command => self.long_command.push(c),
                 KeyCode::Backspace if self.is_long_command => {
                     self.long_command.pop();
@@ -339,6 +205,20 @@ impl App {
 
         Ok(())
     }
+
+    fn handle_help_key_event(&mut self, key_event: KeyEvent) -> Result<()> {
+        if key_event.kind.is_press() {
+            match key_event.code {
+                KeyCode::Esc => self.current_screen = Screen::Main,
+                KeyCode::Char('j') | KeyCode::Down => self.help_table_state.select_next(),
+                KeyCode::Char('k') | KeyCode::Up => self.help_table_state.select_previous(),
+                _ => {},
+            }
+        }
+        Ok(())
+    }
+
+
 
     fn update_scroll(&mut self) {
         if !self.autoscroll { return }

@@ -4,18 +4,18 @@ use std::str::FromStr;
 use serde::{Serialize, Deserialize};
 use anyhow::Result;
 use ratatui::style::Color;
-use super::{
-    FOCUS_COLOR,
-    UNFOCUS_COLOR,
-    DIRECTORIES_COLOR,
-    SONGS_COLOR,
 
-    TITLE_COLOR,
-    CHORDS_COLOR,
-    RHYTHM_COLOR,
-    NOTES_COLOR,
-    TEXT_COLOR
-};
+
+const FOCUS_COLOR: Color = Color::LightGreen;
+const UNFOCUS_COLOR: Color = Color::DarkGray;
+const DIRECTORIES_COLOR: Color = Color::Blue;
+const SONGS_COLOR: Color = Color::White;
+
+const TITLE_COLOR: Color = Color::Green;
+const CHORDS_COLOR: Color = Color::Cyan;
+const RHYTHM_COLOR: Color = Color::Yellow;
+const NOTES_COLOR: Color = Color::DarkGray;
+const TEXT_COLOR: Color = Color::White;
 
 
 
@@ -106,49 +106,49 @@ impl Default for Colors {
 }
 
 impl Colors {
-    pub fn get_focus_color(&self) -> Option<Color> {
-        if let Ok(color) = Self::get_color(&self.focus) { Some(color) }
-        else { None }
+    pub fn get_focus_color(&self) -> Color {
+        if let Ok(color) = Self::get_color(&self.focus) { color }
+        else { FOCUS_COLOR }
     }
 
-    pub fn get_unfocus_color(&self) -> Option<Color> {
-        if let Ok(color) = Self::get_color(&self.unfocus) { Some(color) }
-        else { None }
+    pub fn get_unfocus_color(&self) -> Color {
+        if let Ok(color) = Self::get_color(&self.unfocus) { color }
+        else { UNFOCUS_COLOR }
     }
 
-    pub fn get_directories_color(&self) -> Option<Color> {
-        if let Ok(color) = Self::get_color(&self.directories) { Some(color) }
-        else { None }
+    pub fn get_directories_color(&self) -> Color {
+        if let Ok(color) = Self::get_color(&self.directories) { color }
+        else { DIRECTORIES_COLOR }
     }
 
-    pub fn get_songs_color(&self) -> Option<Color> {
-        if let Ok(color) = Self::get_color(&self.songs) { Some(color) }
-        else { None }
+    pub fn get_songs_color(&self) -> Color {
+        if let Ok(color) = Self::get_color(&self.songs) { color }
+        else { SONGS_COLOR }
     }
 
-    pub fn get_title_color(&self) -> Option<Color> {
-        if let Ok(color) = Self::get_color(&self.song.title) { Some(color) }
-        else { None }
+    pub fn get_title_color(&self) -> Color {
+        if let Ok(color) = Self::get_color(&self.song.title) { color }
+        else { TITLE_COLOR }
     }
 
-    pub fn get_chords_color(&self) -> Option<Color> {
-        if let Ok(color) = Self::get_color(&self.song.chords) { Some(color) }
-        else { None }
+    pub fn get_chords_color(&self) -> Color {
+        if let Ok(color) = Self::get_color(&self.song.chords) { color }
+        else { CHORDS_COLOR }
     }
 
-    pub fn get_rhythm_color(&self) -> Option<Color> {
-        if let Ok(color) = Self::get_color(&self.song.rhythm) { Some(color) }
-        else { None }
+    pub fn get_rhythm_color(&self) -> Color {
+        if let Ok(color) = Self::get_color(&self.song.rhythm) { color }
+        else { RHYTHM_COLOR }
     }
 
-    pub fn get_notes_color(&self) -> Option<Color> {
-        if let Ok(color) = Self::get_color(&self.song.notes) { Some(color) }
-        else { None }
+    pub fn get_notes_color(&self) -> Color {
+        if let Ok(color) = Self::get_color(&self.song.notes) { color }
+        else { NOTES_COLOR }
     }
 
-    pub fn get_text_color(&self) -> Option<Color> {
-        if let Ok(color) = Self::get_color(&self.song.text) { Some(color) }
-        else { None }
+    pub fn get_text_color(&self) -> Color {
+        if let Ok(color) = Self::get_color(&self.song.text) { color }
+        else { TEXT_COLOR }
     }
 
     fn get_color(color_str: &str) -> Result<Color> {
