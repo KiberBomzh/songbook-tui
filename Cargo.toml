@@ -7,7 +7,7 @@ license = "GPL-3.0"
 repository = "https://github.com/KiberBomzh/songbook-tui"
 readme = "README.md"
 categories = ["command-line-utilities"]
-keywords = ["song", "chord", "songbook", "guitar", "music", "cli", "tui"]
+keywords = ["song", "chord", "songbook", "tui"]
 
 [lib]
 name = "songbook"
