@@ -4,7 +4,6 @@ pub mod chord;
 
 use serde::{Serialize, Deserialize};
 use crossterm::style::Stylize;
-use anyhow::Result;
 
 use crate::Fingering;
 use crate::{
@@ -65,14 +64,6 @@ pub struct Metadata {
 }
 
 impl Metadata {
-    pub fn from_str(meta: &str) -> Result<Self> {
-        Ok(serde_yaml::from_str(meta)?)
-    }
-
-    pub fn to_string(&self) -> Result<String> {
-        Ok(serde_yaml::to_string(&self)?)
-    }
-
     fn get_for_editing(&self, s: &mut String) {
         s.push_str(METADATA_START);
         s.push('\n');
