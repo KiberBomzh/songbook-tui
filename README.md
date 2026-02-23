@@ -10,7 +10,12 @@ Also there's some notes (and a little bit of other stuff)
 Written in pure Rust.
 
 # Installation
-Download last release [here](https://github.com/KiberBomzh/songbook-tui/releases/latest).
+Download latest release [here](https://github.com/KiberBomzh/songbook-tui/releases/latest).
+
+Or if you have Rust:
+```
+cargo install songbook --features tui
+```
 
 # TUI
 - `F1` - Open help screen
