@@ -212,6 +212,28 @@ pub fn mv(input_path: &Path, output_path: &Path) -> Result<()> {
 }
 
 
+pub fn cp(input_path: &Path, output_path: &Path) -> Result<()> {
+    let path = get_lib_path()?;
+    let i_path = path.join(input_path);
+    if !i_path.exists() {
+        return Err( Error::new(
+            ErrorKind::NotFound,
+            format!("There's no such path: {:#?}", input_path)
+        ).into())
+    }
+
+    let mut o_path = path.join(output_path);
+    if o_path.is_dir() { o_path = o_path.join( i_path.file_name()
+        .expect("Cannot get input_path file name!") ) }
+
+    if i_path != o_path {
+        fs::copy(i_path, o_path)?;
+    }
+
+    Ok(())
+}
+
+
 pub fn ls(added_path: Option<&Path>) -> Result<()> {
     let mut path = get_lib_path()?;
     if let Some(p) = added_path { path = path.join(p) }

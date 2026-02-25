@@ -65,6 +65,7 @@ struct App {
     current_dir: PathBuf,
     last_dirs: Vec<PathBuf>,
     cutted_path: Option<PathBuf>,
+    copied_path: Option<PathBuf>,
 
     current_song: Option<(Song, PathBuf)>,
     song_area_height: Option<usize>,
@@ -102,6 +103,7 @@ impl App {
             current_dir,
             last_dirs: Vec::new(),
             cutted_path: None,
+            copied_path: None,
             current_song: None,
             song_area_height: None,
             song_area_width: None,

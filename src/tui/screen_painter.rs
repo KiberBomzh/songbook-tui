@@ -38,6 +38,7 @@ impl App {
             if path.is_dir() { style = style.fg(directories_color); }
             else if path.is_file() { style = style.fg(songs_color); }
             if let Some(c_path) = &self.cutted_path && c_path == path { style = style.dim(); }
+            if let Some(c_path) = &self.copied_path && c_path == path { style = style.green(); }
             items.push(ListItem::new(name.as_str()).style(style));
         }
 
@@ -175,7 +176,13 @@ impl App {
             Row::new(vec![
                 Line::from("c"),
                 Line::default(),
-                Line::from("Copy dir/song")
+                Line::from("Copy song")
+            ]),
+
+            Row::new(vec![
+                Line::from("x"),
+                Line::default(),
+                Line::from("Cut dir/song")
             ]),
 
             Row::new(vec![

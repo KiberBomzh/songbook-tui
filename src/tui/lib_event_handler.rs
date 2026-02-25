@@ -24,14 +24,28 @@ impl App {
                 }
             },
 
-            KeyCode::Char('c') => if let Some(selected) = self.lib_list_state.selected() {
+            KeyCode::Char('x') => if let Some(selected) = self.lib_list_state.selected() {
                 let (_name, path) = &self.lib_list[selected];
                 self.cutted_path = Some(path.to_path_buf());
+                self.copied_path = None;
             },
-            KeyCode::Char('p') => if let Some(path) = &self.cutted_path {
-                songbook::song_library::mv(path, &self.current_dir)?;
+            KeyCode::Char('c') => if let Some(selected) = self.lib_list_state.selected() {
+                let (_name, path) = &self.lib_list[selected];
+                if path.is_file() {
+                    self.copied_path = Some(path.to_path_buf());
+                    self.cutted_path = None;
+                }
+            },
+            KeyCode::Char('p') => {
+                if let Some(path) = &self.cutted_path {
+                    songbook::song_library::mv(path, &self.current_dir)?;
+                    self.cutted_path = None;
+                }
+                if let Some(path) = &self.copied_path {
+                    songbook::song_library::cp(path, &self.current_dir)?;
+                    self.copied_path = None;
+                }
                 self.update_lib_list()?;
-                self.cutted_path = None;
             },
 
             KeyCode::Char('j') | KeyCode::Down => self.lib_list_state.select_next(),
