@@ -13,6 +13,8 @@ use super::{Focus, DEFAULT_AUTOSCROLL_SPEED, App};
 
 impl App {
     pub fn handle_lib_key_event(&mut self, key_event: KeyEvent) -> Result<()> {
+        use super::ActionWithSelectedPaths::*;
+
         match key_event.code {
             KeyCode::Char('N') |
             KeyCode::Char('R') |
@@ -24,14 +26,29 @@ impl App {
                 }
             },
 
-            KeyCode::Char('x') => if let Some(selected) = self.lib_list_state.selected() {
+            KeyCode::Char(' ') => if let Some(selected) = self.lib_list_state.selected() {
                 let (_name, path) = &self.lib_list[selected];
-                self.cutted_path = Some(path.to_path_buf());
+                self.selected_paths.push(path.clone());
+                self.cutted_path = None;
                 self.copied_path = None;
             },
-            KeyCode::Char('c') => if let Some(selected) = self.lib_list_state.selected() {
-                let (_name, path) = &self.lib_list[selected];
-                if path.is_file() {
+
+            KeyCode::Char('x') => {
+                if !self.selected_paths.is_empty() {
+                    self.action_with_selected_paths =
+                        if self.action_with_selected_paths != Mv { Mv } else { Nothing };
+                } else if let Some(selected) = self.lib_list_state.selected() {
+                    let (_name, path) = &self.lib_list[selected];
+                    self.cutted_path = Some(path.to_path_buf());
+                    self.copied_path = None;
+                }
+            },
+            KeyCode::Char('c') => {
+                if !self.selected_paths.is_empty() {
+                    self.action_with_selected_paths =
+                        if self.action_with_selected_paths != Cp { Cp } else { Nothing };
+                } else if let Some(selected) = self.lib_list_state.selected() {
+                    let (_name, path) = &self.lib_list[selected];
                     self.copied_path = Some(path.to_path_buf());
                     self.cutted_path = None;
                 }
@@ -45,6 +62,20 @@ impl App {
                     songbook::song_library::cp(path, &self.current_dir)?;
                     self.copied_path = None;
                 }
+                if !self.selected_paths.is_empty() {
+                    match self.action_with_selected_paths {
+                        Cp => for p in &self.selected_paths {
+                            songbook::song_library::cp(p, &self.current_dir)?;
+                        },
+                        Mv => for p in &self.selected_paths {
+                            songbook::song_library::mv(p, &self.current_dir)?;
+                        },
+                        Nothing => {}
+                    }
+
+                    self.selected_paths.clear();
+                    self.action_with_selected_paths = Nothing;
+                }
                 self.update_lib_list()?;
             },
 
@@ -56,6 +87,12 @@ impl App {
                     if path.is_dir() {
                         if let Some(c_path) = &self.cutted_path {
                             if path == c_path { return Ok(()) }
+                        }
+                        if let Some(c_path) = &self.copied_path {
+                            if path == c_path { return Ok(()) }
+                        }
+                        if self.selected_paths.iter().any(|p| p == path) {
+                            return Ok(())
                         }
                         self.last_dirs.push(self.current_dir.clone());
                         (self.lib_list, self.current_dir) = get_files_in_dir( Some(&path) )?;

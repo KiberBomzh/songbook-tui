@@ -28,6 +28,7 @@ cargo install songbook --features tui
 - `k`, `Down` - Go down
 - `h`, `Left`, `Backspace` - Go back
 - `l`, `Right`, `Enter` - Open a song/dir
+- `Space` - Multiple select songs/dirs for copying/moving them after
 - `c` - Copy a song
 - `x` - Cut a song/dir
 - `p` - Paste a song/dir

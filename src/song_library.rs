@@ -227,7 +227,28 @@ pub fn cp(input_path: &Path, output_path: &Path) -> Result<()> {
         .expect("Cannot get input_path file name!") ) }
 
     if i_path != o_path {
-        fs::copy(i_path, o_path)?;
+        if i_path.is_dir() {
+            cp_recursive(&i_path, &o_path)?;
+        } else {
+            fs::copy(i_path, o_path)?;
+        }
+    }
+
+    Ok(())
+}
+fn cp_recursive(in_dir: &Path, out_dir: &Path) -> Result<()> {
+    fs::create_dir_all(out_dir)?;
+    for entry in fs::read_dir(in_dir)? {
+        let entry = entry?;
+        let path = entry.path();
+        let out = out_dir.join(
+            if let Some(n) = path.file_name() { n } else { continue }
+        );
+        if path.is_dir() {
+            cp_recursive(&path, &out)?;
+        } else {
+            fs::copy(path, out)?;
+        }
     }
 
     Ok(())

@@ -39,6 +39,13 @@ impl App {
             else if path.is_file() { style = style.fg(songs_color); }
             if let Some(c_path) = &self.cutted_path && c_path == path { style = style.dim(); }
             if let Some(c_path) = &self.copied_path && c_path == path { style = style.green(); }
+            if self.selected_paths.iter().any(|p| p == path) {
+                match self.action_with_selected_paths {
+                    super::ActionWithSelectedPaths::Cp => style = style.green(),
+                    super::ActionWithSelectedPaths::Mv => style = style.dim(),
+                    super::ActionWithSelectedPaths::Nothing => style = style.bold(),
+                }
+            }
             items.push(ListItem::new(name.as_str()).style(style));
         }
 
@@ -176,7 +183,7 @@ impl App {
             Row::new(vec![
                 Line::from("c"),
                 Line::default(),
-                Line::from("Copy song")
+                Line::from("Copy dir/song")
             ]),
 
             Row::new(vec![
@@ -189,6 +196,12 @@ impl App {
                 Line::from("p"),
                 Line::default(),
                 Line::from("Paste dir/song")
+            ]),
+
+            Row::new(vec![
+                Line::from("Space"),
+                Line::default(),
+                Line::from("Multiple select")
             ]),
 
             Row::new(vec![

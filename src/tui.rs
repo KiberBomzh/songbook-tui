@@ -47,6 +47,13 @@ enum Screen {
     Help
 }
 
+#[derive(PartialEq)]
+enum ActionWithSelectedPaths {
+    Cp,
+    Mv,
+    Nothing
+}
+
 struct App {
     exit: bool,
     config: Config,
@@ -66,6 +73,8 @@ struct App {
     last_dirs: Vec<PathBuf>,
     cutted_path: Option<PathBuf>,
     copied_path: Option<PathBuf>,
+    selected_paths: Vec<PathBuf>,
+    action_with_selected_paths: ActionWithSelectedPaths,
 
     current_song: Option<(Song, PathBuf)>,
     song_area_height: Option<usize>,
@@ -104,6 +113,8 @@ impl App {
             last_dirs: Vec::new(),
             cutted_path: None,
             copied_path: None,
+            selected_paths: Vec::new(),
+            action_with_selected_paths: ActionWithSelectedPaths::Nothing,
             current_song: None,
             song_area_height: None,
             song_area_width: None,
