@@ -1,4 +1,5 @@
 pub mod block;
+pub mod tab;
 pub mod row;
 pub mod chord;
 

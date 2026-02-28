@@ -3,6 +3,7 @@ use crossterm::style::Stylize;
 
 use crate::song::row::Row;
 use crate::song::chord::Chord;
+use crate::song::tab::Tablature;
 use crate::{
     BLOCK_START,
     BLOCK_END,
@@ -32,6 +33,7 @@ pub enum Line {
     TextBlock(Row),
     ChordsLine(Vec<Chord>),
     PlainText(String),
+    Tab(Tablature),
     EmptyLine
 }
 
