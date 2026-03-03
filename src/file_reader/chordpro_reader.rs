@@ -167,7 +167,7 @@ fn read_line(text: &str, lines: &mut Vec<Line>, chord_list: &mut Vec<Chord>) {
                 current_chord.clear();
             },
             '[' => is_chord = true,
-            chord_char if is_chord => current_chord.push(c),
+            c if is_chord => current_chord.push(c),
             c => {
                 index += 1;
                 row_text.push(c);
