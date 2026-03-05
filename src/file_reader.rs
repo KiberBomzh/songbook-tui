@@ -39,7 +39,7 @@ impl Song {
         Ok( Self { blocks, chord_list, metadata, notes: None } )
     }
 
-    pub fn from_sbp(file_path: &Path) -> Result<()> {
+    pub fn from_sbp(file_path: &Path) -> Result<Vec<Self>> {
         let file = fs::File::open(file_path)?;
         let mut archive = ZipArchive::new(file)?;
 
@@ -47,7 +47,6 @@ impl Song {
         let mut content = String::new();
         json_file.read_to_string(&mut content)?;
 
-        sbp_reader::read_from_sbp(&content[3..])?;
-        Ok(())
+        sbp_reader::read_from_sbp(&content[3..])
     }
 }

@@ -24,7 +24,7 @@ pub enum ChordPosition {
     UpBeat(Chord)
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Row {
     pub rhythm: Option<Vec<Beat>>,
     pub chords: Option<Vec<ChordPosition>>, // позиция в строке - аккорд
