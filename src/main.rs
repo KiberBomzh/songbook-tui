@@ -127,6 +127,8 @@ enum AddSubcommand {
     },
     
     FromChordpro { path: PathBuf },
+
+    FromSbp { path: PathBuf },
     
     Empty {
         /// Song's artist
@@ -238,6 +240,19 @@ fn main() {
 
                     song_library::add(&song)
                         .expect("Error during adding a song!");
+                },
+                AddSubcommand::FromSbp { path } => {
+                    let songs = Song::from_sbp(&path)
+                        .expect("Error during adding a song!");
+                    for song in &songs {
+                        if let Err(msg) = song_library::add(song) {
+                            println!("Cannot add song: {} - {}! {}",
+                                song.metadata.artist,
+                                song.metadata.title,
+                                msg
+                            );
+                        }
+                    }
                 },
                 AddSubcommand::Empty { title, artist } => {
                     let song = Song::new(&title, &artist);

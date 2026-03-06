@@ -1,10 +1,15 @@
 pub mod txt_reader;
 pub mod chordpro_reader;
+pub mod sbp_reader; // SongbookPro
+
+
 
 use std::path::Path;
+use std::io::Read;
 use std::fs;
-use std::io::Result;
 use crate::{Song, Metadata};
+use anyhow::Result;
+use zip::ZipArchive;
 
 
 impl Song {
@@ -32,5 +37,16 @@ impl Song {
         );
         let metadata = metadata.expect("Cannot read metadata(title or artist)!");
         Ok( Self { blocks, chord_list, metadata, notes: None } )
+    }
+
+    pub fn from_sbp(file_path: &Path) -> Result<Vec<Self>> {
+        let file = fs::File::open(file_path)?;
+        let mut archive = ZipArchive::new(file)?;
+
+        let mut json_file = archive.by_name("dataFile.txt")?;
+        let mut content = String::new();
+        json_file.read_to_string(&mut content)?;
+
+        sbp_reader::read_from_sbp(&content[3..])
     }
 }

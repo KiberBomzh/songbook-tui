@@ -28,7 +28,7 @@ pub struct Block {
     pub notes: Option<String>
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub enum Line {
     TextBlock(Row),
     ChordsLine(Vec<Chord>),
