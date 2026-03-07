@@ -44,6 +44,9 @@ const EMPTY_LINE_SYMBOL: &str = "{empty_line}";
 const PLAIN_TEXT_START: &str = "{plain_text:}";
 const PLAIN_TEXT_END: &str = "{:plain_text}";
 
+const TAB_START_SYMBOL: &str = "{tab:}";
+const TAB_END_SYMBOL: &str = "{:tab}";
+
 const CHORDS_SYMBOL: &str = "{C}|";
 const RHYTHM_SYMBOL: &str = "{R}|";
 const TEXT_SYMBOL: &str = "{T}|";

@@ -90,6 +90,10 @@ fn convert_content(content: &str) -> ( Vec<Block>, Vec<Chord> ) {
 
     let mut title = String::new();
     let mut notes = String::new();
+
+    let mut tab = String::new();
+    let mut in_tab = false;
+
     let mut lines: Vec<Line> = Vec::new();
     for line in content.lines() {
         if line.starts_with("{c:") {
@@ -110,6 +114,7 @@ fn convert_content(content: &str) -> ( Vec<Block>, Vec<Chord> ) {
             } else {
                 lines.push(Line::PlainText(line.trim().to_string()))
             }
+
         } else if line.starts_with("(") && line.ends_with(")") {
             if let Some(end) = line.find(")") {
                 if !notes.is_empty() { notes.push('\n') }
@@ -117,6 +122,17 @@ fn convert_content(content: &str) -> ( Vec<Block>, Vec<Chord> ) {
             } else {
                 lines.push(Line::PlainText(line.trim().to_string()))
             }
+
+        } else if line.starts_with("{sot}") {
+            in_tab = true;
+        } else if line.starts_with("{eot}") {
+            in_tab = false;
+            lines.push( Line::Tab(tab) );
+            tab = String::new();
+        } else if in_tab {
+            tab.push_str(line);
+            tab.push('\n');
+
         } else if line.trim().is_empty() {
             lines.push(Line::EmptyLine)
         } else if line.contains("[") && line.contains("]") {

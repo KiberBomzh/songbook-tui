@@ -3,7 +3,6 @@ use crossterm::style::Stylize;
 
 use crate::song::row::Row;
 use crate::song::chord::Chord;
-use crate::song::tab::Tablature;
 use crate::{
     BLOCK_START,
     BLOCK_END,
@@ -15,6 +14,8 @@ use crate::{
     CHORDS_LINE_SYMBOL,
     PLAIN_TEXT_START,
     PLAIN_TEXT_END,
+    TAB_START_SYMBOL,
+    TAB_END_SYMBOL,
     BLOCK_NOTE_SYMBOL,
     
     CHORDS_COLOR
@@ -33,7 +34,7 @@ pub enum Line {
     TextBlock(Row),
     ChordsLine(Vec<Chord>),
     PlainText(String),
-    Tab(Tablature),
+    Tab(String),
     EmptyLine
 }
 
@@ -56,6 +57,7 @@ impl Line {
                 s.push('\n');
             },
             Line::PlainText(text) => s.push_str(&text),
+            Line::Tab(text) => s.push_str(&text),
             Line::EmptyLine => s.push('\n')
         }
     }
@@ -101,6 +103,16 @@ impl Block {
                     s.push_str(PLAIN_TEXT_END);
                     s.push('\n');
                 },
+                Line::Tab(text) => {
+                    s.push_str(TAB_START_SYMBOL);
+                    s.push('\n');
+                    
+                    s.push_str(text);
+                    s.push('\n');
+                    
+                    s.push_str(TAB_END_SYMBOL);
+                    s.push('\n');
+                },
                 Line::EmptyLine =>  {
                     s.push_str(EMPTY_LINE_SYMBOL);
                     s.push('\n');
@@ -121,6 +133,10 @@ impl Block {
 
         let mut is_plain_text = false;
         let mut plain_text_buf = String::new();
+
+        let mut is_tab = false;
+        let mut tab_buf = String::new();
+
         
         let mut row_buf = String::new();
         for line in text.lines() {
@@ -136,6 +152,18 @@ impl Block {
             } else if line.starts_with(PLAIN_TEXT_START) {
                 is_plain_text = true;
             
+            } else if line.starts_with(TAB_END_SYMBOL) {
+                is_tab = false;
+                lines.push( Line::Tab(tab_buf) );
+                tab_buf = String::new();
+            } else if is_tab {
+                if !tab_buf.is_empty() {
+                    tab_buf.push('\n');
+                }
+                tab_buf.push_str(line);
+            } else if line.starts_with(TAB_START_SYMBOL) {
+                is_tab = true;
+
             } else if line.starts_with(TITLE_SYMBOL) {
                 let t = line[TITLE_SYMBOL.len()..].trim().to_string();
                 if !t.is_empty() { title = Some(t) }

@@ -109,6 +109,15 @@ pub fn get_as_paragraph<'a>(
                         if l.chars().count() > columns { columns = l.chars().count() }
                     }
                 },
+                block::Line::Tab(text) => {
+                    lines.extend(text.lines()
+                        .map(|l| Line::styled(l.to_string(), Style::new().fg(text_color)))
+                        .collect::<Vec<Line>>()
+                    );
+                    for l in text.lines() {
+                        if l.chars().count() > columns { columns = l.chars().count() }
+                    }
+                },
                 block::Line::EmptyLine => lines.push(Line::default())
             }
         }

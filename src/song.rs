@@ -1,5 +1,4 @@
 pub mod block;
-pub mod tab;
 pub mod row;
 pub mod chord;
 
@@ -238,6 +237,7 @@ impl Song {
                         }
                     },
                     Line::PlainText(text) => s.push_str(text),
+                    Line::Tab(text) => s.push_str(text),
                     Line::EmptyLine => {}
                 }
             }
@@ -367,8 +367,7 @@ impl Song {
                     },
                     Line::ChordsLine(chords) =>
                         chords.iter_mut().for_each(|c| *c = c.transpose(steps)),
-                    Line::PlainText(_) => {},
-                    Line::EmptyLine => {}
+                    _ => {}
                 }
             }
         }
@@ -462,8 +461,7 @@ impl Song {
                             list.push(chord.clone());
                         }
                     },
-                    Line::PlainText(_) => {},
-                    Line::EmptyLine => {}
+                    _ => {}
                 }
             }
         }

@@ -209,6 +209,17 @@ impl App {
                             Some(song)
                         } else { None }
                     },
+                    's' => {
+                        if let Some(file) = FileDialog::new() .pick_file() {
+                            let songs = Song::from_sbp(&file)?;
+                            for s in songs {
+                                songbook::song_library::add(&s)?;
+                            }
+                            self.update_lib_list()?;
+
+                            None
+                        } else { None }
+                    },
                     _ => None
                 };
 
