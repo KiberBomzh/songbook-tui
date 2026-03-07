@@ -51,8 +51,10 @@ const CHORDS_SYMBOL: &str = "{C}|";
 const RHYTHM_SYMBOL: &str = "{R}|";
 const TEXT_SYMBOL: &str = "{T}|";
 
-const SONG_NOTE_SYMBOL: &str = "{snote:} ";
-const BLOCK_NOTE_SYMBOL: &str = "{bnote:} ";
+const SONG_NOTE_START_SYMBOL: &str = "{song_note:} ";
+const SONG_NOTE_END_SYMBOL: &str = "{:song_note}";
+
+const BLOCK_NOTE_SYMBOL: &str = "{note:} ";
 
 
 const TITLE_COLOR: Color = Color::DarkGreen;

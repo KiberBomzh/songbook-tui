@@ -76,12 +76,15 @@ pub fn edit(song: &mut Song) -> Result<()> {
         EMPTY_LINE_SYMBOL,
         PLAIN_TEXT_START,
         PLAIN_TEXT_END,
+        TAB_START_SYMBOL,
+        TAB_END_SYMBOL,
 
         CHORDS_SYMBOL,
         RHYTHM_SYMBOL,
         TEXT_SYMBOL,
 
-        SONG_NOTE_SYMBOL,
+        SONG_NOTE_START_SYMBOL,
+        SONG_NOTE_END_SYMBOL,
         BLOCK_NOTE_SYMBOL
     };
     let help_msg = format!(r#"==================Help==================
@@ -98,14 +101,18 @@ pub fn edit(song: &mut Song) -> Result<()> {
  {TITLE_SYMBOL} - Block's title
  {CHORDS_LINE_SYMBOL} - For lines only with chords
  {EMPTY_LINE_SYMBOL} - For empty lines
- {PLAIN_TEXT_START} - Start of text block (useful if you have some cites in song or something like this)
- {PLAIN_TEXT_END} - End of text block
+ {PLAIN_TEXT_START} - Start of a text block (useful if you have some cites in song or something like this)
+ {PLAIN_TEXT_END} - End of text a block
+ {TAB_START_SYMBOL} - Start of a tab
+ {TAB_END_SYMBOL} - End of a tab
 
  {CHORDS_SYMBOL} - Line with chords for text
  {RHYTHM_SYMBOL} - Line with rhythm highlighting
  {TEXT_SYMBOL} - Text line
 
- {SONG_NOTE_SYMBOL} - Notes for the song
+ {SONG_NOTE_START_SYMBOL} - Start of song's note
+ {SONG_NOTE_END_SYMBOL} - End of song's note
+
  {BLOCK_NOTE_SYMBOL} - Notes for some block in song (for example you need to play chorus twice)
 ========================================"#);
 

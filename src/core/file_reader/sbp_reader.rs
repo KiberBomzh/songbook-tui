@@ -130,8 +130,10 @@ fn convert_content(content: &str) -> ( Vec<Block>, Vec<Chord> ) {
             lines.push( Line::Tab(tab) );
             tab = String::new();
         } else if in_tab {
+            if !tab.is_empty() {
+                tab.push('\n');
+            }
             tab.push_str(line);
-            tab.push('\n');
 
         } else if line.trim().is_empty() {
             lines.push(Line::EmptyLine)

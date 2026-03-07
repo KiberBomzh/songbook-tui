@@ -22,7 +22,8 @@ use crate::{
     TITLE_COLOR,
     NOTES_COLOR,
 
-    SONG_NOTE_SYMBOL,
+    SONG_NOTE_START_SYMBOL,
+    SONG_NOTE_END_SYMBOL,
 
     KEYS
 };
@@ -389,8 +390,15 @@ impl Song {
 
 
         if let Some(n) = &self.notes {
-            s.push_str(SONG_NOTE_SYMBOL);
+            s.push_str(SONG_NOTE_START_SYMBOL);
+            s.push('\n');
+
             s.push_str(n);
+            s.push('\n');
+
+            s.push_str(SONG_NOTE_END_SYMBOL);
+            s.push('\n');
+
             s.push('\n');
         }
 
@@ -410,11 +418,24 @@ impl Song {
 
         let mut block_buf = String::new();
         let mut is_in_block = false;
+
+        let mut note_buf = String::new();
+        let mut is_in_note = false;
+
         let mut is_in_metadata = false;
         for line in text.lines() {
-            if line.starts_with(SONG_NOTE_SYMBOL) {
-                let note = line[SONG_NOTE_SYMBOL.len()..].trim().to_string();
-                self.notes = if note.is_empty() { None } else { Some(note) };
+            if line.starts_with(SONG_NOTE_START_SYMBOL) {
+                is_in_note = true;
+            } else if line.starts_with(SONG_NOTE_END_SYMBOL) {
+                is_in_note = false;
+                self.notes = if note_buf.is_empty() { None } else { Some(note_buf) };
+                note_buf = String::new();
+            } else if is_in_note {
+                if !note_buf.is_empty() {
+                    note_buf.push('\n')
+                }
+                note_buf.push_str(line);
+
             } else if line.starts_with(BLOCK_START) { is_in_block = true }
             else if line.starts_with(BLOCK_END) {
                 is_in_block = false;

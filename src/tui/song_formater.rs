@@ -20,10 +20,14 @@ pub fn get_as_paragraph<'a>(
     let mut columns = 0;
     let [title_color, chords_color, rhythm_color, notes_color, text_color] = colors;
 
-    if let Some(n) = &song.notes && !n.is_empty() && needs_notes {
-        if n.chars().count() > columns { columns = n.chars().count() }
-        lines.push( Line::styled(n, Style::new().fg(notes_color)) );
-        lines.push(Line::default());
+    if let Some(text) = &song.notes && !text.is_empty() && needs_notes {
+        lines.extend(text.lines()
+            .map(|l| Line::styled(l, Style::new().fg(notes_color)))
+            .collect::<Vec<Line>>()
+        );
+        for l in text.lines() {
+            if l.chars().count() > columns { columns = l.chars().count() }
+        }
     }
 
     if needs_chords && needs_fingerings {
