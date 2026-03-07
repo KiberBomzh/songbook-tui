@@ -412,6 +412,16 @@ impl Song {
         return s
     }
 
+    pub fn generate_rhythm_from_chords(&mut self) {
+        for block in &mut self.blocks {
+            for line in &mut block.lines {
+                if let Line::TextBlock(row) = line {
+                    row.generate_rhythm_from_chords();
+                }
+            }
+        }
+    }
+
     pub fn change_from_edited_str(&mut self, text: &str) {
         let mut blocks: Vec<Block> = Vec::new();
         let mut metadata_text = String::new();

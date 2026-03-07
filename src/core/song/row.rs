@@ -20,7 +20,7 @@ pub enum Beat {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum ChordPosition {
-    OnIndex { index: usize, chord: Chord },
+    OnIndex{ index: usize, chord: Chord },
     UpBeat(Chord)
 }
 
@@ -122,6 +122,24 @@ impl Row {
             chords: chords_from_edited(&chord_line, whitespaces),
             rhythm: rhythm_from_edited(&rhythm_line, whitespaces),
             text: if text_line.is_empty() { None } else { Some(text_line.trim().to_string()) },
+        }
+    }
+
+    pub fn generate_rhythm_from_chords(&mut self) {
+        if let Some(chords) = &self.chords {
+            if let Some(_) = self.rhythm { return }
+
+            let mut rhythm = Vec::new();
+            for chord in chords {
+                match chord {
+                    ChordPosition::UpBeat(_) =>
+                        rhythm.push( Beat::UpBeat('↓') ),
+                    ChordPosition::OnIndex{ index, .. } =>
+                        rhythm.push( Beat::OnIndex{ index: *index, symbol: '↓' } )
+                }
+            }
+
+            if !rhythm.is_empty() { self.rhythm = Some(rhythm) }
         }
     }
     

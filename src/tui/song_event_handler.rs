@@ -122,6 +122,12 @@ impl App {
                     self.scroll_x = 0;
                 }
             },
+            KeyCode::Char('R') => {
+                if let Some( (song, _path) ) = &mut self.current_song {
+                    song.generate_rhythm_from_chords();
+                    *is_song_changed = true;
+                }
+            }
             _ => {}
         }
 

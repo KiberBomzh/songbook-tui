@@ -235,7 +235,7 @@ impl App {
             ]),
 
             Row::new(vec![
-                Line::from("A(e/t/c)"),
+                Line::from("A(e/t/c/s)"),
                 Line::default(),
                 Line::from("Add song")
             ]),
@@ -335,6 +335,12 @@ impl App {
                 Line::from("e"),
                 Line::default(),
                 Line::from("Edit song")
+            ]),
+
+            Row::new(vec![
+                Line::from("R"),
+                Line::default(),
+                Line::from("Generate rhythm")
             ]),
 
             Row::new(vec![

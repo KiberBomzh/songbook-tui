@@ -43,6 +43,7 @@ cargo install songbook --features tui
     - `e` - the same as a command `add empty`, needs Artist - Title
     - `t` - the same as a command `add from-text`, needs Artist - Title
     - `c` - the same as a command `add from-chordpro`
+    - `s` - the same as a command `add from-sbp`
 
 
 ## Song
@@ -96,6 +97,8 @@ cargo install songbook --features tui
     - `empty` `-a` Artist `-t` Title
     - `from-txt` `-a` Artist `-t` Title `path/to/file.txt`
     - `from-chordpro` `path/to/chordpro/song`
+    - `from-sbp` `path/to/song.sbp` - add song(s) from SongbookPro format
+    >*Also works with SongbookPro backups(you can add all your libary just with one command*
 
 - `sort` - sort songs in the library, will songs in next struct lib/Artist/Title
 - `rm` - remove a file or a directory
