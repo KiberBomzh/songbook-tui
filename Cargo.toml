@@ -11,7 +11,7 @@ keywords = ["song", "chord", "songbook", "tui"]
 
 [lib]
 name = "songbook"
-path = "src/lib.rs"
+path = "src/core/lib.rs"
 
 [[bin]]
 name = "songbook"
