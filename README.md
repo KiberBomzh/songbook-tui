@@ -62,6 +62,7 @@ cargo install songbook --features tui
 - `n` - Toggle notes
 - `;` - Toggle library
 - `e` - Edit song in your text editor
+- `R` - Generate rhythm from chords
 - `a` - Toggle autoscroll
     - `h`, `Left` - Decrease autoscroll speed
     - `l`, `Right` - Increase autoscroll speed
