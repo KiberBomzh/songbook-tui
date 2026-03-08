@@ -42,6 +42,10 @@ pub fn read_from_chordpro(text: &str) -> (Option<Metadata>, Vec<Block>, Vec<Chor
     let mut is_in_block = false;
     let mut block_lines: Vec<Line> = Vec::new();
     let mut block_title = String::new();
+
+    let mut tab_buf = String::new();
+    let mut is_in_tab = false;
+
     for line in text.lines() {
         if block_ends.iter().any(|end| line.starts_with(end)) {
             is_in_block = false;
@@ -65,6 +69,19 @@ pub fn read_from_chordpro(text: &str) -> (Option<Metadata>, Vec<Block>, Vec<Chor
             }
         
         
+        } else if line.starts_with("{sot}") || line.starts_with("{start_of_tab}") {
+            is_in_tab = true;
+        } else if line.starts_with("{eot}") || line.starts_with("{end_of_tab}") {
+            is_in_tab = false;
+            block_lines.push( Line::Tab(tab_buf) );
+            tab_buf = String::new();
+        } else if is_in_tab {
+            if !tab_buf.is_empty() {
+                tab_buf.push('\n');
+            }
+            tab_buf.push_str(line);
+
+
         } else if line.starts_with("{title:") || line.starts_with("{t:") {
             if let Some(end_index) = line.find("}") {
                 title = if line.starts_with("{t:") {
