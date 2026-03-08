@@ -261,8 +261,9 @@ impl Song {
         }
 
         if let Some(n) = &self.notes && notes {
-            s.push_str(&format!("{}", n.clone().with(NOTES_COLOR)));
-            s.push('\n');
+            for line in n.lines() {
+                s.push_str( &format!("{}\n", line.with(NOTES_COLOR)) );
+            }
         }
 
         if chords && fingerings {
