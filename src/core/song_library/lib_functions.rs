@@ -31,6 +31,8 @@ pub fn get_files_in_dir(added_path: Option<&Path>) -> Result<(Vec<(String, PathB
             };
         }
     }
+    files.sort();
+    buf_for_sorting.sort();
 
     files.extend(buf_for_sorting);
     Ok( (files, path) )
