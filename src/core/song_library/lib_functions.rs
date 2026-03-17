@@ -11,6 +11,8 @@ use crate::song_library::get_lib_path;
 // returns files in directory(file_name, file_path) and directory
 pub fn get_files_in_dir(added_path: Option<&Path>) -> Result<(Vec<(String, PathBuf)>, PathBuf)> {
     let mut path = get_lib_path()?;
+    if !path.exists() { super::init()? }
+
     if let Some(p) = added_path { path = path.join(p) }
     if !path.exists() {
         return Err( Error::new(ErrorKind::NotFound, "There's no such dir!").into() )

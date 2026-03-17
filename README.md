@@ -77,7 +77,7 @@ cargo install songbook --features tui
 
 # CLI
 ## Commands
-- `init` - create a directory for storing songs, **mandatory!** Paths for all platforms you can find [here](https://docs.rs/dirs/latest/dirs/fn.data_dir.html)
+- `init` - create a directory for storing songs. Paths for all platforms you can find [here](https://docs.rs/dirs/latest/dirs/fn.data_dir.html)
 - `fret -t TUNING` - print guitar fretboard for a given tuning
 - `circle-of-fifth`, `cof` - print circle of fifth (not a circle)
 - `chord CHORD` - print fingering for a given chord

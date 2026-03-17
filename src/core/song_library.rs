@@ -5,7 +5,6 @@ use std::fs::{self, File};
 use std::io::{BufWriter, BufReader, Write, Error, ErrorKind, stdout};
 use std::process::{Command, Stdio};
 
-use dirs;
 use include_dir::{include_dir, Dir};
 use anyhow::Result;
 use crossterm::{
@@ -20,15 +19,16 @@ const FORBIDDEN_CHARS: [char; 9] = ['<', '>', ':', '/', '\\', '|', '?', '*', '`'
 
 
 
-pub fn init() -> Result<(), Box<dyn std::error::Error>> {
+pub fn init() -> Result<()> {
     let assets: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/assets");
-    let mut path: PathBuf = dirs::data_dir()
-        .ok_or("Cannot get path for data!")?;
-    path.push("songbook");
-    if !path.exists() { fs::create_dir_all(&path)? }
-    assets.extract(&path)?;
-
-    Ok(())
+    if let Some(mut path) = get_base_path() {
+        path.push("songbook");
+        if !path.exists() { fs::create_dir_all(&path)? }
+        assets.extract(&path)?;
+        Ok(())
+    } else {
+        Err(anyhow::anyhow!("Cannot init first launch"))
+    }
 }
 
 pub fn show(
@@ -351,7 +351,7 @@ pub fn mkdir(added_path: &Path) -> Result<()> {
 }
 
 pub fn add_fingering(fing: &Fingering) -> Result<(), Box<dyn std::error::Error>> {
-    let mut path: PathBuf = dirs::data_dir()
+    let mut path: PathBuf = get_base_path()
         .ok_or("Cannot get path for data!")?;
     path.push("songbook");
     path.push("fingerings");
@@ -373,7 +373,7 @@ pub fn add_fingering(fing: &Fingering) -> Result<(), Box<dyn std::error::Error>>
 }
 
 pub fn get_fingering(chord_name: &str) -> Result<Option<Fingering>, Box<dyn std::error::Error>> {
-    let mut path: PathBuf = dirs::data_dir()
+    let mut path: PathBuf = get_base_path()
         .ok_or("Cannot get path for data!")?;
     path.push("songbook");
     path.push("fingerings");
@@ -421,11 +421,42 @@ fn get_free_path(mut path: PathBuf, name: &str) -> PathBuf {
 }
 
 pub fn get_lib_path() -> Result<PathBuf> {
-    if let Some(mut path) = dirs::data_dir() {
+    if let Some(mut path) = get_base_path() {
         path.push("songbook");
         path.push("library");
 
         Ok(path)
     }
     else { Err( Error::new(ErrorKind::NotFound, "Cannot get data directory!").into() ) }
+}
+
+
+fn get_base_path() -> Option<PathBuf> {
+    #[cfg(not(target_os = "android"))]
+    return dirs::data_dir();
+
+    #[cfg(target_os = "android")]
+    if let Ok(p) = get_local_data_dir() { Some(p) }
+    else { None }
+}
+
+
+#[cfg(target_os = "android")]
+fn get_local_data_dir() -> Result<PathBuf> {
+    use jni::objects::JString;
+
+    let ctx = ndk_context::android_context();
+    let vm = unsafe { jni::JavaVM::from_raw(ctx.vm().cast()) }?;
+    let mut env = vm.attach_current_thread()?;
+    let context = unsafe { jni::objects::JObject::from_raw(ctx.context().cast()) };
+    let files_dir = env
+        .call_method(context, "getFilesDir", "()Ljava/io/File;", &[])?
+        .l()?;
+    let files_dir_path: JString = env
+        .call_method(files_dir, "getAbsolutePath", "()Ljava/lang/String;", &[])?
+        .l()?
+        .into();
+    
+    let path_str: String = env.get_string(&files_dir_path)?.into();
+    Ok(PathBuf::from(path_str))
 }
