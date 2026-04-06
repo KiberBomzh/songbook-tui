@@ -443,20 +443,6 @@ fn get_base_path() -> Option<PathBuf> {
 
 #[cfg(target_os = "android")]
 fn get_local_data_dir() -> Result<PathBuf> {
-    use jni::objects::JString;
-
-    let ctx = ndk_context::android_context();
-    let vm = unsafe { jni::JavaVM::from_raw(ctx.vm().cast()) }?;
-    let mut env = vm.attach_current_thread()?;
-    let context = unsafe { jni::objects::JObject::from_raw(ctx.context().cast()) };
-    let files_dir = env
-        .call_method(context, "getFilesDir", "()Ljava/io/File;", &[])?
-        .l()?;
-    let files_dir_path: JString = env
-        .call_method(files_dir, "getAbsolutePath", "()Ljava/lang/String;", &[])?
-        .l()?
-        .into();
-    
-    let path_str: String = env.get_string(&files_dir_path)?.into();
-    Ok(PathBuf::from(path_str))
+    let path_str = std::env::var("APP_DATA_DIR")?;
+    return Ok(PathBuf::from(path_str))
 }
