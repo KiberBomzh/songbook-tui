@@ -15,7 +15,7 @@ use crossterm::{
 use crate::{Song, Fingering};
 
 
-const FORBIDDEN_CHARS: [char; 9] = ['<', '>', ':', '/', '\\', '|', '?', '*', '`'];
+pub const FORBIDDEN_CHARS: [char; 9] = ['<', '>', ':', '/', '\\', '|', '?', '*', '`'];
 
 
 
