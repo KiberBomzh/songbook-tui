@@ -96,7 +96,7 @@ fn recursive_find(dir: &Path, files: &mut Vec<(String, PathBuf)>, query: &str) -
     Ok(())
 }
 
-fn get_help_msg() -> String {
+pub fn get_help_msg() -> String {
     use crate::{
         METADATA_START,
         METADATA_END,

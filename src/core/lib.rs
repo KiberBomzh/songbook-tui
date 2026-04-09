@@ -1,4 +1,4 @@
-mod file_reader;
+pub mod file_reader;
 pub mod chord_generator;
 pub mod song;
 
