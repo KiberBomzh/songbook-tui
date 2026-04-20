@@ -272,8 +272,9 @@ impl Row {
             for (index, (index_before, chord, slice)) in pairs.iter().enumerate() {
                 chord_string.push_str(&chord.text);
                 if slice.chars().count() <= chord.text.chars().count() {
-                    if let Some((_, _, next_slice)) = pairs.iter().nth(index + 1) {
+                    if let Some((next_index_before, _, next_slice)) = pairs.iter().nth(index + 1) {
                         chord_string.push(' ');
+                        let i = index_before + whitespaces_for_chords + added_indent_in_rhythm;
                         text_string.push_str(&slice);
                         
                         if !slice.ends_with(" ") && !next_slice.starts_with(" ") && !next_slice.is_empty() {
@@ -281,9 +282,16 @@ impl Row {
                         } else {
                             text_string.push_str( &" ".repeat(chord.text.chars().count() - slice.chars().count() + 1) );
                         }
-                        if !rhythm_string.is_empty() {
-                            rhythm_string.insert(index_before + whitespaces_for_chords + added_indent_in_rhythm, ' ');
-                            added_indent_in_rhythm += 1;
+
+                        if !rhythm_string.is_empty() && next_index_before - index_before <= chord.text.chars().count() {
+                            if let Some(i) = rhythm_string
+                                .char_indices()
+                                .nth(i + 1)
+                                .map(|(i, _)| i) 
+                            {
+                                rhythm_string.insert(i, ' ');
+                                added_indent_in_rhythm += 1;
+                            }
                         }
                     } else {
                         text_string.push_str(&slice);
