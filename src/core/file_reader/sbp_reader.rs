@@ -97,17 +97,19 @@ fn convert_content(content: &str) -> ( Vec<Block>, Vec<Chord> ) {
     let mut lines: Vec<Line> = Vec::new();
     for line in content.lines() {
         if line.starts_with("{c:") {
-            if lines.last() == Some(&Line::EmptyLine) {
+            while lines.last() == Some(&Line::EmptyLine) {
                 lines.pop();
             }
-            blocks.push( Block {
-                title: if title.is_empty() { None } else { Some(title) },
-                lines,
-                notes: if notes.is_empty() { None } else { Some(notes) }
-            });
-            title = String::new();
-            notes = String::new();
-            lines = Vec::new();
+            if !title.is_empty() || !notes.is_empty() || !lines.is_empty() {
+                blocks.push( Block {
+                    title: if title.is_empty() { None } else { Some(title) },
+                    lines,
+                    notes: if notes.is_empty() { None } else { Some(notes) }
+                });
+                title = String::new();
+                notes = String::new();
+                lines = Vec::new();
+            }
 
             if let Some(end) = line.find("}") {
                 title = line[3..end].trim().to_string()
