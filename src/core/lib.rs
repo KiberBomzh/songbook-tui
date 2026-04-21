@@ -26,19 +26,19 @@ pub const STANDART_TUNING: [Note; STRINGS] = [E, B, G, D, A, E];
 const METADATA_START: &str = "{metadata:}";
 const METADATA_END: &str = "{:metadata}";
 
-const SONG_TITLE_SYMBOL: &str = "{song_title:} ";
-const SONG_ARTIST_SYMBOL: &str = "{song_artist:} ";
-const SONG_KEY_SYMBOL: &str = "{song_key:} ";
-const SONG_CAPO_SYMBOL: &str = "{song_capo:} ";
-const SONG_AUTOSCROLL_SPEED_SYMBOL: &str = "{song_autoscroll_speed:} ";
+const SONG_TITLE_SYMBOL: &str = "{song_title}: ";
+const SONG_ARTIST_SYMBOL: &str = "{song_artist}: ";
+const SONG_KEY_SYMBOL: &str = "{song_key}: ";
+const SONG_CAPO_SYMBOL: &str = "{song_capo}: ";
+const SONG_AUTOSCROLL_SPEED_SYMBOL: &str = "{song_autoscroll_speed}: ";
 
 
 const BLOCK_START: &str = "{block:}";
 const BLOCK_END: &str = "{:block}";
 
-const TITLE_SYMBOL: &str = "{title:} ";
+const TITLE_SYMBOL: &str = "{title}: ";
 
-const CHORDS_LINE_SYMBOL: &str = "{chords_line:} ";
+const CHORDS_LINE_SYMBOL: &str = "{chords_line}: ";
 const EMPTY_LINE_SYMBOL: &str = "{empty_line}";
 
 const PLAIN_TEXT_START: &str = "{plain_text:}";
@@ -51,10 +51,10 @@ const CHORDS_SYMBOL: &str = "{C}|";
 const RHYTHM_SYMBOL: &str = "{R}|";
 const TEXT_SYMBOL: &str = "{T}|";
 
-const SONG_NOTE_START_SYMBOL: &str = "{song_note:} ";
+const SONG_NOTE_START_SYMBOL: &str = "{song_note:}";
 const SONG_NOTE_END_SYMBOL: &str = "{:song_note}";
 
-const BLOCK_NOTE_SYMBOL: &str = "{note:} ";
+const BLOCK_NOTE_SYMBOL: &str = "{note}: ";
 
 
 const TITLE_COLOR: Color = Color::DarkGreen;
