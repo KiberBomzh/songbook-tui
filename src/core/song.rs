@@ -439,8 +439,6 @@ impl Song {
                 is_in_note = true;
             } else if line.starts_with(SONG_NOTE_END_SYMBOL) {
                 is_in_note = false;
-                self.notes = if note_buf.is_empty() { None } else { Some(note_buf) };
-                note_buf = String::new();
             } else if is_in_note {
                 if !note_buf.is_empty() {
                     note_buf.push('\n')
@@ -465,6 +463,7 @@ impl Song {
         }
 
 
+        self.notes = if note_buf.is_empty() { None } else { Some(note_buf) };
         self.blocks = blocks;
         self.chord_list = self.get_chord_list();
     }
