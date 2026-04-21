@@ -320,7 +320,7 @@ impl Row {
                         rhythm_string.push(' ');
                     },
                     Beat::OnIndex { index, symbol } => {
-                        let dif = index - added_indent;
+                        let dif = index.saturating_sub(added_indent);
                         rhythm_string.push_str(&" ".repeat(dif));
                         rhythm_string.push(*symbol);
                         rhythm_string.push(' ');
