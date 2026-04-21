@@ -146,14 +146,16 @@ fn convert_content(content: &str) -> ( Vec<Block>, Vec<Chord> ) {
         }
     }
     // Последний блок
-    if lines.last() == Some(&Line::EmptyLine) {
+    while lines.last() == Some(&Line::EmptyLine) {
         lines.pop();
     }
-    blocks.push( Block {
-        title: if title.is_empty() { None } else { Some(title) },
-        lines,
-        notes: if notes.is_empty() { None } else { Some(notes) }
-    });
+    if !title.is_empty() || !notes.is_empty() || !lines.is_empty() {
+        blocks.push( Block {
+            title: if title.is_empty() { None } else { Some(title) },
+            lines,
+            notes: if notes.is_empty() { None } else { Some(notes) }
+        });
+    }
 
     return ( blocks, chord_list )
 }
