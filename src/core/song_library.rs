@@ -403,7 +403,7 @@ fn print(text: &str) -> Result<()> {
     Ok(())
 }
 
-fn get_without_forbidden_chars(text: String) -> String {
+pub fn get_without_forbidden_chars(text: String) -> String {
     text.chars().map(|c|
         if FORBIDDEN_CHARS.iter().any(|f| *f == c) { '_' }
         else { c }
