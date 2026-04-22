@@ -299,10 +299,11 @@ impl Row {
 
 
                         let i = chord_string.len() - chord.text.len() - 1;
-                        chord_string.insert_str(i, &" ".repeat(index_before - i));
+                        chord_string.insert_str(i, &" ".repeat(index_before + whitespaces_for_chords - i));
                     } else { // last pair
                         let i = chord_string.len() - chord.text.len();
-                        chord_string.insert_str(i, &" ".repeat(index_before.saturating_sub(i)));
+                        chord_string.insert_str(i, &" ".repeat((index_before + whitespaces_for_chords).saturating_sub(i)));
+                        // saturating_sub здесь не просто так
 
                         text_string.push_str(&slice);
                     }
