@@ -14,6 +14,7 @@ use crate::{
     SONG_KEY_SYMBOL,
     SONG_CAPO_SYMBOL,
     SONG_AUTOSCROLL_SPEED_SYMBOL,
+    SONG_SHOW_OPTIONS_SYMBOL,
 
     BLOCK_START,
     BLOCK_END,
@@ -62,7 +63,17 @@ pub struct Metadata {
     pub key: Option<Key>,
     pub capo: Option<u8>,
     pub autoscroll_speed: Option<u64>, // in milliseconds
+    pub show_options: Option<ShowOptions>,
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+pub struct ShowOptions {
+    pub chords: bool,
+    pub rhythm: bool,
+    pub notes: bool,
+    pub fingerings: bool,
+}
+
 
 impl Metadata {
     fn get_for_editing(&self, s: &mut String) {
@@ -96,6 +107,15 @@ impl Metadata {
         }
         s.push('\n');
 
+        if let Some(opt) = self.show_options {
+            s.push_str(SONG_SHOW_OPTIONS_SYMBOL);
+            if opt.chords { s.push_str("c ") }
+            if opt.rhythm { s.push_str("r ") }
+            if opt.notes { s.push_str("n ") }
+            if opt.fingerings { s.push_str("f ") }
+            s.push('\n');
+        }
+
 
         s.push_str(METADATA_END);
         s.push('\n');
@@ -110,6 +130,7 @@ impl Metadata {
         let mut key: Option<Key> = None;
         let mut capo: Option<u8> = None;
         let mut autoscroll_speed: Option<u64> = None;
+        let mut opts: Option<ShowOptions> = None;
         for line in text.lines() {
             if line.starts_with(SONG_TITLE_SYMBOL) {
                 title = line[SONG_TITLE_SYMBOL.len()..].trim().to_string();
@@ -126,6 +147,14 @@ impl Metadata {
                 if let Ok(s) = line[SONG_AUTOSCROLL_SPEED_SYMBOL.len()..].trim().parse::<u64>() {
                     autoscroll_speed = Some(s)
                 }
+            } else if line.starts_with(SONG_SHOW_OPTIONS_SYMBOL) {
+                let opts_str = line[SONG_SHOW_OPTIONS_SYMBOL.len()..].trim();
+                opts = Some( ShowOptions {
+                    chords: opts_str.contains('c'),
+                    rhythm: opts_str.contains('r'),
+                    notes: opts_str.contains('n'),
+                    fingerings: opts_str.contains('f'),
+                });
             }
         }
 
@@ -134,6 +163,15 @@ impl Metadata {
         self.key = key;
         self.capo = capo;
         self.autoscroll_speed = autoscroll_speed;
+        self.show_options = opts;
+    }
+
+    pub fn get_show_options(&self) -> (bool, bool, bool, bool) {
+        if let Some(opt) = self.show_options {
+            (opt.chords, opt.rhythm, opt.notes, opt.fingerings)
+        } else {
+            (true, true, true, false)
+        }
     }
 }
 
@@ -146,7 +184,8 @@ impl Song {
                 artist: artist.to_string(),
                 key: None,
                 capo: None,
-                autoscroll_speed: None
+                autoscroll_speed: None,
+                show_options: None,
             },
             chord_list: Vec::new(),
             blocks: Vec::new(),
@@ -154,13 +193,8 @@ impl Song {
         }
     }
 
-    pub fn get_song_as_text(
-        &self,
-        chords: bool,
-        rhythm: bool,
-        fingerings: bool,
-        notes: bool
-    ) -> String {
+    pub fn get_song_as_text(&self) -> String {
+        let (chords, _rhythm, fingerings, notes) = self.metadata.get_show_options();
         let mut s = String::new();
 
 
@@ -197,17 +231,19 @@ impl Song {
             }
         }
 
-        s.push_str(&self.to_string(chords, rhythm, notes));
+        s.push_str(&self.to_string());
 
 
         return s
     }
 
-    pub fn print(&self, chords: bool, rhythm: bool, fingerings: bool, notes: bool) {
-        println!("{}", self.get_song_as_text(chords, rhythm, fingerings, notes));
+    pub fn print(&self) {
+        println!("{}", self.get_song_as_text());
     }
 
-    pub fn to_string(&self, chords: bool, rhythm: bool, notes: bool) -> String {
+    pub fn to_string(&self) -> String {
+        let (chords, rhythm, _fingerings, notes) = self.metadata.get_show_options();
+
         let mut s = String::new();
         let mut is_first = true;
         for block in &self.blocks {
@@ -231,8 +267,8 @@ impl Song {
                 else { s.push('\n') }
                 match line {
                     Line::TextBlock(row) => s.push_str(&row.to_string(chords, rhythm)),
-                    Line::ChordsLine(chords) => {
-                        for chord in chords {
+                    Line::ChordsLine(cs) => if chords {
+                        for chord in cs {
                             s.push_str(&chord.text);
                             s.push(' ');
                         }
@@ -247,13 +283,8 @@ impl Song {
         return s
     }
 
-    pub fn get_colored(
-        &self,
-        chords: bool,
-        rhythm: bool,
-        fingerings: bool,
-        notes: bool
-    ) -> String {
+    pub fn get_colored(&self) -> String {
+        let (chords, rhythm, fingerings, notes) = self.metadata.get_show_options();
 
         let mut s = String::new();
         if !self.metadata.artist.is_empty() && !self.metadata.title.is_empty() {

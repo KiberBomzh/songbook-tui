@@ -55,11 +55,14 @@ pub fn show(
         } else { println!("Add a key before transposing, try 'songbook edit <song_name>'") }
     }
 
+    song.metadata.show_options = 
+        Some( crate::song::ShowOptions { chords, rhythm, notes, fingerings } );
+
     let text =
         if is_colored {
-            song.get_colored(chords, rhythm, fingerings, notes)
+            song.get_colored()
         } else {
-            song.get_song_as_text(chords, rhythm, fingerings, notes)
+            song.get_song_as_text()
         };
     print(&text)?;
 

@@ -78,7 +78,8 @@ fn convert_metadata(song: &SbpSong) -> ( Metadata, Option<String> ) {
         artist: song.author.clone(),
         key,
         capo: if song.Capo > 0 { Some( song.Capo ) } else { None },
-        autoscroll_speed: None
+        autoscroll_speed: None,
+        show_options: None,
     },
     if song.NotesText.is_empty() { None }
     else { Some( song.NotesText.clone() ) } )

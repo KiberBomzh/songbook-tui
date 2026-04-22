@@ -151,7 +151,8 @@ pub fn read_from_chordpro(text: &str) -> (Option<Metadata>, Vec<Block>, Vec<Chor
             artist,
             key: crate::Key::new(&key_text),
             capo: None,
-            autoscroll_speed: None
+            autoscroll_speed: None,
+            show_options: None,
         } ) } else { None },
         blocks,
         chord_list
