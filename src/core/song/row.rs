@@ -248,7 +248,10 @@ impl Row {
                 }
                 
                 if whitespaces_for_beats > whitespaces_for_chords {
-                    whitespaces_for_chords = whitespaces_for_beats
+                    let dif = whitespaces_for_beats - whitespaces_for_chords;
+                    chord_string.push_str( &" ".repeat(dif) );
+
+                    whitespaces_for_chords = whitespaces_for_beats;
                 } else {
                     if let Some(index) = start_for_indexed_beats {
                         rhythm_string.insert_str(*index, &" ".repeat(whitespaces_for_chords - whitespaces_for_beats) );
