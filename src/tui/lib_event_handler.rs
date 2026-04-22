@@ -108,6 +108,8 @@ impl App {
                             } else {
                                 DEFAULT_AUTOSCROLL_SPEED
                             };
+                            (self.show_chords, self.show_rhythm, self.show_notes, self.show_fingerings)
+                                = song.metadata.get_show_options();
 
                             self.current_song = Some( (song, path.to_path_buf()) );
                         }

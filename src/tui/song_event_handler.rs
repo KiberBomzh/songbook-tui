@@ -116,6 +116,15 @@ impl App {
                 if let Some( (song, _path) ) = &mut self.current_song {
                     ratatui::restore();
                     edit(song)?;
+                    self.autoscroll_speed = if let Some(speed) = song.metadata.autoscroll_speed {
+                        Duration::from_millis(speed)
+                    } else {
+                        super::DEFAULT_AUTOSCROLL_SPEED
+                    };
+
+                    (self.show_chords, self.show_rhythm, self.show_notes, self.show_fingerings) =
+                        song.metadata.get_show_options();
+
                     *is_song_changed = true;
                     *terminal = ratatui::init();
                     self.scroll_y = 0;

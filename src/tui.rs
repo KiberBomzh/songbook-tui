@@ -207,6 +207,25 @@ impl App {
                     song.metadata.autoscroll_speed = Some(new_speed);
                 }
             }
+
+
+            let (c, r, n, f) = song.metadata.get_show_options();
+            if 
+                self.show_chords != c ||
+                self.show_rhythm != r ||
+                self.show_notes != n ||
+                self.show_fingerings != f
+            {
+                is_song_changed = true;
+                song.metadata.show_options = Some(
+                    songbook::song::ShowOptions {
+                        chords: self.show_chords,
+                        rhythm: self.show_rhythm,
+                        notes: self.show_notes,
+                        fingerings: self.show_fingerings,
+                    }
+                );
+            }
         }
 
 
