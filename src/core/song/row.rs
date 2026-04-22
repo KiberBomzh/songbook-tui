@@ -274,7 +274,6 @@ impl Row {
                 if slice.chars().count() <= chord.text.chars().count() {
                     if let Some((next_index_before, _, next_slice)) = pairs.iter().nth(index + 1) {
                         chord_string.push(' ');
-                        let i = index_before + whitespaces_for_chords + added_indent_in_rhythm;
                         text_string.push_str(&slice);
                         
                         if !slice.ends_with(" ") && !next_slice.starts_with(" ") && !next_slice.is_empty() {
@@ -283,6 +282,7 @@ impl Row {
                             text_string.push_str( &" ".repeat(chord.text.chars().count() - slice.chars().count() + 1) );
                         }
 
+                        let i = index_before + whitespaces_for_chords + added_indent_in_rhythm;
                         if !rhythm_string.is_empty() && next_index_before - index_before <= chord.text.chars().count() {
                             if let Some(i) = rhythm_string
                                 .char_indices()
@@ -293,7 +293,14 @@ impl Row {
                                 added_indent_in_rhythm += 1;
                             }
                         }
-                    } else {
+
+
+                        let i = chord_string.len() - chord.text.len() - 1;
+                        chord_string.insert_str(i, &" ".repeat(index_before - i));
+                    } else { // last pair
+                        let i = chord_string.len() - chord.text.len();
+                        chord_string.insert_str(i, &" ".repeat(index_before.saturating_sub(i)));
+
                         text_string.push_str(&slice);
                     }
                 } else {
