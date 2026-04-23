@@ -194,7 +194,7 @@ impl Song {
     }
 
     pub fn get_song_as_text(&self) -> String {
-        let (chords, _rhythm, fingerings, notes) = self.metadata.get_show_options();
+        let (chords, _rhythm, notes, fingerings) = self.metadata.get_show_options();
         let mut s = String::new();
 
 
@@ -242,7 +242,7 @@ impl Song {
     }
 
     pub fn to_string(&self) -> String {
-        let (chords, rhythm, _fingerings, notes) = self.metadata.get_show_options();
+        let (chords, rhythm, notes, _fingerings) = self.metadata.get_show_options();
 
         let mut s = String::new();
         let mut is_first = true;
@@ -284,7 +284,7 @@ impl Song {
     }
 
     pub fn get_colored(&self) -> String {
-        let (chords, rhythm, fingerings, notes) = self.metadata.get_show_options();
+        let (chords, rhythm, notes, fingerings) = self.metadata.get_show_options();
 
         let mut s = String::new();
         if !self.metadata.artist.is_empty() && !self.metadata.title.is_empty() {
