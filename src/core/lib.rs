@@ -23,39 +23,39 @@ pub use crate::song::chord::Chord;
 pub const STANDART_TUNING: [Note; STRINGS] = [E, B, G, D, A, E];
 
 
-const METADATA_START: &str = "{metadata:}";
-const METADATA_END: &str = "{:metadata}";
+pub const METADATA_START: &str = "{metadata:}";
+pub const METADATA_END: &str = "{:metadata}";
 
-const SONG_TITLE_SYMBOL: &str = "{song_title}: ";
-const SONG_ARTIST_SYMBOL: &str = "{song_artist}: ";
-const SONG_KEY_SYMBOL: &str = "{song_key}: ";
-const SONG_CAPO_SYMBOL: &str = "{song_capo}: ";
-const SONG_AUTOSCROLL_SPEED_SYMBOL: &str = "{song_autoscroll_speed}: ";
-const SONG_SHOW_OPTIONS_SYMBOL: &str = "{song_show_options}: ";
+pub const SONG_TITLE_SYMBOL: &str = "{song_title}: ";
+pub const SONG_ARTIST_SYMBOL: &str = "{song_artist}: ";
+pub const SONG_KEY_SYMBOL: &str = "{song_key}: ";
+pub const SONG_CAPO_SYMBOL: &str = "{song_capo}: ";
+pub const SONG_AUTOSCROLL_SPEED_SYMBOL: &str = "{song_autoscroll_speed}: ";
+pub const SONG_SHOW_OPTIONS_SYMBOL: &str = "{song_show_options}: ";
 
 
-const BLOCK_START: &str = "{block:}";
-const BLOCK_END: &str = "{:block}";
+pub const BLOCK_START: &str = "{block:}";
+pub const BLOCK_END: &str = "{:block}";
 
-const TITLE_SYMBOL: &str = "{title}: ";
+pub const TITLE_SYMBOL: &str = "{title}: ";
 
-const CHORDS_LINE_SYMBOL: &str = "{chords_line}: ";
-const EMPTY_LINE_SYMBOL: &str = "{empty_line}";
+pub const CHORDS_LINE_SYMBOL: &str = "{chords_line}: ";
+pub const EMPTY_LINE_SYMBOL: &str = "{empty_line}";
 
-const PLAIN_TEXT_START: &str = "{plain_text:}";
-const PLAIN_TEXT_END: &str = "{:plain_text}";
+pub const PLAIN_TEXT_START: &str = "{plain_text:}";
+pub const PLAIN_TEXT_END: &str = "{:plain_text}";
 
-const TAB_START_SYMBOL: &str = "{tab:}";
-const TAB_END_SYMBOL: &str = "{:tab}";
+pub const TAB_START_SYMBOL: &str = "{tab:}";
+pub const TAB_END_SYMBOL: &str = "{:tab}";
 
-const CHORDS_SYMBOL: &str = "{C}|";
-const RHYTHM_SYMBOL: &str = "{R}|";
-const TEXT_SYMBOL: &str = "{T}|";
+pub const CHORDS_SYMBOL: &str = "{C}|";
+pub const RHYTHM_SYMBOL: &str = "{R}|";
+pub const TEXT_SYMBOL: &str = "{T}|";
 
-const SONG_NOTE_START_SYMBOL: &str = "{song_note:}";
-const SONG_NOTE_END_SYMBOL: &str = "{:song_note}";
+pub const SONG_NOTE_START_SYMBOL: &str = "{song_note:}";
+pub const SONG_NOTE_END_SYMBOL: &str = "{:song_note}";
 
-const BLOCK_NOTE_SYMBOL: &str = "{note}: ";
+pub const BLOCK_NOTE_SYMBOL: &str = "{note}: ";
 
 
 const TITLE_COLOR: Color = Color::DarkGreen;
