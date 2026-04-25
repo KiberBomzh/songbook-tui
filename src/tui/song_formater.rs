@@ -2,7 +2,7 @@ use ratatui::style::Style;
 use ratatui::text::{Line, Span};
 use ratatui::widgets::Paragraph;
 
-use songbook::{Song, STANDART_TUNING};
+use songbook::Song;
 use songbook::song::block;
 use songbook::chord_generator::chord_fingerings::sum_text_in_fingerings;
 
@@ -31,16 +31,7 @@ pub fn get_as_paragraph<'a>(
     }
 
     if needs_chords && needs_fingerings {
-        let mut fings = Vec::new();
-        
-        for chord in &song.chord_list {
-            if let Ok(Some(f)) = songbook::song_library::get_fingering(&chord.text) {
-                fings.push(f)
-            } else {
-                fings.push( chord.get_fingerings(&STANDART_TUNING)[0].clone() )
-            }
-        }
-
+        let fings = song.get_fingerings();
         
         if let Some(text) = sum_text_in_fingerings(&fings, Some(available_width)) {
             lines.extend( text.lines()

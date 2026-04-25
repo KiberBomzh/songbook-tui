@@ -209,22 +209,7 @@ impl Song {
         }
 
         if chords && fingerings {
-            let mut fings = Vec::new();
-            
-            #[cfg(not(feature = "song_library"))]
-            for f in self.get_fingerings() {
-                fings.push(f[0].clone());
-            }
-            
-            #[cfg(feature = "song_library")]
-            for chord in &self.chord_list {
-                if let Ok(Some(f)) = crate::song_library::get_fingering(&chord.text) {
-                    fings.push(f)
-                } else {
-                    fings.push( chord.get_fingerings(&STANDART_TUNING)[0].clone() )
-                }
-            }
-
+            let fings = self.get_fingerings();
             
             if let Some(text) = sum_text_in_fingerings(&fings, None) {
                 s.push_str(&text);
@@ -298,22 +283,7 @@ impl Song {
         }
 
         if chords && fingerings {
-            let mut fings = Vec::new();
-            
-            #[cfg(not(feature = "song_library"))]
-            for f in self.get_fingerings() {
-                fings.push(f[0].clone());
-            }
-            
-            #[cfg(feature = "song_library")]
-            for chord in &self.chord_list {
-                if let Ok(Some(f)) = crate::song_library::get_fingering(&chord.text) {
-                    fings.push(f)
-                } else {
-                    fings.push( chord.get_fingerings(&STANDART_TUNING)[0].clone() )
-                }
-            }
-
+            let fings = self.get_fingerings();
             
             if let Some(text) = sum_text_in_fingerings(&fings, None) {
                 s.push_str(&text);
@@ -406,7 +376,27 @@ impl Song {
         }
     }
 
-    pub fn get_fingerings(&self) -> Vec<Vec<Fingering>> {
+    pub fn get_fingerings(&self) -> Vec<Fingering> {
+        let mut fings = Vec::new();
+        
+        #[cfg(not(feature = "song_library"))]
+        for f in self.get_all_fingerings() {
+            fings.push(f[0].clone());
+        }
+        
+        #[cfg(feature = "song_library")]
+        for chord in &self.chord_list {
+            if let Ok(Some(f)) = crate::song_library::get_fingering(&chord.text) {
+                fings.push(f)
+            } else {
+                fings.push( chord.get_fingerings(&STANDART_TUNING)[0].clone() )
+            }
+        }
+
+        return fings
+    }
+
+    pub fn get_all_fingerings(&self) -> Vec<Vec<Fingering>> {
         let mut fings = Vec::new();
         for chord in &self.chord_list {
             fings.push(chord.get_fingerings(&STANDART_TUNING));
