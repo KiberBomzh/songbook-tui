@@ -83,6 +83,14 @@ pub fn find(query: &str) -> Result<Vec<(String, PathBuf)>> {
 
     return Ok(files)
 }
+
+pub fn find_in(path: &Path, query: &str) -> Result<Vec<(String, PathBuf)>> {
+    let mut files = Vec::new();
+    recursive_find(path, &mut files, query)?;
+
+    return Ok(files)
+}
+
 fn recursive_find(dir: &Path, files: &mut Vec<(String, PathBuf)>, query: &str) -> Result<()> {
     for entry in fs::read_dir(dir)? {
         let path = entry?.path();
