@@ -77,7 +77,17 @@ impl Row {
 
 
     pub fn get_for_editing(&self, s: &mut String) {
-        let (chords_line, rhythm_line, text) = self.get_strings();
+        let (mut chords_line, mut rhythm_line, text) = self.get_strings();
+
+        let mut max_len = text.chars().count();
+        let chords_len = chords_line.chars().count();
+        let rhythm_len = rhythm_line.chars().count();
+        if chords_len > max_len { max_len = chords_len }
+        if rhythm_len > max_len { max_len = rhythm_len }
+
+        chords_line.push_str( &" ".repeat(max_len - chords_len) );
+        rhythm_line.push_str( &" ".repeat(max_len - rhythm_len) );
+
         
         s.push_str(CHORDS_SYMBOL);
         s.push_str(&chords_line);
@@ -357,6 +367,11 @@ impl Row {
 
 
 fn chords_from_edited(line: &str, whitespaces: usize) -> Option<Vec<ChordPosition>> {
+    if line.trim().is_empty() {
+        return None;
+    }
+
+
     let mut chords: Vec<ChordPosition> = Vec::new();
 
     let line = line.to_string() + " ";
@@ -387,6 +402,11 @@ fn chords_from_edited(line: &str, whitespaces: usize) -> Option<Vec<ChordPositio
     else { Some(chords) }
 }
 fn rhythm_from_edited(line: &str, whitespaces: usize) -> Option<Vec<Beat>> {
+    if line.trim().is_empty() {
+        return None;
+    }
+
+
     let mut beats: Vec<Beat> = Vec::new();
     for (i, c) in line.chars().enumerate() {
         if c != ' ' { beats.push(
