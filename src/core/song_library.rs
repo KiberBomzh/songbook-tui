@@ -434,7 +434,7 @@ pub fn get_lib_path() -> Result<PathBuf> {
 }
 
 
-fn get_base_path() -> Option<PathBuf> {
+pub fn get_base_path() -> Option<PathBuf> {
     #[cfg(not(target_os = "android"))]
     return dirs::data_dir();
 
