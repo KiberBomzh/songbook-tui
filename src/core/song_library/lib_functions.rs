@@ -97,7 +97,7 @@ fn recursive_find(dir: &Path, files: &mut Vec<(String, PathBuf)>, query: &str) -
         if path.is_dir() {
             recursive_find(&path, files, query)?;
         } else if let Some(name) = path.file_name().and_then(|n: &std::ffi::OsStr| n.to_str()) {
-            if name.contains(query) { files.push( (name.to_string(), path.to_path_buf()) ) }
+            if name.to_lowercase().contains(&query.to_lowercase()) { files.push( (name.to_string(), path.to_path_buf()) ) }
         }
     }
 
