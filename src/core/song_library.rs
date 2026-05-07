@@ -413,7 +413,7 @@ pub fn get_without_forbidden_chars(text: String) -> String {
     ).collect()
 }
 
-fn get_free_path(mut path: PathBuf, name: &str) -> PathBuf {
+pub fn get_free_path(mut path: PathBuf, name: &str) -> PathBuf {
     let mut counter = 1;
     while path.exists() {
         path.set_file_name(&format!("{}({})", name, counter));
