@@ -206,10 +206,12 @@ pub fn mv(input_path: &Path, output_path: &Path) -> Result<()> {
     }
 
     let mut o_path = path.join(output_path);
-    if o_path.is_dir() { o_path = o_path.join( i_path.file_name()
-        .expect("Cannot get input_path file name!") ) }
+    if let Some(name) = i_path.file_name().and_then(|n| n.to_str()) {
+        if o_path.is_dir() { o_path = o_path.join(name) }
+        o_path = get_free_path(o_path, name);
 
-    fs::rename(i_path, o_path)?;
+        fs::rename(i_path, o_path)?;
+    }
 
     Ok(())
 }
@@ -226,14 +228,16 @@ pub fn cp(input_path: &Path, output_path: &Path) -> Result<()> {
     }
 
     let mut o_path = path.join(output_path);
-    if o_path.is_dir() { o_path = o_path.join( i_path.file_name()
-        .expect("Cannot get input_path file name!") ) }
+    if let Some(name) = i_path.file_name().and_then(|n| n.to_str()) {
+        if o_path.is_dir() { o_path = o_path.join(name) }
+        o_path = get_free_path(o_path, name);
 
-    if i_path != o_path {
-        if i_path.is_dir() {
-            cp_recursive(&i_path, &o_path)?;
-        } else {
-            fs::copy(i_path, o_path)?;
+        if i_path != o_path {
+            if i_path.is_dir() {
+                cp_recursive(&i_path, &o_path)?;
+            } else {
+                fs::copy(i_path, o_path)?;
+            }
         }
     }
 
