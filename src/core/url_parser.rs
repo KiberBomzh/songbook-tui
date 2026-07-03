@@ -1,3 +1,6 @@
+mod amdm_ru;
+
+
 pub fn parse(url: &str) ->Option<crate::Song> {
     let stripped_url: &str = 
         if url.starts_with("https://") {
@@ -9,5 +12,9 @@ pub fn parse(url: &str) ->Option<crate::Song> {
         };
 
 
-    None
+    if stripped_url.starts_with("amdm.ru") {
+        amdm_ru::parse(url)
+    } else {
+        None
+    }
 }
