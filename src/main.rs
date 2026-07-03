@@ -271,6 +271,9 @@ fn main() {
                 AddSubcommand::FromUrl { url } => {
                     if let Some(song) = songbook::url_parser::parse(&url) {
                         song.print();
+                    } else {
+                        let sites = songbook::url_parser::AVAILABLE_SITES.join(", ");
+                        eprintln!("An error ocured or the site isn't available! List of available sites: {sites}");
                     }
                 },
                 AddSubcommand::Empty { title, artist } => {

@@ -1,6 +1,11 @@
 mod amdm_ru;
 
 
+pub const AVAILABLE_SITES: [&str; 1] = [
+    "amdm.ru",
+];
+
+
 pub fn parse(url: &str) ->Option<crate::Song> {
     let stripped_url: &str = 
         if url.starts_with("https://") {
