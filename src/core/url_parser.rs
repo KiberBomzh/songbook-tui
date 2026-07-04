@@ -2,13 +2,15 @@ mod amdm;
 mod akkords;
 mod _5lad;
 mod mytabs;
+mod muzland;
 
 
-pub const AVAILABLE_SITES: [&str; 4] = [
+pub const AVAILABLE_SITES: [&str; 5] = [
     "amdm",
     "akkords",
     "5lad",
     "mytabs",
+    "muzland",
 ];
 
 
@@ -36,6 +38,8 @@ impl crate::Song {
             _5lad::parse(url)
         } else if has_part(base_url, "mytabs") {
             mytabs::parse(url)
+        } else if has_part(base_url, "muzland") {
+            muzland::parse(url)
         } else {
             None
         }
