@@ -20,16 +20,24 @@ impl crate::Song {
             } else {
                 url
             };
+        
+        let base_url = if let Some(end_index) = stripped_url.find('/') {
+            &stripped_url[..end_index]
+        } else { stripped_url };
     
     
-        if stripped_url.starts_with("amdm") {
+        if has_part(base_url, "amdm") {
             amdm::parse(url)
-        } else if stripped_url.starts_with("akkords") {
+        } else if has_part(base_url, "akkords") {
             akkords::parse(url)
-        } else if stripped_url.starts_with("5lad") {
+        } else if has_part(base_url, "5lad") {
             _5lad::parse(url)
         } else {
             None
         }
     }
+}
+
+fn has_part(base_url: &str, part: &str) -> bool {
+    base_url.split('.').any(|p| p == part)
 }
