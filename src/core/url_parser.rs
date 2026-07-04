@@ -3,10 +3,10 @@ mod akkords;
 mod _5lad;
 
 
-pub const AVAILABLE_SITES: [&str; 2] = [
+pub const AVAILABLE_SITES: [&str; 3] = [
     "amdm",
     "akkords",
-    "5lad"
+    "5lad",
 ];
 
 
@@ -26,6 +26,8 @@ impl crate::Song {
             amdm::parse(url)
         } else if stripped_url.starts_with("akkords") {
             akkords::parse(url)
+        } else if stripped_url.starts_with("5lad") {
+            _5lad::parse(url)
         } else {
             None
         }
