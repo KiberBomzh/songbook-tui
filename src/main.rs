@@ -269,7 +269,7 @@ fn main() {
                 },
                 #[cfg(feature = "from_url")]
                 AddSubcommand::FromUrl { url } => {
-                    if let Some(song) = songbook::url_parser::parse(&url) {
+                    if let Some(song) = Song::from_url(&url) {
                         song.print();
                     } else {
                         let sites = songbook::url_parser::AVAILABLE_SITES.join(", ");
