@@ -1,10 +1,12 @@
-mod amdm_ru;
-mod akkords_pro;
+mod amdm;
+mod akkords;
+mod _5lad;
 
 
 pub const AVAILABLE_SITES: [&str; 2] = [
-    "amdm.ru",
-    "akkords.pro",
+    "amdm",
+    "akkords",
+    "5lad"
 ];
 
 
@@ -20,10 +22,10 @@ impl crate::Song {
             };
     
     
-        if stripped_url.starts_with("amdm.ru") {
-            amdm_ru::parse(url)
-        } else if stripped_url.starts_with("akkords.pro") {
-            akkords_pro::parse(url)
+        if stripped_url.starts_with("amdm") {
+            amdm::parse(url)
+        } else if stripped_url.starts_with("akkords") {
+            akkords::parse(url)
         } else {
             None
         }
