@@ -3,14 +3,16 @@ mod akkords;
 mod _5lad;
 mod mytabs;
 mod muzland;
+mod guitar_link;
 
 
-pub const AVAILABLE_SITES: [&str; 5] = [
+pub const AVAILABLE_SITES: [&str; 6] = [
     "amdm",
     "akkords",
     "5lad",
     "mytabs",
     "muzland",
+    "guitar-link",
 ];
 
 
@@ -40,6 +42,8 @@ impl crate::Song {
             mytabs::parse(url)
         } else if has_part(base_url, "muzland") {
             muzland::parse(url)
+        } else if has_part(base_url, "guitar-link") {
+            guitar_link::parse(url)
         } else {
             None
         }

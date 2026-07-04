@@ -107,6 +107,7 @@ cargo install songbook --features tui
       > - 5lad.info
       > - mytabs.ru
       > - muzland.ru
+      > - guitar-link.com
 
 - `sort` - sort songs in the library, will songs in next struct lib/Artist/Title
 - `rm` - remove a file or a directory
