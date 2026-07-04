@@ -1,12 +1,14 @@
 mod amdm;
 mod akkords;
 mod _5lad;
+mod mytabs;
 
 
-pub const AVAILABLE_SITES: [&str; 3] = [
+pub const AVAILABLE_SITES: [&str; 4] = [
     "amdm",
     "akkords",
     "5lad",
+    "mytabs",
 ];
 
 
@@ -32,6 +34,8 @@ impl crate::Song {
             akkords::parse(url)
         } else if has_part(base_url, "5lad") {
             _5lad::parse(url)
+        } else if has_part(base_url, "mytabs") {
+            mytabs::parse(url)
         } else {
             None
         }
