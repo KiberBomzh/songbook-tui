@@ -22,16 +22,16 @@ fn parse_metadata(document: &Html) -> Option<(String, String)> {
         .join("");
 
 
-    let title = if let Some(end_index) = text.find('-') {
+    let artist = if let Some(end_index) = text.find('-') {
         text[..end_index].trim().to_string()
-    } else { String::from("title") };
+    } else { String::from("artist") };
 
-    let artist = 
+    let title = 
         if let Some(start_index) = text.find('-')
         && let Some(end_index) = text.find(':')
     {
         text[start_index + 1..end_index].trim().to_string()
-    } else { String::from("artist") };
+    } else { String::from("title") };
 
 
     return Some((title, artist))
