@@ -43,8 +43,11 @@ pub fn get_files_in_dir(added_path: Option<&Path>) -> Result<(Vec<(String, PathB
 
 
 pub fn get_song(song_path: &Path) -> Result<Song> {
-    let mut path = get_lib_path()?;
-    path = path.join(song_path);
+    let path = if song_path.is_file() {
+        song_path.to_path_buf()
+    } else {
+        get_lib_path()?.join(song_path)
+    };
 
     let file = File::open(path)?;
     let reader = BufReader::new(file);
@@ -175,6 +178,7 @@ pub fn get_help_msg() -> String {
         BLOCK_START,
         BLOCK_END,
         TITLE_SYMBOL,
+        KEY_SYMBOL,
         CHORDS_LINE_SYMBOL,
         NOTE_LINE_SYMBOL,
         EMPTY_LINE_SYMBOL,
@@ -210,6 +214,7 @@ r#"==================Help==================
  {BLOCK_START} - Start of block (verse, chorus, bridge, etc.)
  {BLOCK_END} - End of block
  {TITLE_SYMBOL} - Block's title
+ {KEY_SYMBOL} - Block's key, useful for modulation and proper flat note handling
  {CHORDS_LINE_SYMBOL} - For lines only with chords
  {NOTE_LINE_SYMBOL} - For notes
  {EMPTY_LINE_SYMBOL} - For empty lines
